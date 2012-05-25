@@ -9,12 +9,6 @@ Examples and complete reference can be found at <http://jquery.creativecouple.de
 
 [CreativeCouple](http://www.creativecouple.de) - Peter Liske
 
-<p style="position:relative">
-<span style="position:absolute;font-family:monospace;white-space:pre-line">C  a  v  o  l  g  .  t</span>
-<span style="position:absolute;font-family:monospace;white-space:pre-line"> r  t  e  u  e  m  n</span>
-<span style="position:absolute;font-family:monospace;white-space:pre-line">  e  i  C  p  &#64;  x  e</span>
-</p>
-
 ## License
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
