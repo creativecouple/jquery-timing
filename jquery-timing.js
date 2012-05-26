@@ -25,7 +25,7 @@
 	/**
 	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #now, and #until
 	 */
-	EASY_TIMING = {};
+	JQUERY_TIMING = {};
 	
 	/**
 	 * Remove a specific element value from a numeric array. The value is compared with the === operator.
@@ -76,7 +76,7 @@
 		
 		// callStack is a linked list of method invocations
 		callStack = {
-				_token: EASY_TIMING,
+				_token: JQUERY_TIMING,
 				_placeholder: _placeholder
 		},
 		
@@ -90,7 +90,7 @@
 						callStack = callStack.next = {
 								_name: functionName,
 								_args: arguments,
-								_token: EASY_TIMING
+								_token: JQUERY_TIMING
 						};
 						return _placeholder;
 					};
@@ -162,7 +162,7 @@
 		var original = this,
 		
 		// create new call stack if necessary 
-		callStack = (_callStack && _callStack._token === EASY_TIMING) ? _callStack : createPlaceholderCallStack(original),
+		callStack = (_callStack && _callStack._token === JQUERY_TIMING) ? _callStack : createPlaceholderCallStack(original),
 		
 		// define timer
 		timer = window.setTimeout(function(){
@@ -213,7 +213,7 @@
 		var original = this,
 		
 		// create new call stack if necessary 
-		callStack = (_callStack && _callStack._token === EASY_TIMING) ? _callStack : createPlaceholderCallStack(original),
+		callStack = (_callStack && _callStack._token === JQUERY_TIMING) ? _callStack : createPlaceholderCallStack(original),
 		
 		// define timer
 		timer = window.setInterval(function(){
@@ -228,8 +228,8 @@
 				_count: 0,
 				_context: original,
 				_timer: timer,
-				_prev: (_repeat && _repeat._token === EASY_TIMING) ? _repeat : {},
-				_token: EASY_TIMING
+				_prev: (_repeat && _repeat._token === JQUERY_TIMING) ? _repeat : {},
+				_token: JQUERY_TIMING
 		};
 		
 		// update interval array
@@ -282,7 +282,7 @@
 	 * @param _repeat internally used data object to perceive concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	function until(condition, _repeat){
-		if (!_repeat || _repeat._token !== EASY_TIMING) {
+		if (!_repeat || _repeat._token !== JQUERY_TIMING) {
 			throw new Error(".until() method cannot be called without previous use of .repeat()");
 		}
 		if (typeof condition === "undefined") {
@@ -309,12 +309,28 @@
 	function now(callback, _repeat) {
 		if (typeof callback === "function") {
 			var args = [];
-			for (; _repeat && (_repeat._token === EASY_TIMING); _repeat = _repeat._prev) {
+			for (; _repeat && (_repeat._token === JQUERY_TIMING); _repeat = _repeat._prev) {
 				args.push(_repeat._count);
 			}
 			callback.apply(this, args);
 		}
 		return this;
+	}
+	
+	/**
+	 * Start a new queue to apply all the timing methods on.
+	 * This will be used in the static variants.
+	 *   
+	 * @param queue the name of the queue to apply the timing stuff on 
+	 * @param method the method to be called
+	 * @param args the original function arguments
+	 */
+	function startQueue(queue, method, args){
+		if (typeof queue === "undefined") {
+			queue = '';
+		}
+		JQUERY_TIMING[queue] = JQUERY_TIMING[queue] || $('<div>');
+		return method.apply(JQUERY_TIMING[queue], args);
 	}
 	
 	/*
@@ -327,5 +343,22 @@
 		unrepeat: unrepeat,
 		until: until,
 		now: now
+	});
+	$.extend({
+		wait: function(timeout, queue) {
+			return startQueue(queue, wait, arguments);
+		},
+		unwait: function(queue) {
+			return startQueue(queue, unwait, arguments);
+		},
+		repeat: function(timeout, firstCallNow, queue) {
+			return startQueue(queue, repeat, arguments);
+		},
+		unrepeat: function(queue) {
+			return startQueue(queue, unrepeat, arguments);
+		},
+		now: function(callback, queue) {
+			return startQueue(queue, now, arguments);
+		}
 	});
 })(jQuery);
