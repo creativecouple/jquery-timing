@@ -23,7 +23,7 @@
 	var TIMEOUTS = '__timeouts', INTERVALS = '__intervals',
 	
 	/**
-	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #then, and #until
+	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	EASY_TIMING = {};
 	
@@ -108,7 +108,7 @@
 	 * @author Peter Liske
 	 * @param callStack the call stack to iterate
 	 * @param context the method context to be faked
-	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #then, and #until
+	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	function invokeCallStack(callStack, context, _repeat) {
 		// now invoke method chain up to first #until
@@ -138,9 +138,9 @@
 				// forward repetition data and invocation stack to #wait method
 				wait.call(object, invocation._args[0], repetition, invocation);
 				break;
-			} else if (method === then) {
-				// forward repetition data and invocation stack to #wait method
-				object = then.call(object, invocation._args[0], repetition);
+			} else if (method === now) {
+				// forward repetition data and invocation stack to #now method
+				object = now.call(object, invocation._args[0], repetition);
 			} else {
 				object = method.apply(object, invocation._args);
 			}
@@ -154,8 +154,8 @@
 	 * @author CreativeCouple
 	 * @author Peter Liske
 	 * @param timeout the timeout in milliseconds to wait before invoking the delayed method chain
-	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #then, and #until
-	 * @param _callStack internally used data object for concatenated calls of #repeat, #wait, #then, and #until
+	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #now, and #until
+	 * @param _callStack internally used data object for concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	function wait(timeout, _repeat, _callStack){
 		// store context
@@ -205,8 +205,8 @@
 	 * @author Peter Liske
 	 * @param timeout the timeout in milliseconds between each invocation of the method chain
 	 * @param firstCallNow a boolean whether to run the first invocation now or only after the given timeout, defaults to <code>false</code>
-	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #then, and #until
-	 * @param _callStack internally used data object for concatenated calls of #repeat, #wait, #then, and #until
+	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #now, and #until
+	 * @param _callStack internally used data object for concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	function repeat(timeout, firstCallNow, _repeat, _callStack){
 		// store context
@@ -279,7 +279,7 @@
 	 *      The <code>this</code> context is the current jQuery selection.
 	 *      The return value is treated as boolean or number as defined above.</li>
 	 * </ul>
-	 * @param _repeat internally used data object to perceive concatenated calls of #repeat, #wait, #then, and #until
+	 * @param _repeat internally used data object to perceive concatenated calls of #repeat, #wait, #now, and #until
 	 */
 	function until(condition, _repeat){
 		if (!_repeat || _repeat._token !== EASY_TIMING) {
@@ -304,11 +304,15 @@
 	 * @author Peter Liske
 	 * @param callback function which is called in the context of the jQuery selection object. 
 	 * The only argument when invoking is the current number of repeat operations - if any. 
-	 * @param _repeat internally used data object to perceive concatenated calls of #repeat, #wait, #then, and #until
+	 * @param _repeat internally used data object to perceive concatenated calls of #repeat, #wait, #now, and #until
 	 */
-	function then(callback, _repeat) {
+	function now(callback, _repeat) {
 		if (typeof callback === "function") {
-			callback.call(this, (_repeat && _repeat._token !== EASY_TIMING) ? _repeat._count : 0);
+			var args = [];
+			for (; _repeat && (_repeat._token === EASY_TIMING); _repeat = _repeat._prev) {
+				args.push(_repeat._count);
+			}
+			callback.apply(this, args);
 		}
 		return this;
 	}
@@ -322,6 +326,6 @@
 		repeat: repeat,
 		unrepeat: unrepeat,
 		until: until,
-		then: then
+		now: now
 	});
 })(jQuery);
