@@ -3,7 +3,7 @@ jquery-timing
 
 A jQuery plugin that provides easy-to-use timing methods to write less and do more.
 
-Examples and complete reference can be found at <http://jquery.creativecouple.de/timing>
+Examples and complete reference can be found at <http://creativecouple.github.com/jquery-timing>
 
 ## Author
 
