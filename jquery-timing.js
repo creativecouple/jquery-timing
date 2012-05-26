@@ -7,12 +7,12 @@
  * http://www.opensource.org/licenses/mit-license.php
  * 
  * For examples, reference, and other information see
- * http://creativecouple.github.com/jquery-easytiming/
+ * http://creativecouple.github.com/jquery-timing/
  * 
  * @author CreativeCouple
  * @author Peter Liske
  * @copyright (c) 2011 by CreativeCouple
- * @see http://creativecouple.github.com/jquery-easytiming/
+ * @see http://creativecouple.github.com/jquery-timing/
  */
 
 (function($){
