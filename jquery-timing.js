@@ -265,6 +265,21 @@
 	}
 	
 	/**
+	 * Calls a method within a specified context and gives the repeat counts as arguments.
+	 * 
+	 * @param context the context to apply the method on
+	 * @param method the function to be used
+	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #now, and #until
+	 */
+	function runMethodWithRepeatCounts(context, method, _repeat) {
+		var args = [], repetition;
+		for (repetition = _repeat; repetition && (repetition._token === JQUERY_TIMING); repetition = repetition._prev) {
+			args.push(repetition._count);
+		}
+		return method.apply(context, args);
+	}
+	
+	/**
 	 * Define when to stop a repeat-loop.
 	 * 
 	 * @author CreativeCouple
@@ -289,7 +304,7 @@
 			condition = this.length <= 0;
 		}
 		if (typeof condition === "function") {
-			condition = condition.call(this, _repeat._count);
+			condition = runMethodWithRepeatCounts(this, condition, _repeat);
 		}
 		if (typeof condition === "number") {
 			condition = _repeat._count >= condition;
@@ -308,11 +323,7 @@
 	 */
 	function now(callback, _repeat) {
 		if (typeof callback === "function") {
-			var args = [];
-			for (; _repeat && (_repeat._token === JQUERY_TIMING); _repeat = _repeat._prev) {
-				args.push(_repeat._count);
-			}
-			callback.apply(this, args);
+			runMethodWithRepeatCounts(this, callback, _repeat);
 		}
 		return this;
 	}
