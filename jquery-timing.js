@@ -242,9 +242,10 @@
 	 */
 	function unwait(){
 		this.each(function(){
-			$.each($(this).data(TIMEOUTS) || [], function(){
-				window.clearTimeout(this);
-			});			
+			var timers = $(this).data(TIMEOUTS);
+			while (timers && timers.length){
+				window.clearTimeout(timers.pop());
+			}
 		});
 		return this.data(TIMEOUTS, []);
 	}
@@ -325,13 +326,15 @@
 	 */
 	function unrepeat() {
 		this.each(function(){
-			$.each($(this).data(INTERVALS) || [], function(){
-				if (typeof this === OBJECT) {
-					this._interrupted = true;
+			var timers = $(this).data(INTERVALS);
+			while (timers && timers.length) {
+				var timer = timers.pop();
+				if (typeof timer === OBJECT) {
+					timer._interrupted = true;
 				} else {
-					window.clearInterval(this);
+					window.clearInterval(timer);
 				}
-			});			
+			}
 		});
 		return this.data(INTERVALS, []);
 	}
