@@ -241,13 +241,12 @@
 	 * @author Peter Liske
 	 */
 	function unwait(){
-		this.each(function(){
+		return this.each(function(){
 			var timers = $(this).data(TIMEOUTS);
 			while (timers && timers.length){
 				window.clearTimeout(timers.pop());
 			}
 		});
-		return this.data(TIMEOUTS, []);
 	}
 	
 	/**
@@ -325,7 +324,7 @@
 	 * @author Peter Liske
 	 */
 	function unrepeat() {
-		this.each(function(){
+		return this.each(function(){
 			var timers = $(this).data(INTERVALS);
 			while (timers && timers.length) {
 				var timer = timers.pop();
@@ -336,7 +335,6 @@
 				}
 			}
 		});
-		return this.data(INTERVALS, []);
 	}
 	
 	/**
