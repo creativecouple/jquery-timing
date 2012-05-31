@@ -123,6 +123,22 @@
 	function invokeCallStack(callStack, context, _repeat) {
 		// first run optional callback method
 		runMethodWithRepeatCounts(context, callStack._callback, _repeat);
+
+		if (!callStack._next) {
+			// if we start here without next step then check for method chain ending on repeat without a timer
+			for (; _repeat && (_repeat._token === JQUERY_TIMING) && (typeof _repeat._timer === OBJECT); _repeat = _repeat._prev) {
+				// if repeat loop without interval timer is not interrupted then we have to start it over again right here
+				if (!_repeat._timer._interrupted) {
+					context = _repeat._context;
+					callStack = _repeat._invocation;
+					_repeat._count++;
+					// run optional callback method
+					runMethodWithRepeatCounts(context, callStack._callback, _repeat);
+					break;
+				}
+			}
+		}
+		
 		// now invoke method chain up to first #until
 		for (var invocation = callStack._next, object = context, repetition = _repeat; invocation; invocation = invocation._next) {
 			// first run optional callback method
@@ -418,6 +434,9 @@
 			callback = queueName;
 			// use the default jQuery queue if none given
 			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
+		} else if (typeof queueName === UNDEFINED) {
+			// use the default jQuery queue if none given
+			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
 		}
 		// store context
 		var original = this,
@@ -430,9 +449,11 @@
 
 		window.setTimeout(function(){
 			// wait for jQuery queue to finalize
-			original.queue(queueName, function(){
-				// now invoke the stuff
+			original.queue(queueName, function(next){
+				// now invoke our stuff
 				invokeCallStack(callStack, original, _repeat);
+				// and let the queue go on
+				next();
 			});
 		}, 0);
 		
