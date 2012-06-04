@@ -6,28 +6,26 @@
 		<property name="src" value="jquery-timing.js" />
 		<property name="dest" value="jquery-timing.min.js" />
 		
-		<tempfile property="temp.file" deleteonexit="true" suffix=".js"/>
-		
-		<copy file="${src}" tofile="${temp.file}"/>
-		<replace file="${temp.file}" token="_args" value="a"/>
-		<replace file="${temp.file}" token="_callback" value="b"/>
-		<replace file="${temp.file}" token="_context" value="c"/>
-		<replace file="${temp.file}" token="_count" value="d"/>
-		<replace file="${temp.file}" token="_interrupted" value="e"/>
-		<replace file="${temp.file}" token="_invocation" value="f"/>
-		<replace file="${temp.file}" token="_name" value="g"/>
-		<replace file="${temp.file}" token="_next" value="h"/>
-		<replace file="${temp.file}" token="_placeholder" value="i"/>
-		<replace file="${temp.file}" token="_prev" value="j"/>
-		<replace file="${temp.file}" token="_timer" value="k"/>
-		<replace file="${temp.file}" token="_token" value="l"/>
-		
 		<java jar="${js-compressor}" fork="true">
-			<arg value="${temp.file}"/>
+			<arg value="${src}"/>
 			<arg value="-o"/><arg value="${dest}"/>
 			<arg value="--charset"/><arg value="utf-8"/>
 			<arg value="-v"/>
 		</java>
+		
+		<replace file="${dest}" token="_args" value="a"/>
+		<replace file="${dest}" token="_callback" value="b"/>
+		<replace file="${dest}" token="_context" value="c"/>
+		<replace file="${dest}" token="_count" value="d"/>
+		<replace file="${dest}" token="_interrupted" value="e"/>
+		<replace file="${dest}" token="_invocation" value="f"/>
+		<replace file="${dest}" token="_name" value="g"/>
+		<replace file="${dest}" token="_next" value="h"/>
+		<replace file="${dest}" token="_placeholder" value="i"/>
+		<replace file="${dest}" token="_prev" value="j"/>
+		<replace file="${dest}" token="_timer" value="k"/>
+		<replace file="${dest}" token="_token" value="l"/>
+		
 	</target>
 	
 </project>
