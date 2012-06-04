@@ -412,7 +412,7 @@
 			condition = condition.toString();
 		}
 		if (typeof condition == NUMBER) {
-			condition = _repeat._count >= condition;
+			condition = _repeat._count >= condition-1;
 		}
 		return condition ? _repeat._prev : false;
 	}
