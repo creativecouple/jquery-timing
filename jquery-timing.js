@@ -18,22 +18,32 @@
 (function($, window){
 	
 	/**
-	 * constants to be used as member for jQuery's data function 
+	 * constants to be used as member for jQuery's data function,
+	 * will shrink in minimization 
 	 */
 	var TIMEOUTS = '__timeouts', INTERVALS = '__intervals',
 	
 	/**
-	 * constants for typeof operator
+	 * constants for typeof operator,
+	 * will shrink in minimization
 	 */
-	OBJECT = "object", FUNCTION = "function", NUMBER = "number", STRING = "string", UNDEFINED = "undefined",
+	OBJECT = "object", FUNCTION = "function", NUMBER = "number", STRING = "string",
 	
 	/**
-	 * jQuery default effects queue
+	 * constant for testing undefined,
+	 * will shrink in minimization
+	 */
+	UNDEFINED = undefined,
+	
+	/**
+	 * jQuery default effects queue,
+	 * will shrink in minimization
 	 */
 	JQUERY_DEFAULT_EFFECTS_QUEUE = 'fx',
 	
 	/**
-	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #until, #then, and #then
+	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #until, #then, and #then,
+	 * will shrink in minimization
 	 */
 	JQUERY_TIMING = {};
 	
@@ -94,7 +104,7 @@
 		member;
 		
 		for (member in context) {
-			if (typeof context[member] === FUNCTION) {
+			if (typeof context[member] == FUNCTION) {
 				(function(functionName){
 					_placeholder[functionName] = function(){
 						callStack = callStack._next = {
@@ -126,7 +136,7 @@
 
 		if (!callStack._next) {
 			// if we start here without next step then check for method chain ending on repeat without a timer
-			for (; _repeat && (_repeat._token === JQUERY_TIMING) && (typeof _repeat._timer === OBJECT); _repeat = _repeat._prev) {
+			for (; _repeat && (_repeat._token === JQUERY_TIMING) && (typeof _repeat._timer == OBJECT); _repeat = _repeat._prev) {
 				// if repeat loop without interval timer is not interrupted then we have to start it over again right here
 				if (!_repeat._timer._interrupted) {
 					context = _repeat._context;
@@ -140,17 +150,17 @@
 		}
 		
 		// now invoke method chain up to first #until
-		for (var invocation = callStack._next, object = context, repetition = _repeat; invocation; invocation = invocation._next) {
+		for (var invocation = callStack._next, object = context, repetition = _repeat, method, repetition_end; invocation; invocation = invocation._next) {
 			// first run optional callback method
 			runMethodWithRepeatCounts(object, invocation._callback, repetition);
-			var method = object[invocation._name];
+			method = object[invocation._name];
 			// check if we reached one of our own methods
 			if (method === until) {
 				// forward repetition data and invocation stack to #until method
-				var repetition_end = until.call(object, invocation._args[0], repetition);
+				repetition_end = until.call(object, invocation._args[0], repetition);
 				if (repetition_end) {
 					// the loop has come to an end :-)
-					if (typeof repetition._timer === OBJECT) {
+					if (typeof repetition._timer == OBJECT) {
 						// we have an interruption object instead of an interval timer
 						repetition._timer._interrupted = true;
 					} else {
@@ -163,7 +173,7 @@
 					repetition = repetition_end;
 				} else {
 					// the #until method said that it want to do more iterations, so we break our method chain here
-					if (typeof repetition._timer === OBJECT) {
+					if (typeof repetition._timer == OBJECT) {
 						// if repeat loop runs without interval timer we start it over by faking the method chain's end
 						invocation = {};
 					} else {
@@ -190,7 +200,7 @@
 			}
 			if (!invocation._next) {
 				// if we come here then the method chain ends without setting a new timer
-				for (; repetition && (repetition._token === JQUERY_TIMING) && (typeof repetition._timer === OBJECT); repetition = repetition._prev) {
+				for (; repetition && (repetition._token === JQUERY_TIMING) && (typeof repetition._timer == OBJECT); repetition = repetition._prev) {
 					// if repeat loop without interval timer is not interrupted then we have to start it over again right here
 					if (!repetition._timer._interrupted) {
 						object = repetition._context;
@@ -218,7 +228,7 @@
 	 */
 	function wait(timeout, callback, _repeat, _callStack){
 		// fix parameters
-		if (typeof timeout === FUNCTION) {
+		if (typeof timeout == FUNCTION) {
 			callback = timeout;
 			timeout = 0;
 		}
@@ -280,11 +290,11 @@
 	 */
 	function repeat(timeout, firstCallNow, callback, _repeat, _callStack){
 		// fix parameters
-		if (typeof timeout === FUNCTION) {
+		if (typeof timeout == FUNCTION) {
 			callback = timeout;
 			timeout = 0;
 		}
-		if (typeof firstCallNow === FUNCTION) {
+		if (typeof firstCallNow == FUNCTION) {
 			callback = firstCallNow;
 			firstCallNow = false;
 		}
@@ -341,10 +351,11 @@
 	 */
 	function unrepeat() {
 		return this.each(function(){
-			var timers = $(this).data(INTERVALS);
+			var timers = $(this).data(INTERVALS),
+			timer;
 			while (timers && timers.length) {
-				var timer = timers.pop();
-				if (typeof timer === OBJECT) {
+				timer = timers.pop();
+				if (typeof timer == OBJECT) {
 					timer._interrupted = true;
 				} else {
 					window.clearInterval(timer);
@@ -361,7 +372,7 @@
 	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #until, #then, and #then
 	 */
 	function runMethodWithRepeatCounts(context, method, _repeat) {
-		if (typeof method === FUNCTION) {
+		if (typeof method == FUNCTION) {
 			var args = [], repetition;
 			for (repetition = _repeat; repetition && (repetition._token === JQUERY_TIMING); repetition = repetition._prev) {
 				args.push(repetition._count);
@@ -391,13 +402,16 @@
 		if (!_repeat || _repeat._token !== JQUERY_TIMING) {
 			throw new Error(".until() method cannot be called without previous use of .repeat()");
 		}
-		if (typeof condition === UNDEFINED) {
+		if (condition === UNDEFINED) {
 			condition = this.length <= 0;
 		}
-		if (typeof condition === FUNCTION) {
+		if (typeof condition == FUNCTION) {
 			condition = runMethodWithRepeatCounts(this, condition, _repeat);
 		}
-		if (typeof condition === NUMBER) {
+		if (typeof condition == OBJECT) {
+			condition = condition.toString();
+		}
+		if (typeof condition == NUMBER) {
 			condition = _repeat._count >= condition;
 		}
 		return condition ? _repeat._prev : false;
@@ -430,11 +444,11 @@
 	 */
 	function join(queueName, callback, _repeat, _callStack){
 		// fix parameters
-		if (typeof queueName === FUNCTION) {
-			callback = queueName;
+		if (queueName === UNDEFINED) {
 			// use the default jQuery queue if none given
 			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
-		} else if (typeof queueName === UNDEFINED) {
+		} else if (typeof queueName == FUNCTION) {
+			callback = queueName;
 			// use the default jQuery queue if none given
 			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
 		}
@@ -470,7 +484,7 @@
 	 * @param args the original function arguments
 	 */
 	function startQueue(threadName, method, args){
-		if (typeof threadName === STRING) {
+		if (typeof threadName == STRING) {
 			Array.prototype.shift.apply(args);
 		} else {
 			threadName = '';
@@ -508,4 +522,5 @@
 			return startQueue(threadName, then, arguments);
 		}
 	});
+
 })(jQuery, window);
