@@ -306,7 +306,7 @@
 				
 		// define internal repetition information
 		_repeat = {
-				_count: 0,
+				_count: -1,
 				_context: original,
 				_prev: (_repeat && (_repeat._token === JQUERY_TIMING)) ? _repeat : {},
 				_token: JQUERY_TIMING,
