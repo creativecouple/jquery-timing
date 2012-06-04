@@ -503,7 +503,8 @@
 		unrepeat: unrepeat,
 		until: until,
 		then: then,
-		join: join
+		join: join,
+		$: $
 	});
 	$.extend({
 		wait: function(threadName) {
