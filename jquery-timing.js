@@ -553,7 +553,7 @@
 		deferredVariable.$ = {
 			toString: deferredVariable.toString
 		};
-		deferredVariable.modulo = function(val){
+		deferredVariable.mod = function(val){
 			return $$(function(x){
 				return x % val;
 			}, deferredVariable);
