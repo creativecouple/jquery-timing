@@ -524,4 +524,52 @@
 		}
 	});
 
+	/**
+	 * $$ defines deferred variables that can be used in timed invocation chains 
+	 * 
+	 * @author CreativeCouple
+	 * @author Peter Liske
+	 */
+	window.$$ = function(compute, $n){
+		if (typeof compute == STRING) {
+			compute = new Function('x','return '+compute);
+		}
+		var hasRelatedVariable = (typeof $n == FUNCTION),
+		hasComputation = (typeof compute == FUNCTION),
+		
+		deferredVariable = function(x){
+			if (arguments.length) {
+				deferredVariable.value = x;
+				if (hasRelatedVariable) {
+					$n(x);
+				}
+			}
+			return deferredVariable.toString();
+		};
+		deferredVariable.toString = function(){
+			var x = hasRelatedVariable ? $n() : deferredVariable.value;
+			return hasComputation ? compute(x) : x;
+		};
+		deferredVariable.$ = {
+			toString: deferredVariable.toString
+		};
+		deferredVariable.modulo = function(val){
+			return $$(function(x){
+				return x % val;
+			}, deferredVariable);
+		};
+		deferredVariable.plus = function(val){
+			return $$(function(x){
+				return x + val;
+			}, deferredVariable);
+		};
+		deferredVariable.minus = function(val){
+			return $$(function(x){
+				return x - val;
+			}, deferredVariable);
+		};
+		
+		return deferredVariable;
+	};
+
 })(jQuery, window);
