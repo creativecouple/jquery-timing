@@ -563,13 +563,19 @@
 				return x + val;
 			}, deferredVariable);
 		};
-		deferredVariable.minus = function(val){
+		deferredVariable.neg = function(){
 			return $$(function(x){
-				return x - val;
+				return -x;
 			}, deferredVariable);
 		};
 		
 		return deferredVariable;
+	};
+	window.$$.mod = function(val){
+		return $$().mod(val);
+	};
+	window.$$.plus = function(val){
+		return $$().plus(val);
 	};
 
 })(jQuery, window);
