@@ -27,7 +27,7 @@
 	 * constants for typeof operator,
 	 * will shrink in minimization
 	 */
-	OBJECT = "object", FUNCTION = "function", NUMBER = "number", STRING = "string",
+	STRING = "string",
 	
 	/**
 	 * constant for testing undefined,
@@ -47,6 +47,14 @@
 	 */
 	JQUERY_TIMING = {};
 	
+	function isObject(object) {
+		return typeof object == "object";
+	}
+	
+	function isFunction(object) {
+		return typeof object == "function";
+	}
+
 	/**
 	 * Remove a specific element value from a numeric array. The value is compared with the === operator.
 	 * 
@@ -56,7 +64,7 @@
 	 */
 	function removeArrayElement(array, element) {
 		array = array || [];
-		for (var i=0; i<array.length; i++) {
+		for (var i=0; i < array.length; i++) {
 			if (array[i] === element) {
 				if (i < array.length-1) {
 					array[i] = array.pop();
@@ -104,7 +112,7 @@
 		member;
 		
 		for (member in context) {
-			if (typeof context[member] == FUNCTION) {
+			if (isFunction(context[member])) {
 				(function(functionName){
 					_placeholder[functionName] = function(){
 						callStack = callStack._next = {
@@ -136,7 +144,7 @@
 
 		if (!callStack._next) {
 			// if we start here without next step then check for method chain ending on repeat without a timer
-			for (; _repeat && (_repeat._token === JQUERY_TIMING) && (typeof _repeat._timer == OBJECT); _repeat = _repeat._prev) {
+			for (; _repeat && (_repeat._token === JQUERY_TIMING) && isObject(_repeat._timer); _repeat = _repeat._prev) {
 				// if repeat loop without interval timer is not interrupted then we have to start it over again right here
 				if (!_repeat._timer._interrupted) {
 					context = _repeat._context;
@@ -149,7 +157,7 @@
 			}
 		}
 		
-		// now invoke method chain up to first #until
+		// now invoke method chain up to first #until, #wait, or #join
 		for (var invocation = callStack._next, object = context, repetition = _repeat, method, repetition_end; invocation; invocation = invocation._next) {
 			// first run optional callback method
 			runMethodWithRepeatCounts(object, invocation._callback, repetition);
@@ -160,7 +168,7 @@
 				repetition_end = until.call(object, invocation._args[0], repetition);
 				if (repetition_end) {
 					// the loop has come to an end :-)
-					if (typeof repetition._timer == OBJECT) {
+					if (isObject(repetition._timer)) {
 						// we have an interruption object instead of an interval timer
 						repetition._timer._interrupted = true;
 					} else {
@@ -173,7 +181,7 @@
 					repetition = repetition_end;
 				} else {
 					// the #until method said that it want to do more iterations, so we break our method chain here
-					if (typeof repetition._timer == OBJECT) {
+					if (isObject(repetition._timer)) {
 						// if repeat loop runs without interval timer we start it over by faking the method chain's end
 						invocation = {};
 					} else {
@@ -184,12 +192,8 @@
 				// forward repetition data and invocation stack to #repeat method
 				repeat.call(object, invocation._args[0], invocation._args[1], invocation._args[2], repetition, invocation);
 				break;
-			} else if (method === wait) {
-				// forward repetition data and invocation stack to #wait method
-				wait.call(object, invocation._args[0], invocation._args[1], repetition, invocation);
-				break;
-			} else if (method === join) {
-				// forward repetition data and invocation stack to #join method
+			} else if (method === wait || method === join) {
+				// forward repetition data and invocation stack to #wait and #join method
 				join.call(object, invocation._args[0], invocation._args[1], repetition, invocation);
 				break;
 			} else if (method === then) {
@@ -200,7 +204,7 @@
 			}
 			if (!invocation._next) {
 				// if we come here then the method chain ends without setting a new timer
-				for (; repetition && (repetition._token === JQUERY_TIMING) && (typeof repetition._timer == OBJECT); repetition = repetition._prev) {
+				for (; repetition && (repetition._token === JQUERY_TIMING) && isObject(repetition._timer); repetition = repetition._prev) {
 					// if repeat loop without interval timer is not interrupted then we have to start it over again right here
 					if (!repetition._timer._interrupted) {
 						object = repetition._context;
@@ -228,7 +232,7 @@
 	 */
 	function wait(timeout, callback, _repeat, _callStack){
 		// fix parameters
-		if (typeof timeout == FUNCTION) {
+		if (isFunction(timeout)) {
 			callback = timeout;
 			timeout = 0;
 		}
@@ -290,11 +294,11 @@
 	 */
 	function repeat(timeout, firstCallNow, callback, _repeat, _callStack){
 		// fix parameters
-		if (typeof timeout == FUNCTION) {
+		if (isFunction(timeout)) {
 			callback = timeout;
 			timeout = 0;
 		}
-		if (typeof firstCallNow == FUNCTION) {
+		if (isFunction(firstCallNow)) {
 			callback = firstCallNow;
 			firstCallNow = false;
 		}
@@ -355,7 +359,7 @@
 			timer;
 			while (timers && timers.length) {
 				timer = timers.pop();
-				if (typeof timer == OBJECT) {
+				if (isObject(timer)) {
 					timer._interrupted = true;
 				} else {
 					window.clearInterval(timer);
@@ -372,7 +376,7 @@
 	 * @param _repeat internally used data object for concatenated calls of #repeat, #wait, #until, #then, and #then
 	 */
 	function runMethodWithRepeatCounts(context, method, _repeat) {
-		if (typeof method == FUNCTION) {
+		if (isFunction(method)) {
 			var args = [], repetition;
 			for (repetition = _repeat; repetition && (repetition._token === JQUERY_TIMING); repetition = repetition._prev) {
 				args.push(repetition._count);
@@ -405,13 +409,13 @@
 		if (condition === UNDEFINED) {
 			condition = this.length <= 0;
 		}
-		if (typeof condition == FUNCTION) {
+		if (isFunction(condition)) {
 			condition = runMethodWithRepeatCounts(this, condition, _repeat);
 		}
-		if (typeof condition == OBJECT) {
+		if (isObject(condition)) {
 			condition = condition.toString();
 		}
-		if (typeof condition == NUMBER) {
+		if (typeof condition == "number") {
 			condition = _repeat._count >= condition-1;
 		}
 		return condition ? _repeat._prev : false;
@@ -447,7 +451,7 @@
 		if (queueName === UNDEFINED) {
 			// use the default jQuery queue if none given
 			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
-		} else if (typeof queueName == FUNCTION) {
+		} else if (isFunction(queueName)) {
 			callback = queueName;
 			// use the default jQuery queue if none given
 			queueName = JQUERY_DEFAULT_EFFECTS_QUEUE;
@@ -530,12 +534,12 @@
 	 * @author CreativeCouple
 	 * @author Peter Liske
 	 */
-	window.$$ = function(compute, $n){
+	function $$(compute, $n){
 		if (typeof compute == STRING) {
 			compute = new Function('x','return '+compute);
 		}
-		var hasRelatedVariable = (typeof $n == FUNCTION),
-		hasComputation = (typeof compute == FUNCTION),
+		var hasRelatedVariable = isFunction($n),
+		hasComputation = isFunction(compute),
 		
 		deferredVariable = function(x){
 			if (arguments.length) {
@@ -571,11 +575,7 @@
 		
 		return deferredVariable;
 	};
-	window.$$.mod = function(val){
-		return $$().mod(val);
-	};
-	window.$$.plus = function(val){
-		return $$().plus(val);
-	};
+	
+	window.$$ = $$;
 
 })(jQuery, window);
