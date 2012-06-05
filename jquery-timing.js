@@ -192,9 +192,9 @@
 				// forward repetition data and invocation stack to #repeat method
 				repeat.call(object, invocation._args[0], invocation._args[1], invocation._args[2], repetition, invocation);
 				break;
-			} else if (method === wait || method === join) {
+			} else if ((method === wait) || (method === join)) {
 				// forward repetition data and invocation stack to #wait and #join method
-				join.call(object, invocation._args[0], invocation._args[1], repetition, invocation);
+				method.call(object, invocation._args[0], invocation._args[1], repetition, invocation);
 				break;
 			} else if (method === then) {
 				// forward repetition data and invocation stack to #then method
