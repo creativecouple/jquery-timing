@@ -150,9 +150,13 @@
 	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
 		if (triggeredState) {
 			// inform trigger to fire
-			triggeredState._trigger._isTriggered = TRUE;
-			if (timedInvocationChain._activeExecutionPoint != triggeredState) {
-				return;
+			if (triggeredState._trigger) {
+				triggeredState._trigger._isTriggered = TRUE;
+				if (timedInvocationChain._activeExecutionPoint != triggeredState) {
+					return;
+				}
+			} else {
+				return triggeredState._trigger = { _isTriggered: TRUE };
 			}
 		}
 		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
@@ -290,18 +294,21 @@
 		executionState._trigger = UNDEFINED;
 	}
 
-	function setupJoinTrigger(timedInvocationChain, executionState, queueName) {
+	function setupJoinTrigger(timedInvocationChain, executionState, queueName, tmpState) {
 		if (isFunction(executionState._methodArguments[0])) {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
 			queueName = executionState._methodArguments[0];
 			executionState._callback = executionState._methodArguments[1];
 		}
-		executionState._trigger = {};
+		tmpState = executionState;
 		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
-			runTimedInvocationChain(timedInvocationChain, executionState);
+			runTimedInvocationChain(timedInvocationChain, tmpState);
+			// avoid multiple invocation - redirect following calls to wrong target
+			tmpState = { };
 			next();
 		});
+		executionState._trigger = executionState._trigger || { };
 	}
 
 	function removeJoinTrigger(timedInvocationChain, executionState) {
