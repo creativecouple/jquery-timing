@@ -49,7 +49,11 @@
 	
 	setTimeout = window.setTimeout,
 	
-	setInterval = window.setInterval;
+	clearTimeout = window.clearTimeout,
+	
+	setInterval = window.setInterval,
+	
+	clearInterval = window.clearInterval;
 	
 	function isObject(object) {
 		return typeof object == "object";
@@ -102,6 +106,14 @@
 		return array;
 	}
 	
+	/**
+	 * Initialize a new timed invocation chain. First entry is the given method.
+	 *  
+	 * @param context
+	 * @param firstMethodName
+	 * @param firstMethodArguments
+	 * @returns the placeholder to collect all concatenated function calls
+	 */
 	function createTIC(context, firstMethodName, firstMethodArguments) {
 		var chainEnd = {
 			_isChainEnd: true
@@ -109,8 +121,8 @@
 		lastAddedEntry = {
 			_next: chainEnd,
 			_context: context,
-			_method: firstMethodName,
-			_arguments: firstMethodArguments
+			_methodName: firstMethodName,
+			_methodArguments: firstMethodArguments
 		},
 		tic = {
 			_activeExecutionPoint: lastAddedEntry,
@@ -118,12 +130,10 @@
 			_openEndLoopTimeout: setTimeout(function(){
 				tic._openEndLoopTimeout = false;
 				if (tic._activeExecutionPoint._isChainEnd) {
-					var lastRepeat = tic._ongoingLoops.pop();
+					var lastRepeat = tic._ongoingLoops.shift();
 					if (lastRepeat) {
 						tic._activeExecutionPoint = lastRepeat;
-						if (lastRepeat._nextIterationAllowedNow) {
-							invokeTIC(tic);
-						}
+						runTIC(tic);
 					}
 				}
 			}, 0)
@@ -135,73 +145,214 @@
 					placeholder[name] = function(){
 						lastAddedEntry = lastAddedEntry._next = {
 								_next: chainEnd,
-								_method: name,
-								_arguments: arguments 
+								_context: chainEnd._context,
+								_methodName: name,
+								_methodArguments: arguments 
 						};
 						if (tic._activeExecutionPoint._isChainEnd) {
 							tic._activeExecutionPoint = lastAddedEntry;
-							invokeTIC(tic);
+							runTIC(tic);
 						}
-						return this;
+						return placeholder;
 					};
 				})(key);
 			}
 		}
-		invokeTIC(tic);
+		runTIC(tic);
 		return placeholder;
 	}
 	
 	/**
+	 * 
+	 * @param tic
+	 * @returns
+	 */
+	function runTIC(tic, triggeredState) {
+		if (triggeredState) {
+			// inform trigger to fire
+			triggeredState._trigger._isTriggered = true;
+			if (tic._activeExecutionPoint != triggeredState) {
+				return;
+			}
+		}
+		for (var executionState, context, method, trigger; executionState = tic._activeExecutionPoint;) {
+			if (executionState._isChainEnd) {
+				if (tic._ongoingLoops[0] && !tic._openEndLoopTimeout) {
+					// start open repeat loop over again at the end of the chain
+					tic._activeExecutionPoint = tic._ongoingLoops.shift();
+					continue;
+				}
+				break;
+			}
+			trigger = executionState._trigger;
+			if (trigger) {
+				if (trigger._isInterrupted) {
+					break;
+				}
+				if (trigger._isTriggered) {
+					gotoNextStep(tic);
+				} else {
+					trigger._isWaiting = true;
+					break;
+				}
+			}
+			context = executionState._context;
+			method = context[executionState._methodName];
+			
+			if (method == wait) {
+				((trigger && trigger._isTriggered) ? removeWaitTrigger : setupWaitTrigger)(tic,executionState);
+			} else if (method == join) {
+				((trigger && trigger._isTriggered) ? removeJoinTrigger : setupJoinTrigger)(tic,executionState);
+			} else if (method == then) {
+				executionState._callback = executionState._methodArguments[0];
+				gotoNextStep(tic);
+			} else if (method == repeat) {
+				//...
+				gotoNextStep(tic);
+			} else if (method == until) {
+				//...
+				gotoNextStep(tic);
+			} else {
+				context = method.apply(context, executionState._methodArguments);
+				gotoNextStep(tic);
+			}			
+			tic._activeExecutionPoint._context = context;
+		}
+	}
+	
+	function gotoNextStep(tic, executionState) {
+		executionState = tic._activeExecutionPoint;
+		if (isFunction(executionState._callback)) {
+			var loopArgs = [];
+			executionState._callback.apply(executionState._context, loopArgs);
+		}
+		tic._activeExecutionPoint = executionState._next;
+	}
+	
+	function setupWaitTrigger(tic, executionState, trigger) {
+		function triggerAction(){
+			runTIC(tic, executionState);
+		}
+		
+		if (isFunction(executionState._methodArguments[0])) {
+			executionState._callback = executionState._methodArguments[0];
+		} else {
+			trigger = executionState._methodArguments[0];
+			executionState._callback = executionState._methodArguments[1];
+		}
+		
+		executionState._trigger = isString(trigger) ? {
+			_type: 'event',
+			_action: triggerAction,
+			_context: executionState._context.bind(trigger, triggerAction),
+			_value: trigger
+		} : {
+			_type: 'timeout',
+			_action: triggerAction,
+			_value: setTimeout(triggerAction, Math.max(0,trigger))
+		};
+		executionState._context.each(function(index,element){
+			$(element).data(TIMEOUTS, addArrayElement($(element).data(TIMEOUTS), executionState._trigger));
+		});
+	}
+
+	function stopWaitTrigger(trigger) {
+		if (trigger._type == 'event') {
+			trigger._context.unbind(trigger._value, trigger._action);
+		} else  {
+			clearTimeout(trigger._value);
+		}
+		trigger._isInterrupted = true;
+	}
+	
+	function removeWaitTrigger(tic, executionState) {
+		stopWaitTrigger(executionState._trigger);
+		executionState._context.each(function(index,element){
+			$(element).data(TIMEOUTS, removeArrayElement($(element).data(TIMEOUTS), executionState._trigger));
+		});
+		executionState._trigger = UNDEFINED;
+	}
+
+	function setupJoinTrigger(tic, executionState, queueName) {
+		if (isFunction(executionState._methodArguments[0])) {
+			executionState._callback = executionState._methodArguments[0];
+		} else {
+			queueName = executionState._methodArguments[0];
+			executionState._callback = executionState._methodArguments[1];
+		}
+		queueName = queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName;
+		
+		executionState._trigger = {
+			_type: 'join',
+			_value: queueName
+		};
+		executionState._context.queue(function(next){
+			runTIC(tic, executionState);
+			next();
+		});
+	}
+
+	function removeJoinTrigger(tic, executionState) {
+		executionState._trigger = UNDEFINED;
+	}
+
+	/**
 	 * start new timed invocation chain and apply wait method 
 	 */
-	function wait(arg1, arg2, arg3) {
-		return createTIC(this).wait(arg1, arg2, arg3);
+	function wait() {
+		return createTIC(this,'wait',arguments);
 	}
 	
 	/**
 	 * start new timed invocation chain and apply unwait method 
 	 */
-	function unwait(arg1, arg2, arg3) {
-		return createTIC(this).unwait(arg1, arg2, arg3);
+	function unwait() {
+		return this.each(function(triggers){
+			triggers = $(this).data(TIMEOUTS);
+			while (triggers && triggers.length){
+				stopWaitTrigger(triggers.pop());
+			}
+		});
 	}
 
 	/**
 	 * start new timed invocation chain and apply repeat method 
 	 */
-	function repeat(arg1, arg2, arg3) {
-		return createTIC(this).repeat(arg1, arg2, arg3);
+	function repeat() {
+		return createTIC(this,'repeat',arguments);
 	}
 	
 	/**
 	 * start new timed invocation chain and apply unrepeat method 
 	 */
-	function unrepeat(arg1, arg2, arg3) {
-		return createTIC(this).unrepeat(arg1, arg2, arg3);
+	function unrepeat() {
+		return this;
 	}
 	
 	/**
 	 * start new timed invocation chain and apply until method 
 	 */
-	function until(arg1, arg2, arg3) {
-		return createTIC(this).until(arg1, arg2, arg3);
+	function until() {
+		throw '.until() method must be used after .repeat() only';
 	}
 	
 	/**
 	 * start new timed invocation chain and apply then method 
 	 */
-	function then(arg1, arg2, arg3) {
-		return createTIC(this).then(arg1, arg2, arg3);
+	function then(callback) {
+		callback.apply(this);
+		return this;
 	}
 	
 	/**
 	 * start new timed invocation chain and apply join method 
 	 */
-	function join(arg1, arg2, arg3) {
-		return createTIC(this).join(arg1, arg2, arg3);
+	function join() {
+		return createTIC(this,'join',arguments);
 	}
 	
 	/**
-	 * Start a new queue to apply all the timing methods on.
+	 * Start a new thread to apply all the timing methods on.
 	 * This will be used in the static variants.
 	 *   
 	 * @param threadName the optional name of the timing thread 
@@ -209,12 +360,12 @@
 	 * @param args the original function arguments
 	 */
 	function useThread(threadName, method, args){
-		if (typeof threadName == STRING) {
+		if (isString(threadName)) {
 			Array.prototype.shift.apply(args);
 		} else {
 			threadName = '';
 		}
-		return method.apply(JQUERY_TIMING[threadName] = (JQUERY_TIMING[threadName] || $('<div>')), args);
+		return method.apply(JQUERY_TIMING[threadName] = (JQUERY_TIMING[threadName] || $('<div>').text(threadName)), args);
 	}
 	
 	/*
