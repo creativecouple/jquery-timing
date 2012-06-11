@@ -473,18 +473,245 @@ suite = {
 
 		"event-loop with open end": null,
 
+		".repeat(event,callback)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var event = 'myEvent';
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(event,callback);
+			test.assertEquals(".repeat(event) should wait for event to be triggered", 0, x);
+			for (var i=1; i<=count; i++) {
+				$x.trigger(event);
+				test.assertEquals(".repeat(event) should be fired only once for now because it is open", 1, x);
+			}
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should now have been fired again", 2, x);
+				for (var i=1; i<=count; i++) {
+					$x.trigger(event);
+					test.assertEquals(".repeat(event) should wait for event to be triggered", i+2, x);
+				}
+				$x.unrepeat();
+				$x.trigger(event);
+				test.assertEquals(".repeat(event) should not fire anymore", count+2, x);
+				$x.trigger(event);
+				window.setTimeout(function(){
+					$x.trigger(event);
+					test.assertEquals("callback should not have fired anymore", count+2, x);
+					test.done();
+				}, 100);
+			}, 1);			
+		},
+		
+		".repeat(event,true,callback)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var event = 'myEvent';
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			}			
+			var TIC = $x.repeat(event,true,callback);
+			test.assertEquals(".repeat(event) should have been fired already", 1, x);
+			for (var i=1; i<=count; i++) {
+				$x.trigger(event);
+				test.assertEquals(".repeat(event) should be fired only once for now because it is open", 1, x);
+			}
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should now have been fired again", 2, x);
+				for (var i=1; i<=count; i++) {
+					$x.trigger(event);
+					test.assertEquals(".repeat(event) should wait for event to be triggered", i+2, x);
+				}
+				$x.unrepeat();
+				$x.trigger(event);
+				test.assertEquals(".repeat(event) should not fire anymore", count+2, x);
+				$x.trigger(event);
+				window.setTimeout(function(){
+					$x.trigger(event);
+					test.assertEquals("callback should not have fired anymore", count+2, x);
+					test.done();
+				}, 100);
+			}, 1);			
+		},
+		
 		"event-loop until countdown": null,
 
-		"event-loop until condition callback": null,
-
-		"event-loop until empty selection": null,
-
+		".repeat(event,callback).until(count)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var event = 'myEvent';
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(event,callback).until(count);
+			for (var i=0; i<count; i++) {
+				test.assertEquals(".repeat(event) should wait for event to be triggered", i, x);
+				$x.trigger(event);
+			}
+			test.assertEquals(".repeat(event) should been fired exactly " + count + " times", count, x);
+			$x.trigger(event);
+			test.assertEquals(".repeat(event) should not fire anymore", count, x);
+			$x.trigger(event);
+			window.setTimeout(function(){
+				$x.trigger(event);
+				test.assertEquals("callback should not have fired anymore", count, x);
+				test.done();
+			}, 100);
+		},
+		
+		".repeat(event,true,callback).until(count)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var event = 'myEvent';
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(event,true,callback).until(count);
+			test.assertEquals(".repeat(event) should have been fired already", 1, x);
+			for (var i=1; i<=count; i++) {
+				test.assertEquals(".repeat(event) should wait for event to be triggered", i, x);
+				$x.trigger(event);
+			}
+			test.assertEquals(".repeat(event) should been fired exactly " + count + " times", count, x);
+			$x.trigger(event);
+			test.assertEquals(".repeat(event) should not fire anymore", count, x);
+			$x.trigger(event);
+			window.setTimeout(function(){
+				$x.trigger(event);
+				test.assertEquals("callback should not have fired anymore", count, x);
+				test.done();
+			}, 100);
+		},
+		
 		"interval-loop with open end": null,
 
+		".repeat(interval,callback)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var interval = 100;
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(interval,callback);
+			test.assertEquals(".repeat(interval) should wait for interval", 0, x);
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should still wait for interval", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".repeat(event) should have been triggered", 1, x);
+					window.setTimeout(function(){
+						test.assertEquals(".repeat(event) should have been triggered again", 2, x);
+						$x.unrepeat();
+						window.setTimeout(function(){
+							test.assertEquals(".repeat(event) should not fire anymore", 2, x);
+							test.done();
+						}, 2*interval);
+					}, interval);
+				}, interval);
+			}, interval / 2);			
+		},
+		
+		".repeat(interval,true,callback)": function($, test) {
+			var x = 0;
+			var count = 10;
+			var interval = 100;
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(interval,true,callback);
+			test.assertEquals(".repeat(interval) should have been run already", 1, x);
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should wait for interval", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".repeat(event) should have been triggered", 2, x);
+					window.setTimeout(function(){
+						test.assertEquals(".repeat(event) should have been triggered again", 3, x);
+						$x.unrepeat();
+						window.setTimeout(function(){
+							test.assertEquals(".repeat(event) should not fire anymore", 3, x);
+							test.done();
+						}, 2*interval);
+					}, interval);
+				}, interval);
+			}, interval / 2);			
+		},		
+		
 		"interval-loop until countdown": null,
 
-		"interval-loop until condition callback": null,
+		".repeat(interval,callback).until(count)": function($, test) {
+			var x = 0;
+			var count = 2;
+			var interval = 100;
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(interval,callback).until(count);
+			test.assertEquals(".repeat(interval) should wait for interval", 0, x);
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should still wait for interval", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".repeat(event) should have been triggered", 1, x);
+					window.setTimeout(function(){
+						test.assertEquals(".repeat(event) should not have been triggered again", 2, x);
+						window.setTimeout(function(){
+							test.assertEquals(".repeat(event) should not fire anymore", 2, x);
+							TIC.then(function(){
+								test.done();
+							});
+						}, 2*interval);
+					}, interval);
+				}, interval);
+			}, interval / 2);			
+		},		
 
-		"interval-loop until empty selection": null,
+		".repeat(interval,true,callback).until(count)": function($, test) {
+			var x = 0;
+			var count = 2;
+			var interval = 100;
+			var $x = $('<div>');
+			var callback = function(y){
+				test.assertEquals("callback argument must be iteration number", x,y);
+				x++; test.check();
+				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+			};
+			var TIC = $x.repeat(interval,true,callback).until(count);
+			test.assertEquals(".repeat(interval) should have been run already", 1, x);
+			window.setTimeout(function(){
+				test.assertEquals(".repeat(event) should wait for interval", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".repeat(event) should have been triggered", 2, x);
+					window.setTimeout(function(){
+						test.assertEquals(".repeat(event) should not have been triggered again", 2, x);
+						window.setTimeout(function(){
+							test.assertEquals(".repeat(event) should not fire anymore", 2, x);
+							TIC.then(function(){
+								test.done();
+							});
+						}, 2*interval);
+					}, interval);
+				}, interval);
+			}, interval / 2);			
+		},		
 
 };

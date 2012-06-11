@@ -456,6 +456,56 @@
 		return method.apply(JQUERY_TIMING[threadName] = (JQUERY_TIMING[threadName] || $('<div>').text(threadName)), args);
 	}
 	
+	/**
+	 * $$ defines deferred variables that can be used in timed invocation chains 
+	 * 
+	 * @author CreativeCouple
+	 * @author Peter Liske
+	 */
+	function $$(compute, $n){
+		if (isString(compute)) {
+			compute = new Function('x','return '+compute);
+		}
+		var hasRelatedVariable = isFunction($n),
+		hasComputation = isFunction(compute),
+		
+		deferredVariable = function(x){
+			if (arguments.length) {
+				deferredVariable.value = x;
+				if (hasRelatedVariable) {
+					$n(x);
+				}
+			}
+			return deferredVariable.toString();
+		};
+		deferredVariable.toString = function(){
+			var x = hasRelatedVariable ? $n() : deferredVariable.value;
+			return hasComputation ? compute(x) : x;
+		};
+		deferredVariable.$ = {
+				toString: deferredVariable.toString
+		};
+		deferredVariable.mod = function(val){
+			return $$(function(x){
+				return x % val;
+			}, deferredVariable);
+		};
+		deferredVariable.plus = function(val){
+			return $$(function(x){
+				return x + val;
+			}, deferredVariable);
+		};
+		deferredVariable.neg = function(){
+			return $$(function(x){
+				return -x;
+			}, deferredVariable);
+		};
+		
+		return deferredVariable;
+	};
+	
+	window.$$ = $$;
+	
 	/*
 	 * now put the whole stuff into jQuery and let the games begin...
 	 */
@@ -487,57 +537,9 @@
 		},
 		join: function(threadName) {
 			return useThread(threadName, join, arguments);
-		}
+		},
+		$$: $$
 	});
 
-	/**
-	 * $$ defines deferred variables that can be used in timed invocation chains 
-	 * 
-	 * @author CreativeCouple
-	 * @author Peter Liske
-	 */
-	function $$(compute, $n){
-		if (isString(compute)) {
-			compute = new Function('x','return '+compute);
-		}
-		var hasRelatedVariable = isFunction($n),
-		hasComputation = isFunction(compute),
-		
-		deferredVariable = function(x){
-			if (arguments.length) {
-				deferredVariable.value = x;
-				if (hasRelatedVariable) {
-					$n(x);
-				}
-			}
-			return deferredVariable.toString();
-		};
-		deferredVariable.toString = function(){
-			var x = hasRelatedVariable ? $n() : deferredVariable.value;
-			return hasComputation ? compute(x) : x;
-		};
-		deferredVariable.$ = {
-			toString: deferredVariable.toString
-		};
-		deferredVariable.mod = function(val){
-			return $$(function(x){
-				return x % val;
-			}, deferredVariable);
-		};
-		deferredVariable.plus = function(val){
-			return $$(function(x){
-				return x + val;
-			}, deferredVariable);
-		};
-		deferredVariable.neg = function(){
-			return $$(function(x){
-				return -x;
-			}, deferredVariable);
-		};
-		
-		return deferredVariable;
-	};
-	
-	window.$$ = $$;
 
 })(jQuery, window);
