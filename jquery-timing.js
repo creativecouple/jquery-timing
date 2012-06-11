@@ -24,7 +24,7 @@
 	var TIMEOUTS = '__timeouts', INTERVALS = '__intervals',
 	
 	/**
-	 * constant for testing undefined,
+	 * constant for JavaScript constants,
 	 * will shrink in minimization
 	 */
 	UNDEFINED = undefined, TRUE = true,
@@ -39,15 +39,7 @@
 	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #until, #then, and #then,
 	 * will shrink in minimization
 	 */
-	JQUERY_TIMING = {},
-	
-	setTimeout = window.setTimeout,
-	
-	clearTimeout = window.clearTimeout,
-	
-	setInterval = window.setInterval,
-	
-	clearInterval = window.clearInterval;
+	JQUERY_TIMING = {};
 	
 	function isFunction(object) {
 		return typeof object == "function";
@@ -114,12 +106,13 @@
 		tic = {
 			_activeExecutionPoint: lastAddedEntry,
 			_ongoingLoops: [],
-			_openEndLoopTimeout: setTimeout(function(){
+			_openEndLoopTimeout: window.setTimeout(function(){
 				tic._openEndLoopTimeout = UNDEFINED;
 				runTIC(tic, chainEnd);
 			}, 0)
 		},
-		placeholder = {};
+		placeholder = {},
+		key;
 		for (key in context) {
 			if (isFunction(context[key])) {
 				(function(name){
@@ -239,7 +232,7 @@
 		} : {
 			_type: 'timer',
 			_action: triggerAction,
-			_value: setTimeout(triggerAction, Math.max(0,trigger))
+			_value: window.setTimeout(triggerAction, Math.max(0,trigger))
 		};
 		executionState._context.each(function(index,element){
 			$(element).data(TIMEOUTS, addArrayElement($(element).data(TIMEOUTS), executionState._trigger));
@@ -250,7 +243,7 @@
 		if (trigger._type == 'event') {
 			trigger._context.unbind(trigger._value, trigger._action);
 		} else  {
-			clearTimeout(trigger._value);
+			window.clearTimeout(trigger._value);
 		}
 		trigger._isInterrupted = TRUE;
 	}
@@ -309,7 +302,7 @@
 		} : {
 			_type: 'timer',
 			_action: triggerAction,
-			_value: setInterval(triggerAction, Math.max(0,trigger)),
+			_value: window.setInterval(triggerAction, Math.max(0,trigger)),
 			_isTriggered: firstRunNow
 		};
 		executionState._context.each(function(index,element){
@@ -328,7 +321,7 @@
 			trigger._context.unbind(trigger._value, trigger._action);
 		}
 		if (trigger._type == 'timer') {
-			clearInterval(trigger._value);
+			window.clearInterval(trigger._value);
 		}
 		trigger._isInterrupted = TRUE;
 	}
