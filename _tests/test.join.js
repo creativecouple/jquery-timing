@@ -191,6 +191,17 @@ suite = {
 				test.done();
 			}, 100);
 		},
+		
+		"join multiple elements": function($, test) {
+			var x = 0;
+			var callback = function(){ x++; test.check(); };
+			var $x = $(['<div>','<span>','<p>']);
+			var TIC = $x.join(callback);
+			test.assertEquals("join should fire once, even for multiple objects", 1, x);
+			var TIC = $x.join(callback);
+			test.assertEquals("join again should fire once, even for multiple objects", 2, x);
+			test.done();
+		},
 
 		"joining empty default queue deferred": null,
 		
