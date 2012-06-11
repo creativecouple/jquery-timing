@@ -30,6 +30,22 @@ suite = {
 			}, 1);
 		},
 		
+		".wait() +…+ .then(callback)" : function($, test) {
+			var x = 0;
+			var callback = function(){ x++; test.check(); };
+			var TIC = $.wait();
+			test.assertEquals(".wait() should defer", 0, x);
+			window.setTimeout(function(){				
+				test.assertEquals("TIC should wait until .then()", 0, x);
+				TIC.then(callback);
+				test.assertEquals(".wait() should have fired after short waiting", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			}, 1);
+		},
+		
 		".wait(callback) + .unwait()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
