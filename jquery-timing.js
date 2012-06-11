@@ -86,7 +86,10 @@
 	
 	/**
 	 * Initialize a new timed invocation chain. First entry is the given method.
-	 *  
+	 * 
+	 * @author CreativeCouple
+	 * @author Peter Liske
+	 * 
 	 * @param context
 	 * @param firstMethodName
 	 * @param firstMethodArguments
@@ -103,12 +106,12 @@
 			_methodName: firstMethodName,
 			_methodArguments: firstMethodArguments
 		},
-		tic = {
+		timedInvocationChain = {
 			_activeExecutionPoint: lastAddedEntry,
 			_ongoingLoops: [],
 			_openEndLoopTimeout: window.setTimeout(function(){
-				tic._openEndLoopTimeout = UNDEFINED;
-				runTIC(tic, chainEnd);
+				timedInvocationChain._openEndLoopTimeout = UNDEFINED;
+				runTimedInvocationChain(timedInvocationChain, chainEnd);
 			}, 0)
 		},
 		placeholder = {},
@@ -123,38 +126,41 @@
 								_methodName: name,
 								_methodArguments: arguments 
 						};
-						if (tic._activeExecutionPoint._isChainEnd) {
-							tic._activeExecutionPoint = lastAddedEntry;
-							runTIC(tic);
+						if (timedInvocationChain._activeExecutionPoint._isChainEnd) {
+							timedInvocationChain._activeExecutionPoint = lastAddedEntry;
+							runTimedInvocationChain(timedInvocationChain);
 						}
 						return placeholder;
 					};
 				})(key);
 			}
 		}
-		runTIC(tic);
+		runTimedInvocationChain(timedInvocationChain);
 		return placeholder;
 	}
 	
 	/**
+	 * Invoke all the methods currently in the timed invocation chain.
+	 * @author CreativeCouple
+	 * @author Peter Liske
 	 * 
-	 * @param tic
-	 * @returns
+	 * @param timedInvocationChain
+	 * @param triggeredState optional state to be triggered
 	 */
-	function runTIC(tic, triggeredState) {
+	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
 		if (triggeredState) {
 			// inform trigger to fire
 			triggeredState._trigger._isTriggered = TRUE;
-			if (tic._activeExecutionPoint != triggeredState) {
+			if (timedInvocationChain._activeExecutionPoint != triggeredState) {
 				return;
 			}
 		}
-		for (var executionState, context, method, trigger; executionState = tic._activeExecutionPoint;) {
+		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
 			if (executionState._isChainEnd) {
-				if (tic._ongoingLoops[0] && !tic._openEndLoopTimeout) {
+				if (timedInvocationChain._ongoingLoops[0] && !timedInvocationChain._openEndLoopTimeout) {
 					// start open repeat loop over again at the end of the chain
-					tic._activeExecutionPoint = tic._ongoingLoops[0];
-					tic._activeExecutionPoint._count++;
+					timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0];
+					timedInvocationChain._activeExecutionPoint._count++;
 					continue;
 				}
 				break;
@@ -162,7 +168,7 @@
 			trigger = executionState._trigger;
 			if (trigger) {
 				if (trigger._isTriggered && !trigger._isInterrupted) {
-					gotoNextStep(tic);
+					gotoNextStep(timedInvocationChain);
 				} else {
 					break;
 				}
@@ -171,50 +177,72 @@
 			method = context[executionState._methodName];
 			
 			if (method == wait) {
-				(trigger && trigger._isTriggered ? removeWaitTrigger : setupWaitTrigger)(tic,executionState);
+				(trigger && trigger._isTriggered ? removeWaitTrigger : setupWaitTrigger)(timedInvocationChain,executionState);
 			} else if (method == join) {
-				(trigger && trigger._isTriggered ? removeJoinTrigger : setupJoinTrigger)(tic,executionState);
+				(trigger && trigger._isTriggered ? removeJoinTrigger : setupJoinTrigger)(timedInvocationChain,executionState);
 			} else if (method == then) {
 				executionState._callback = executionState._methodArguments[0];
-				gotoNextStep(tic);
+				gotoNextStep(timedInvocationChain);
 			} else if (method == repeat) {
-				(trigger && trigger._isTriggered ? resetRepeatTrigger : setupRepeatTrigger)(tic,executionState);
-			} else if (method == until && tic._ongoingLoops[0]) {
-				if (evaluateUntilCondition(tic,executionState)) {					
-					gotoNextStep(tic);
-					removeRepeatTrigger(tic);
+				(trigger && trigger._isTriggered ? resetRepeatTrigger : setupRepeatTrigger)(timedInvocationChain,executionState);
+			} else if (method == until && timedInvocationChain._ongoingLoops[0]) {
+				if (evaluateUntilCondition(timedInvocationChain,executionState)) {					
+					gotoNextStep(timedInvocationChain);
+					removeRepeatTrigger(timedInvocationChain);
 				} else {
-					tic._activeExecutionPoint = tic._ongoingLoops[0];
-					tic._activeExecutionPoint._count++;
+					timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0];
+					timedInvocationChain._activeExecutionPoint._count++;
 					continue;
 				}
 			} else {
 				context = method.apply(context, executionState._methodArguments);
-				gotoNextStep(tic);
+				gotoNextStep(timedInvocationChain);
 			}			
-			tic._activeExecutionPoint._context = context;
+			timedInvocationChain._activeExecutionPoint._context = context;
 		}
 	}
 	
-	function gotoNextStep(tic, executionState) {
-		executionState = tic._activeExecutionPoint;		
+	/**
+	 * Go on one step in the timed invocation chain.
+	 * Optionally call callback method.
+	 * 
+	 * @param timedInvocationChain
+	 * @param executionState - ignored from arguments, just here without "var" to save bytes in the minimized version
+	 */
+	function gotoNextStep(timedInvocationChain, executionState) {
+		executionState = timedInvocationChain._activeExecutionPoint;		
 		if (isFunction(executionState._callback)) {
-			callbackWithLoopCounts(tic, executionState._context, executionState._callback);
+			callbackWithLoopCounts(timedInvocationChain, executionState._context, executionState._callback);
 		}
-		tic._activeExecutionPoint = executionState._next;
+		timedInvocationChain._activeExecutionPoint = executionState._next;
 	}
 	
-	function callbackWithLoopCounts(tic, context, callback, loopCounts) {
+	/**
+	 * Run a callback method and hand current iteration numbers as arguments.
+	 * 
+	 * @param timedInvocationChain
+	 * @param context the context to apply on
+	 * @param callback the method to use
+	 * @param loopCounts - ignored from arguments, just here without "var" to save bytes in the minimized version
+	 */
+	function callbackWithLoopCounts(timedInvocationChain, context, callback, loopCounts) {
 		loopCounts = [];
-		$.each(tic._ongoingLoops, function(){
+		$.each(timedInvocationChain._ongoingLoops, function(){
 			loopCounts.push(this._count);
 		});
 		return callback.apply(context, loopCounts);
 	}
 	
-	function setupWaitTrigger(tic, executionState, trigger) {
+	/**
+	 * Define timeout or binding to wait for.
+	 * 
+	 * @param timedInvocationChain
+	 * @param executionState
+	 * @param trigger - ignored from arguments, just here without "var" to save bytes in the minimized version
+	 */
+	function setupWaitTrigger(timedInvocationChain, executionState, trigger) {
 		function triggerAction(){
-			runTIC(tic, executionState);
+			runTimedInvocationChain(timedInvocationChain, executionState);
 		}
 		
 		if (isFunction(executionState._methodArguments[0])) {
@@ -225,12 +253,12 @@
 		}
 		
 		executionState._trigger = isString(trigger) ? {
-			_type: 'event',
+			_type: '_event_',
 			_action: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger
 		} : {
-			_type: 'timer',
+			_type: '_timeout_',
 			_action: triggerAction,
 			_value: window.setTimeout(triggerAction, Math.max(0,trigger))
 		};
@@ -239,16 +267,22 @@
 		});
 	}
 
+	/**
+	 * Clear timeout or remove binding for a waiting trigger.
+	 * 
+	 * @param trigger
+	 */
 	function stopWaitTrigger(trigger) {
-		if (trigger._type == 'event') {
+		if (trigger._type == '_event_') {
 			trigger._context.unbind(trigger._value, trigger._action);
-		} else  {
+		}
+		if (trigger._type == '_timeout_') {
 			window.clearTimeout(trigger._value);
 		}
 		trigger._isInterrupted = TRUE;
 	}
 	
-	function removeWaitTrigger(tic, executionState) {
+	function removeWaitTrigger(timedInvocationChain, executionState) {
 		stopWaitTrigger(executionState._trigger);
 		executionState._context.each(function(index,element){
 			$(element).data(TIMEOUTS, removeArrayElement($(element).data(TIMEOUTS), executionState._trigger));
@@ -256,7 +290,7 @@
 		executionState._trigger = UNDEFINED;
 	}
 
-	function setupJoinTrigger(tic, executionState, queueName) {
+	function setupJoinTrigger(timedInvocationChain, executionState, queueName) {
 		if (isFunction(executionState._methodArguments[0])) {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
@@ -265,18 +299,18 @@
 		}
 		executionState._trigger = {};
 		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
-			runTIC(tic, executionState);
+			runTimedInvocationChain(timedInvocationChain, executionState);
 			next();
 		});
 	}
 
-	function removeJoinTrigger(tic, executionState) {
+	function removeJoinTrigger(timedInvocationChain, executionState) {
 		executionState._trigger = UNDEFINED;
 	}
 	
-	function setupRepeatTrigger(tic, executionState, trigger, firstRunNow) {
+	function setupRepeatTrigger(timedInvocationChain, executionState, trigger, firstRunNow) {
 		function triggerAction(){
-			runTIC(tic, executionState);
+			runTimedInvocationChain(timedInvocationChain, executionState);
 		}
 		
 		// determine parameters
@@ -294,13 +328,13 @@
 		executionState._trigger = trigger == UNDEFINED ? {
 			_isTriggered: TRUE
 		} : isString(trigger) ? {
-			_type: 'event',
+			_type: '_event_',
 			_action: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger,
 			_isTriggered: firstRunNow
 		} : {
-			_type: 'timer',
+			_type: '_interval_',
 			_action: triggerAction,
 			_value: window.setInterval(triggerAction, Math.max(0,trigger)),
 			_isTriggered: firstRunNow
@@ -309,25 +343,25 @@
 			$(element).data(INTERVALS, addArrayElement($(element).data(INTERVALS), executionState._trigger));
 		});
 		executionState._count = 0;
-		tic._ongoingLoops.unshift(executionState);
+		timedInvocationChain._ongoingLoops.unshift(executionState);
 	}
 	
-	function resetRepeatTrigger(tic, executionState) {
+	function resetRepeatTrigger(timedInvocationChain, executionState) {
 		executionState._trigger._isTriggered = !executionState._trigger._type;
 	}
 
 	function stopRepeatTrigger(trigger) {
-		if (trigger._type == 'event') {
+		if (trigger._type == '_event_') {
 			trigger._context.unbind(trigger._value, trigger._action);
 		}
-		if (trigger._type == 'timer') {
+		if (trigger._type == '_interval_') {
 			window.clearInterval(trigger._value);
 		}
 		trigger._isInterrupted = TRUE;
 	}
 	
-	function removeRepeatTrigger(tic, executionState) {
-		executionState = tic._ongoingLoops.shift();
+	function removeRepeatTrigger(timedInvocationChain, executionState) {
+		executionState = timedInvocationChain._ongoingLoops.shift();
 		stopRepeatTrigger(executionState._trigger);
 		executionState._context.each(function(index,element){
 			$(element).data(INTERVALS, removeArrayElement($(element).data(INTERVALS), executionState._trigger));
@@ -335,18 +369,18 @@
 		executionState._trigger = UNDEFINED;
 	}
 	
-	function evaluateUntilCondition(tic, executionState, condition) {
+	function evaluateUntilCondition(timedInvocationChain, executionState, condition) {
 		condition = executionState._methodArguments[0];
 		if (condition == UNDEFINED) {
 			condition = !executionState._context.size();
 		}
 		if (isFunction(condition)) {
-			condition = callbackWithLoopCounts(tic, executionState._context, condition);
+			condition = callbackWithLoopCounts(timedInvocationChain, executionState._context, condition);
 		}
 		if (typeof condition == "object") {
 			condition = condition.toString();
 		}
-		return typeof condition == "number" ? tic._ongoingLoops[0]._count >= condition-1 : condition;
+		return typeof condition == "number" ? timedInvocationChain._ongoingLoops[0]._count >= condition-1 : condition;
 	}
 
 
