@@ -168,7 +168,6 @@ function TestCase(success, error) {
 		} 
 		this.finished = true;
 		success();
-		throw assertionException;
 	};
 	this.fail = function(message) {
 		if (this.finished) {
