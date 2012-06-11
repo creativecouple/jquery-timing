@@ -24,16 +24,10 @@
 	var TIMEOUTS = '__timeouts', INTERVALS = '__intervals',
 	
 	/**
-	 * constants for typeof operator,
-	 * will shrink in minimization
-	 */
-	STRING = "string",
-	
-	/**
 	 * constant for testing undefined,
 	 * will shrink in minimization
 	 */
-	UNDEFINED = undefined,
+	UNDEFINED = undefined, TRUE = true,
 	
 	/**
 	 * jQuery default effects queue,
@@ -55,20 +49,12 @@
 	
 	clearInterval = window.clearInterval;
 	
-	function isObject(object) {
-		return typeof object == "object";
-	}
-	
 	function isFunction(object) {
 		return typeof object == "function";
 	}
 
 	function isString(object) {
 		return typeof object == "string";
-	}
-
-	function isNumber(object) {
-		return typeof object == "number";
 	}
 
 	/**
@@ -116,7 +102,7 @@
 	 */
 	function createTIC(context, firstMethodName, firstMethodArguments) {
 		var chainEnd = {
-			_isChainEnd: true,
+			_isChainEnd: TRUE,
 			_trigger: {}
 		},
 		lastAddedEntry = {
@@ -129,7 +115,7 @@
 			_activeExecutionPoint: lastAddedEntry,
 			_ongoingLoops: [],
 			_openEndLoopTimeout: setTimeout(function(){
-				tic._openEndLoopTimeout = false;
+				tic._openEndLoopTimeout = UNDEFINED;
 				runTIC(tic, chainEnd);
 			}, 0)
 		},
@@ -165,7 +151,7 @@
 	function runTIC(tic, triggeredState) {
 		if (triggeredState) {
 			// inform trigger to fire
-			triggeredState._trigger._isTriggered = true;
+			triggeredState._trigger._isTriggered = TRUE;
 			if (tic._activeExecutionPoint != triggeredState) {
 				return;
 			}
@@ -266,7 +252,7 @@
 		} else  {
 			clearTimeout(trigger._value);
 		}
-		trigger._isInterrupted = true;
+		trigger._isInterrupted = TRUE;
 	}
 	
 	function removeWaitTrigger(tic, executionState) {
@@ -313,7 +299,7 @@
 		}
 		
 		executionState._trigger = trigger == UNDEFINED ? {
-			_isTriggered: true
+			_isTriggered: TRUE
 		} : isString(trigger) ? {
 			_type: 'event',
 			_action: triggerAction,
@@ -344,7 +330,7 @@
 		if (trigger._type == 'timer') {
 			clearInterval(trigger._value);
 		}
-		trigger._isInterrupted = true;
+		trigger._isInterrupted = TRUE;
 	}
 	
 	function removeRepeatTrigger(tic, executionState) {
@@ -364,7 +350,7 @@
 		if (isFunction(condition)) {
 			condition = callbackWithLoopCounts(tic, executionState._context, condition);
 		}
-		if (isObject(condition)) {
+		if (typeof condition == "object") {
 			condition = condition.toString();
 		}
 		return typeof condition == "number" ? tic._ongoingLoops[0]._count >= condition-1 : condition;
@@ -484,7 +470,7 @@
 	 * @author Peter Liske
 	 */
 	function $$(compute, $n){
-		if (typeof compute == STRING) {
+		if (isString(compute)) {
 			compute = new Function('x','return '+compute);
 		}
 		var hasRelatedVariable = isFunction($n),
