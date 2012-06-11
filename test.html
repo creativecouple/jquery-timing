@@ -28,13 +28,16 @@ th.method:hover {
 th.title {
 	padding: 1em;
 }
+th.jquery {
+	text-align: center;
+}
 td {
 	background-color: white;
 	border-right: 1px solid #ccc;
 }
 td.result {
-	width: 16px;
-	height: 16px;
+	width: 20px;
+	height: 20px;
 }
 td.run {
 	background: url(_tests/run.gif) no-repeat center center scroll;
@@ -138,13 +141,13 @@ function savejQuery(type) {
 
 <p><button onclick="window.location.reload()">Run tests again&hellip;</button></p>
 
-<script type="text/javascript">var tests = {};</script>
+<script type="text/javascript">var tests = {}, minVersion={};</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.wait.js"></script>
 <script type="text/javascript">tests[".wait() functionality"] = suite;</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.repeat.js"></script>
 <script type="text/javascript">tests[".repeat() functionality"] = suite;</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.join.js"></script>
-<script type="text/javascript">tests[".join() functionality"] = suite;</script>
+<script type="text/javascript">tests[".join() functionality"] = suite; minVersion[".join() functionality"]='1.4.0'</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.var.js"></script>
 <script type="text/javascript">tests["$$() functionality"] = suite;</script>
 
@@ -221,6 +224,9 @@ $(document).ready(function(){
 				$.each(jQueries, function(version, types){
 					$.each(types, function(type, _jQuery){
 						var $td = $('<td class="result">…').addClass('run').attr('title','jQuery '+version+' + '+type).appendTo($tr);
+						if (minVersion[part] && (version < minVersion[part])) {
+							return $td.removeClass('run').text('-');
+						}
 						count++;
 						window.setTimeout(function(){
 							var testCase = new TestCase(function(){
