@@ -21,28 +21,6 @@ suite = {
 			}, 100);
 		},
 
-		".repeat(callback) +…+ .unrepeat()": function($, test) {
-			var x = 0;
-			var $x = $('<div>');
-			var callback = function(){
-				x++; test.check();
-				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
-			}
-			var TIC = $x.repeat(callback);
-			test.assertEquals("instant open .repeat() should fire once", 1, x);
-			window.setTimeout(function(){
-				test.assertEquals("open .repeat() should fire only once in meantime", 2, x);
-				$x.unrepeat();
-				test.assertEquals("open .repeat() should not fire on .unrepeat()", 2, x);
-				window.setTimeout(function(){
-					test.assertEquals(".repeat() should not have fired anymore", 2, x);
-					$x.unrepeat();
-					test.assertEquals(".repeat() should not have fired anymore after .unrepeat()", 2, x);
-					test.done();
-				}, 100);
-			}, 0);
-		},
-
 		".repeat().then(callback) + .unrepeat()": function($, test) {
 			var x = 0;
 			var $x = $('<div>');
@@ -64,30 +42,6 @@ suite = {
 			}, 100);
 		},
 
-		".repeat().then(callback) +…+ .unrepeat()": function($, test) {
-			var x = 0;
-			var $x = $('<div>');
-			var callback = function(){
-				x++; test.check();
-				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
-			}
-			var TIC = $x.repeat();
-			test.assertEquals("TIC has to wait for .then()", 0, x);
-			TIC.then(callback);
-			test.assertEquals("instant open .repeat() should fire once", 1, x);
-			window.setTimeout(function(){
-				test.assertEquals("open .repeat() should fire only once in meantime", 2, x);
-				$x.unrepeat();
-				test.assertEquals("open .repeat() should not fire on .unrepeat()", 2, x);
-				window.setTimeout(function(){
-					test.assertEquals(".repeat() should not have fired anymore", 2, x);
-					$x.unrepeat();
-					test.assertEquals(".repeat() should not have fired anymore after .unrepeat()", 2, x);
-					test.done();
-				}, 100);
-			}, 0);
-		},
-
 		".repeat() + .unrepeat() + .then(callback)": function($, test) {
 			var x = 0;
 			var $x = $('<div>');
@@ -106,28 +60,6 @@ suite = {
 				test.assertEquals(".repeat() should not have fired anymore after .unrepeat()", 1, x);
 				test.done();
 			}, 100);
-		},
-
-		".repeat() +…+ .unrepeat() + .then(callback)": function($, test) {
-			var x = 0;
-			var $x = $('<div>');
-			var callback = function(){
-				x++; test.check();
-				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
-			}
-			var TIC = $x.repeat();
-			test.assertEquals("TIC has to wait for .then()", 0, x);
-			window.setTimeout(function(){
-				$x.unrepeat();
-				TIC.then(callback);
-				test.assertEquals("instant open .repeat() should fire once, because .unrepeat() was too late", 1, x);
-				window.setTimeout(function(){
-					test.assertEquals(".repeat() should not have fired anymore", 1, x);
-					$x.unrepeat();
-					test.assertEquals(".repeat() should not have fired anymore after .unrepeat()", 1, x);
-					test.done();
-				}, 100);
-			}, 0);
 		},
 
 		".repeat() + .unrepeat() +…+ .then(callback)": function($, test) {
@@ -328,11 +260,11 @@ suite = {
 				x++; test.check();
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
-			var TIC = $x.repeat(callback).until(count, function(){
+			var TIC = $x.repeat(callback).then(function(){
 				if (x >= stopAfter) {
 					$x.unrepeat();
 				}
-			});
+			}).until(count);
 			test.assertEquals("instant open .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
 			window.setTimeout(function(){
 				test.assertEquals(".repeat() should not have fired anymore", stopAfter, x);
@@ -340,7 +272,7 @@ suite = {
 			}, 100);
 		},
 
-		".repeat().until(count,callback) % .unrepeat()": function($, test) {
+		".repeat().then(callback).until(count) % .unrepeat()": function($, test) {
 			var x = 0;
 			var count = 10;
 			var stopAfter = count/2;
@@ -354,7 +286,7 @@ suite = {
 				if (x >= stopAfter-1) {
 					$x.unrepeat();
 				}
-			}).until(count,callback);
+			}).then(callback).until(count);
 			test.assertEquals("instant open .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
 			window.setTimeout(function(){
 				test.assertEquals(".repeat() should not have fired anymore", stopAfter, x);
@@ -365,6 +297,7 @@ suite = {
 		".repeat().until(count).then(callback) % .unrepeat()": function($, test) {
 			var x = 0;
 			var count = 10;
+			var stopAfter = count/2;
 			var $x = $('<div>');
 			var callback = function(){
 				x++; test.check();
@@ -373,7 +306,7 @@ suite = {
 			var TIC = $x.repeat(function(y){
 				test.assertEquals("callback must not be fired before end of loop", 0, x);
 				if (y >= stopAfter-1) {
-					$y.unrepeat();
+					$x.unrepeat();
 				}
 			}).until(count).then(callback);
 			test.assertEquals("callback must not be fired because of .unrepeat()", 0, x);
@@ -396,7 +329,7 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var TIC = $x.repeat(callback).until(function(y){
-				test.assertEquals("callback argument must be iteration number", x,y);
+				test.assertEquals("callback argument must be iteration number", x-1,y);
 				return x >= stopAfter;
 			});
 			test.assertEquals("instant .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
@@ -417,7 +350,7 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var TIC = $x.repeat().then(callback).until(function(y){
-				test.assertEquals("callback argument must be iteration number", x,y);
+				test.assertEquals("callback argument must be iteration number", x-1,y);
 				return x >= stopAfter;
 			});
 			test.assertEquals("instant .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
@@ -438,7 +371,7 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var TIC = $x.repeat(callback).until(function(y){
-				test.assertEquals("callback argument must be iteration number", x,y);
+				test.assertEquals("callback argument must be iteration number", x-1,y);
 				return stopAfter;
 			});
 			test.assertEquals("instant .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
@@ -459,7 +392,7 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var TIC = $x.repeat().then(callback).until(function(y){
-				test.assertEquals("callback argument must be iteration number", x,y);
+				test.assertEquals("callback argument must be iteration number", x-1,y);
 				return stopAfter;
 			});
 			test.assertEquals("instant .repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
@@ -471,7 +404,7 @@ suite = {
 		
 		"for-loop until empty selection": null,
 
-		".repeat(X).eq(X).until(callback)": function($, test) {
+		".repeat(X).eq(X).until()": function($, test) {
 			var x = 0;
 			var count = 10;
 			var $x = $(['<div>','<span>','<p>']);
@@ -483,10 +416,10 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var X=$$();
-			var TIC = $x.repeat(X).eq(X).until(callback);
-			test.assertEquals("instant .repeat() should have fired exactly "+size+" times", size, x);
+			var TIC = $x.repeat(X).eq(X).then(callback).until();
+			test.assertEquals("instant .repeat() should have fired exactly "+(size+1)+" times", size+1, x);
 			window.setTimeout(function(){
-				test.assertEquals(".repeat() should not have fired anymore", size, x);
+				test.assertEquals(".repeat() should not have fired anymore", size+1, x);
 				test.done();
 			}, 100);
 		},
@@ -503,18 +436,18 @@ suite = {
 			}
 			var X=$$();
 			var TIC = $x.repeat(X).then(callback).eq(X).until();
-			test.assertEquals("instant .repeat() should have fired exactly "+size+" times", size, x);
+			test.assertEquals("instant .repeat() should have fired exactly "+(size+1)+" times", size+1, x);
 			window.setTimeout(function(){
-				test.assertEquals(".repeat() should not have fired anymore", size, x);
+				test.assertEquals(".repeat() should not have fired anymore", size+1, x);
 				TIC.then(callback);
-				test.assertEquals(".repeat() should have fired once more after .then()", size+1, x);
+				test.assertEquals(".repeat() should have fired once more after .then()", size+2, x);
 				test.done();
 			}, 100);
 		},		
 		
 		"infinite for-loop": null,
 
-		".repeat().until(false,callback) % .unrepeat()": function($, test) {
+		".repeat().until(false) % .unrepeat()": function($, test) {
 			var x = 0;
 			var count = 10;
 			var stopAfter = count/2;
@@ -528,7 +461,7 @@ suite = {
 				if (y >= stopAfter-1) {
 					$x.unrepeat();
 				}
-			}).until(false,callback).then(function(){
+			}).then(callback).until(false).then(function(){
 				test.fail("can never call something after infinite loops");
 			});
 			test.assertEquals(".repeat() should have fired exactly "+stopAfter+" times", stopAfter, x);
