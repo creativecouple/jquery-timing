@@ -239,12 +239,10 @@ $(document).ready(function(){
 							});
 							try {
 								window.setTimeout(function(){
-									if (!testCase.finished) {
-										$td.removeClass('run').addClass('error').text('!').attr('title',"processing timeout exceeded");
-										errors++;
-										updateResults();
-									}
-								}, 5000)
+									try {
+										testCase.assertTrue(testCase.finished && $td.addClass('error'), 'processing timeout exceeded');										
+									} catch (error) {}
+								}, 10000)
 								testMethod(_jQuery, testCase);
 							} catch(error) {
 								if ((error !== assertionException) && !testCase.finished) {									
