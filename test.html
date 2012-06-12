@@ -240,7 +240,7 @@ $(document).ready(function(){
 							try {
 								window.setTimeout(function(){
 									try {
-										testCase.assertTrue(testCase.finished && $td.addClass('error'), 'processing timeout exceeded');										
+										testCase.assertTrue(testCase.finished || !$td.addClass('error'), 'processing timeout exceeded');										
 									} catch (error) {}
 								}, 10000)
 								testMethod(_jQuery, testCase);
