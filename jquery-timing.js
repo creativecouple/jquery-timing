@@ -476,39 +476,44 @@
 		var hasRelatedVariable = isFunction($n),
 		hasComputation = isFunction(compute),
 		
-		deferredVariable = function(x){
-			if (arguments.length) {
-				deferredVariable.value = x;
-				if (hasRelatedVariable) {
-					$n(x);
-				}
+		callbackVariable = function(x){
+			if (!arguments.length) {
+				return evaluate();
 			}
-			return deferredVariable.toString();
+			callbackVariable._value = x;
+			if (hasRelatedVariable) {
+				$n(x);
+			}
+		},
+		evaluate = function(value){
+			value = hasRelatedVariable ? $n() : callbackVariable._value;
+			return hasComputation ? compute(value) : value;
 		};
-		deferredVariable.toString = function(){
-			var x = hasRelatedVariable ? $n() : deferredVariable.value;
-			return hasComputation ? compute(x) : x;
+		callbackVariable._value = 0;
+		callbackVariable.toString = evaluate;
+		callbackVariable.$ = {
+				toString: evaluate 
 		};
-		deferredVariable.$ = {
-				toString: deferredVariable.toString
-		};
-		deferredVariable.mod = function(val){
+		callbackVariable.mod = function(val){
 			return $$(function(x){
 				return x % val;
-			}, deferredVariable);
+			}, callbackVariable);
 		};
-		deferredVariable.plus = function(val){
+		callbackVariable.plus = function(val){
 			return $$(function(x){
 				return x + val;
-			}, deferredVariable);
+			}, callbackVariable);
 		};
-		deferredVariable.neg = function(){
+		callbackVariable.neg = function(){
 			return $$(function(x){
 				return -x;
-			}, deferredVariable);
+			}, callbackVariable);
+		};
+		callbackVariable.$$ = function(compute){
+			return $$(compute, callbackVariable);
 		};
 		
-		return deferredVariable;
+		return callbackVariable;
 	};
 	
 	window.$$ = $$;

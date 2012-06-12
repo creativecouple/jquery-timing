@@ -78,18 +78,18 @@ suite = {
 			test.done();
 		},
  
-		"$$().plus(1).$$() -> x": function($, test) {			
-			var X=$.$$().$$('x+1');
+		"$$().plus(1).$$() -> x+1": function($, test) {			
+			var X=$.$$().plus(1).$$();
 			for (var i=10; i>0; i--) {
 				X(i);
-				test.assertEquals('callback variable X should have right value', 2*i+1, X);
-				test.assertEquals('callback variable read-only property X.$ should have right value', 2*i+1, X.$);
+				test.assertEquals('callback variable X should have right value', i+1, X);
+				test.assertEquals('callback variable read-only property X.$ should have right value', i+1, X.$);
 			}
 			test.done();
 		},
 
 		"$$('x*2').$$('x+1') -> 2*x+1": function($, test) {			
-			var X=$.$$().$$('x+1');
+			var X=$.$$('x*2').$$('x+1');
 			for (var i=10; i>0; i--) {
 				X(i);
 				test.assertEquals('callback variable X should have right value', 2*i+1, X);
