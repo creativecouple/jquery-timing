@@ -471,7 +471,12 @@
 	 */
 	function $$(compute, $n){
 		if (isString(compute)) {
-			compute = new Function('x','return '+compute);
+			var calculation = new Function('x','return ['+compute+'\n,x]');
+			compute = function(x, result){
+				result = calculation(x);
+				callbackVariable._value = result[1];
+				return result[0];
+			};
 		}
 		var hasRelatedVariable = isFunction($n),
 		hasComputation = isFunction(compute),

@@ -187,7 +187,9 @@ function TestCase(success, error) {
 		this.assert(msg, !condition);
 	};
 	this.assertEquals = function(msg, expected, value) {
-		this.assert(msg+'\n'+expected+' != '+value+'', expected == value);
+		if (expected != value) {
+			this.fail(msg+'\n'+expected+' != '+value+'');
+		}
 	};
 }
 var count=0;
