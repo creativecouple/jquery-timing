@@ -464,40 +464,46 @@
 	}
 	
 	/**
+	 * Object for holding counter variables etc.
+	 */
+	function CallbackVariable() {}
+	
+	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
 	 * 
 	 * @author CreativeCouple
 	 * @author Peter Liske
 	 */
-	function $$(compute, $n){
+	function $$(compute, Var, calculation){
 		if (isString(compute)) {
-			var calculation = new Function('x','return ['+compute+'\n,x]');
+			calculation = new Function('x','return ['+compute+'\n,x]');
 			compute = function(x, result){
 				result = calculation(x);
-				callbackVariable._value = result[1];
+				callbackVariable.x = result[1];
 				return result[0];
 			};
 		}
-		var hasRelatedVariable = isFunction($n),
+		var hasRelatedVariable = Var instanceof CallbackVariable,
 		hasComputation = isFunction(compute),
 		
-		callbackVariable = function(x){
+		callbackVariable = new CallbackVariable();
+		
+		callbackVariable.x = 0;
+		callbackVariable.set = function(x){
 			if (!arguments.length) {
 				return evaluate();
 			}
-			callbackVariable._value = x;
+			callbackVariable.x = x;
 			if (hasRelatedVariable) {
-				$n(x);
+				Var.set(x);
 			}
-		},
-		evaluate = function(value){
-			value = hasRelatedVariable ? $n() : callbackVariable._value;
+		};
+		callbackVariable.toString = callbackVariable.get = function(value){
+			value = hasRelatedVariable ? Var.get() : callbackVariable.x;
 			return hasComputation ? compute(value) : value;
 		};
-		callbackVariable._value = 0;
-		callbackVariable.toString = evaluate;
 		callbackVariable.$ = {
-				toString: evaluate 
+				toString: callbackVariable.get 
 		};
 		callbackVariable.mod = function(val){
 			return $$(function(x){
@@ -517,6 +523,11 @@
 		callbackVariable.$$ = function(compute){
 			return $$(compute, callbackVariable);
 		};
+		$.each('abcdefghij', function(index, character){
+			callbackVariable[index] = callbackVariable[character] = function(){
+				callbackVariable.set(arguments[index]);
+			};
+		});
 		
 		return callbackVariable;
 	};
