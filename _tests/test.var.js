@@ -7,7 +7,7 @@ suite = {
 			test.assertEquals('callback variable X should be initialized with zero', 0, X);
 			test.assertEquals('callback variable read-only property X.$ should be initialized with zero', 0, X.$);
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should look like its value', i, X);
 				test.assertEquals('callback variable read-only property X.$ should look like its value', i, X.$);
 			}
@@ -19,7 +19,7 @@ suite = {
 		"$$('x*x') -> x^2": function($, test) {
 			var X=$.$$('x*x');
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', i*i, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', i*i, X.$);
 			}
@@ -29,7 +29,7 @@ suite = {
 		"$$('x%3') -> x % 3": function($, test) {
 			var X=$.$$('x%3');
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', i%3, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', i%3, X.$);
 			}
@@ -41,7 +41,7 @@ suite = {
 		"$$().mod(3) -> x % 3": function($, test) {			
 			var X=$.$$().mod(3);
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', i%3, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', i%3, X.$);
 			}
@@ -51,7 +51,7 @@ suite = {
 		"$$().plus(1) -> x + 1": function($, test) {			
 			var X=$.$$().plus(1);
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', i+1, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', i+1, X.$);
 			}
@@ -61,7 +61,7 @@ suite = {
 		"$$().neg() -> -x": function($, test) {			
 			var X=$.$$().neg();
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', -i, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', -i, X.$);
 			}
@@ -71,7 +71,7 @@ suite = {
 		"$$().plus(2).neg() -> -x-2": function($, test) {			
 			var X=$.$$().plus(2).neg();
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', -i-2, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', -i-2, X.$);
 			}
@@ -81,17 +81,37 @@ suite = {
 		"$$().plus(1).$$() -> x+1": function($, test) {			
 			var X=$.$$().plus(1).$$();
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', i+1, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', i+1, X.$);
 			}
 			test.done();
 		},
 
+		"$$('x+5',$$()) -> x+5": function($, test) {			
+			var X=$.$$('x+5',$.$$());
+			for (var i=10; i>0; i--) {
+				X.set(i);
+				test.assertEquals('callback variable X should have right value', i+5, X);
+				test.assertEquals('callback variable read-only property X.$ should have right value', i+5, X.$);
+			}
+			test.done();
+		},
+
+		"$$('x*2',$$('x+1')) -> 2*x+2": function($, test) {			
+			var X=$.$$('x*2',$.$$('x+1'));
+			for (var i=10; i>0; i--) {
+				X.set(i);
+				test.assertEquals('callback variable X should have right value', 2*i+2, X);
+				test.assertEquals('callback variable read-only property X.$ should have right value', 2*i+2, X.$);
+			}
+			test.done();
+		},
+		
 		"$$('x*2').$$('x+1') -> 2*x+1": function($, test) {			
 			var X=$.$$('x*2').$$('x+1');
 			for (var i=10; i>0; i--) {
-				X(i);
+				X.set(i);
 				test.assertEquals('callback variable X should have right value', 2*i+1, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', 2*i+1, X.$);
 			}
@@ -104,8 +124,8 @@ suite = {
 			var Y=$.$$(), X=$.$$().mod(Y);
 			for (var i=10; i>0; i--) {
 				for (var j=10; j>0; j--) {
-					X(i);
-					Y(j);
+					X.set(i);
+					Y.set(j);
 					test.assertEquals('callback variable X should have right value', i%j, X);
 					test.assertEquals('callback variable read-only property X.$ should have right value', i%j, X.$);
 				}
@@ -117,8 +137,8 @@ suite = {
 			var Y=$.$$(), X=$.$$().plus(Y);
 			for (var i=10; i>0; i--) {
 				for (var j=10; j>0; j--) {
-					X(i);
-					Y(j);
+					X.set(i);
+					Y.set(j);
 					test.assertEquals('callback variable X should have right value', i+j, X);
 					test.assertEquals('callback variable read-only property X.$ should have right value', i+j, X.$);
 				}
@@ -150,7 +170,7 @@ suite = {
 			var X=$.$$('x*=2');
 			test.assertEquals('callback variable X should have right initial value', 0, X);
 			test.assertEquals('callback variable read-only property X.$ should have right initial value', 0, X.$);
-			X(1);
+			X.set(1);
 			for (var i=2; i<1000; i+=3*i) {
 				test.assertEquals('callback variable X should have right value', i, X);
 				test.assertEquals('callback variable read-only property X.$ should have right value', 2*i, X.$);
@@ -158,7 +178,7 @@ suite = {
 			test.done();
 		},
 		
-		"callback usage": null,
+		"callback parameter": null,
 
 		"$$(callback)": function($, test) {
 			var z=0;
@@ -171,7 +191,7 @@ suite = {
 			test.assertEquals('callback variable X should have right initial value', 1, X);
 			test.assertEquals('callback variable read-only property X.$ should have right initial value', 2, X.$);
 			test.assertEquals('callback should have been called twice', 2, z);
-			X(10);
+			X.set(10);
 			test.assertEquals('callback should not have been called on value setting', 2, z);
 			for (var i=2; i<10; i++) {
 				test.assertEquals('callback variable X should have right value', 2*i+9, X);
@@ -180,5 +200,29 @@ suite = {
 			test.done();
 		},
 		
+		"$$().a,b,c,d,e,f,…": function($, test) {
+			var X=$.$$('x*2');
+			var characters = 'abcdefghij';
+			var values = [19,18,17,16,15,14,13,12,11,10];
+			for (var i=0; i<10; i++) {
+				X.set(0);
+				X[characters[i]].apply(this,values);
+				test.assertEquals('callback variable X should have right value', 2*values[i], X);
+				test.assertEquals('callback variable read-only property X.$ should have right value', 2*values[i], X.$);
+			}
+			test.done();
+		},
+		
+		"$$()[0,1,2,3,…]": function($, test) {
+			var X=$.$$('x*2');
+			var values = [19,18,17,16,15,14,13,12,11,10];
+			for (var i=0; i<10; i++) {
+				X.set(0);
+				X[i].apply(this,values);
+				test.assertEquals('callback variable X should have right value', 2*values[i], X);
+				test.assertEquals('callback variable read-only property X.$ should have right value', 2*values[i], X.$);
+			}
+			test.done();
+		},
 
 };
