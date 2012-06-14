@@ -192,6 +192,11 @@ function TestCase(success, error) {
 			this.fail(msg+'\n'+expected+' != '+value+'');
 		}
 	};
+	this.assertNotEquals = function(msg, expected, value) {
+		if (expected == value) {
+			this.fail(msg+'\n'+expected+' == '+value+'');
+		}
+	};
 }
 var count=0;
 var passed=0;
