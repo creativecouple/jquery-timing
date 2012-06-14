@@ -465,7 +465,7 @@
 	 */
 	function useThread(threadName, method, args){
 		if (isString(threadName)) {
-			Array.prototype.shift.apply(args);
+			[].shift.apply(args);
 		} else {
 			threadName = '';
 		}
