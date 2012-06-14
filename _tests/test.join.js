@@ -195,12 +195,25 @@ suite = {
 		"join multiple elements": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $(['<div>','<span>','<p>']);
+			var $x = $('<div>').add('<span>').add('<p>');
+			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(callback);
 			test.assertEquals("join should fire once, even for multiple objects", 1, x);
+			var timeout = 100;
+			$x.eq(0).delay(timeout);
+			$x.eq(2).delay(timeout*2);
 			var TIC = $x.join(callback);
-			test.assertEquals("join again should fire once, even for multiple objects", 2, x);
-			test.done();
+			test.assertEquals("join should wait until all elements joined", 1, x);
+			window.setTimeout(function(){
+				test.assertEquals("join should still wait until all elements joined", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals("join should have fired once", 2, x);
+					window.setTimeout(function(){
+						test.assertEquals("join should not fire anymore", 2, x);
+						test.done();
+					}, timeout);
+				}, timeout);
+			}, timeout*1.5);
 		},
 
 		"joining empty default queue deferred": null,
