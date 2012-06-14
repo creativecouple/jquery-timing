@@ -1,4 +1,5 @@
 /**
+
  * timing.jquery.js
  * 
  * JavaScript functions for waiting / repeating / stopping jQuery actions.
@@ -499,35 +500,35 @@
 				return callbackVariable.$();
 			}
 		};
-		
-		callbackVariable.x = 0;
-		callbackVariable.$ = callbackVariable.toString = function(value){
+		function evaluate(value){
 			value = hasRelatedVariable ? Var() : callbackVariable.x;
 			return hasComputation ? compute(value) : value;				
-		};
-		callbackVariable.$.toString = callbackVariable.$;
-		callbackVariable._ = {
+		}
+		evaluate.toString = evaluate;
+		$.extend(callbackVariable,{
+			x: 0,
+			$: evaluate,
+			toString: evaluate,
+			_: {
 				toString: callbackVariable.$
-		};
-		
-		callbackVariable.mod = function(val){
-			return $$(function(x){
-				return x % val;
-			}, callbackVariable);
-		};
-		callbackVariable.plus = function(val){
-			return $$(function(x){
-				return x + val;
-			}, callbackVariable);
-		};
-		callbackVariable.neg = function(){
-			return $$(function(x){
-				return -x;
-			}, callbackVariable);
-		};
-		callbackVariable.$$ = function(compute){
-			return $$(compute, callbackVariable);
-		};
+			},
+			mod: function(val){
+				return $$(function(x){
+					return x % val;
+				}, callbackVariable);
+			},
+			plus: function(val){
+				return $$(function(x){
+					return x + val;
+				}, callbackVariable);
+			},
+			neg: function(){
+				return $$('-x', callbackVariable);
+			},
+			$$: function(compute){
+				return $$(compute, callbackVariable);
+			}
+		});
 		$.each('abcdefghij', function(index, character){
 			callbackVariable[index] = callbackVariable[character] = function(){
 				callbackVariable(arguments[index]);
