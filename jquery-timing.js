@@ -517,7 +517,7 @@
 					return x % val;
 				}, callbackVariable);
 			},
-			plus: function(val){
+			add: function(val){
 				return $$(function(x){
 					return x + val;
 				}, callbackVariable);

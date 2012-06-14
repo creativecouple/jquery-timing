@@ -48,8 +48,8 @@ suite = {
 			test.done();
 		},
 
-		"$$().plus(1) -> x + 1": function($, test) {			
-			var X=$.$$().plus(1);
+		"$$().add(1) -> x + 1": function($, test) {			
+			var X=$.$$().add(1);
 			for (var i=10; i>0; i--) {
 				X(i);
 				test.assertEquals('callback variable X should have right value', i+1, X);
@@ -68,8 +68,8 @@ suite = {
 			test.done();
 		},
 
-		"$$().plus(2).neg() -> -x-2": function($, test) {			
-			var X=$.$$().plus(2).neg();
+		"$$().add(2).neg() -> -x-2": function($, test) {			
+			var X=$.$$().add(2).neg();
 			for (var i=10; i>0; i--) {
 				X(i);
 				test.assertEquals('callback variable X should have right value', -i-2, X);
@@ -78,8 +78,8 @@ suite = {
 			test.done();
 		},
  
-		"$$().plus(1).$$() -> x+1": function($, test) {			
-			var X=$.$$().plus(1).$$();
+		"$$().add(1).$$() -> x+1": function($, test) {			
+			var X=$.$$().add(1).$$();
 			for (var i=10; i>0; i--) {
 				X(i);
 				test.assertEquals('callback variable X should have right value', i+1, X);
@@ -133,8 +133,8 @@ suite = {
 			test.done();
 		},
 
-		"$$().plus($$()) -> x + y": function($, test) {			
-			var Y=$.$$(), X=$.$$().plus(Y);
+		"$$().add($$()) -> x + y": function($, test) {			
+			var Y=$.$$(), X=$.$$().add(Y);
 			for (var i=10; i>0; i--) {
 				for (var j=10; j>0; j--) {
 					X(i);
