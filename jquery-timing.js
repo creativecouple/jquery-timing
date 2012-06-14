@@ -302,7 +302,7 @@
 			executionState._callback = executionState._methodArguments[1];
 		}
 		// wait for each element to reach the current end of its queue
-		waitingElements = Array.prototype.slice.call(executionState._context);
+		waitingElements = [].slice.call(executionState._context);
 		if (waitingElements.length) {			
 			executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
 				if (waitingElements.length) {
