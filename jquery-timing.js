@@ -294,20 +294,28 @@
 		executionState._trigger = UNDEFINED;
 	}
 
-	function setupJoinTrigger(timedInvocationChain, executionState, queueName, tmpState) {
+	function setupJoinTrigger(timedInvocationChain, executionState, queueName, waitingElements) {
 		if (isFunction(executionState._methodArguments[0])) {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
 			queueName = executionState._methodArguments[0];
 			executionState._callback = executionState._methodArguments[1];
 		}
-		tmpState = executionState;
-		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
-			runTimedInvocationChain(timedInvocationChain, tmpState);
-			// avoid multiple invocation - redirect following calls to wrong target
-			tmpState = { };
-			next();
-		});
+		// wait for each element to reach the current end of its queue
+		waitingElements = Array.prototype.slice.call(executionState._context);
+		if (waitingElements.length) {			
+			executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
+				if (waitingElements.length) {
+					removeArrayElement(waitingElements, this);
+					if (!waitingElements.length) {
+						runTimedInvocationChain(timedInvocationChain, executionState);
+					}
+				}
+				next();
+			});
+		} else {
+			runTimedInvocationChain(timedInvocationChain, executionState);
+		}
 		executionState._trigger = executionState._trigger || { };
 	}
 
