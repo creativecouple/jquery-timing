@@ -464,11 +464,6 @@
 	}
 	
 	/**
-	 * Object for holding counter variables etc.
-	 */
-	function CallbackVariable() {}
-	
-	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
 	 * 
 	 * @author CreativeCouple
@@ -483,28 +478,30 @@
 				return result[0];
 			};
 		}
-		var hasRelatedVariable = Var instanceof CallbackVariable,
+		var hasRelatedVariable = isFunction(Var),
 		hasComputation = isFunction(compute),
 		
-		callbackVariable = new CallbackVariable();
+		callbackVariable = function(value) {
+			if (arguments.length == 1) {
+				callbackVariable.x = value;
+				if (hasRelatedVariable) {
+					Var(value);
+				}
+			} else {
+				return callbackVariable.$();
+			}
+		};
 		
 		callbackVariable.x = 0;
-		callbackVariable.set = function(x){
-			if (!arguments.length) {
-				return evaluate();
-			}
-			callbackVariable.x = x;
-			if (hasRelatedVariable) {
-				Var.set(x);
-			}
+		callbackVariable.$ = callbackVariable.toString = function(value){
+			value = hasRelatedVariable ? Var() : callbackVariable.x;
+			return hasComputation ? compute(value) : value;				
 		};
-		callbackVariable.toString = callbackVariable.get = function(value){
-			value = hasRelatedVariable ? Var.get() : callbackVariable.x;
-			return hasComputation ? compute(value) : value;
+		callbackVariable.$.toString = callbackVariable.$;
+		callbackVariable._ = {
+				toString: callbackVariable.$
 		};
-		callbackVariable.$ = {
-				toString: callbackVariable.get 
-		};
+		
 		callbackVariable.mod = function(val){
 			return $$(function(x){
 				return x % val;
@@ -525,7 +522,7 @@
 		};
 		$.each('abcdefghij', function(index, character){
 			callbackVariable[index] = callbackVariable[character] = function(){
-				callbackVariable.set(arguments[index]);
+				callbackVariable(arguments[index]);
 			};
 		});
 		
