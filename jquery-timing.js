@@ -127,6 +127,7 @@
 								_methodName: name,
 								_methodArguments: arguments 
 						};
+						//XXX
 						if (timedInvocationChain._activeExecutionPoint._isChainEnd) {
 							timedInvocationChain._activeExecutionPoint = lastAddedEntry;
 							return runTimedInvocationChain(timedInvocationChain) || placeholder;
