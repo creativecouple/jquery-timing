@@ -162,8 +162,21 @@
 			}
 		}
 		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
+			context = executionState._context;
 			if (executionState._isChainEnd) {
-				if (timedInvocationChain._ongoingLoops[0] && !timedInvocationChain._openEndLoopTimeout) {
+				if (!timedInvocationChain._ongoingLoops[0]) {
+					/*
+					 * We've reached the end of our TIC
+					 * and there is nothing to wait for left.
+					 * So we can safely return the original jQuery object.
+					 */
+					return context; 
+				}
+				/*
+				 * Now we have ongoing loops but reached the chain's end.
+				 * If we already waited a bit then we start over right there.
+				 */
+				if (!timedInvocationChain._openEndLoopTimeout) {
 					// start open repeat loop over again at the end of the chain
 					timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0];
 					timedInvocationChain._activeExecutionPoint._count++;
@@ -171,6 +184,7 @@
 				}
 				break;
 			}
+			method = context[executionState._methodName];
 			trigger = executionState._trigger;
 			if (trigger) {
 				if (trigger._isTriggered && !trigger._isInterrupted) {
@@ -179,8 +193,6 @@
 					break;
 				}
 			}
-			context = executionState._context;
-			method = context[executionState._methodName];
 			
 			if (method == wait) {
 				(trigger && trigger._isTriggered ? removeWaitTrigger : setupWaitTrigger)(timedInvocationChain,executionState);
@@ -192,7 +204,7 @@
 			} else if (method == repeat) {
 				(trigger && trigger._isTriggered ? resetRepeatTrigger : setupRepeatTrigger)(timedInvocationChain,executionState);
 			} else if (method == until && timedInvocationChain._ongoingLoops[0]) {
-				if (evaluateUntilCondition(timedInvocationChain,executionState)) {					
+				if (evaluateUntilCondition(timedInvocationChain, executionState)) {					
 					gotoNextStep(timedInvocationChain);
 					removeRepeatTrigger(timedInvocationChain);
 				} else {
