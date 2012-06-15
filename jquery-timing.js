@@ -127,12 +127,10 @@
 								_methodName: name,
 								_methodArguments: arguments 
 						};
-						//XXX
-						if (timedInvocationChain._activeExecutionPoint._isChainEnd) {
-							timedInvocationChain._activeExecutionPoint = lastAddedEntry;
-							return runTimedInvocationChain(timedInvocationChain) || placeholder;
-						}
-						return placeholder;
+						return timedInvocationChain._activeExecutionPoint._isChainEnd
+							&& (timedInvocationChain._activeExecutionPoint = lastAddedEntry)
+							&& runTimedInvocationChain(timedInvocationChain)
+							|| placeholder;
 					};
 				})(key);
 			}
