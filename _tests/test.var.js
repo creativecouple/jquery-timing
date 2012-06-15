@@ -243,7 +243,6 @@ suite = {
 			$x.addClass($.$$('"t"+(x++)'));
 			for (var i=0; i<3; i++) {
 				test.assertTrue('element should have right class: t'+i, $x.eq(i).hasClass('t'+i));
-				console.log($x.eq(i));
 			}
 			test.done();
 		},
