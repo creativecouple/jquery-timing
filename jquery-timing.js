@@ -129,7 +129,7 @@
 						};
 						if (timedInvocationChain._activeExecutionPoint._isChainEnd) {
 							timedInvocationChain._activeExecutionPoint = lastAddedEntry;
-							runTimedInvocationChain(timedInvocationChain);
+							return runTimedInvocationChain(timedInvocationChain) || placeholder;
 						}
 						return placeholder;
 					};
@@ -157,7 +157,8 @@
 					return;
 				}
 			} else {
-				return triggeredState._trigger = { _isTriggered: TRUE };
+				triggeredState._trigger = { _isTriggered: TRUE };
+				return;
 			}
 		}
 		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
