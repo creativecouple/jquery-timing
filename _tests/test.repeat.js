@@ -416,8 +416,7 @@ suite = {
 
 		".repeat(X).eq(X).until()": function($, test) {
 			var x = 0;
-			var count = 10;
-			var $x = $(['<div>','<span>','<p>']);
+			var $x = $('<div>').add('<span>').add('<p>');
 			var size=3;
 			test.assertEquals("test selection has wrong size", 3, $x.size());
 			var callback = function(y){
@@ -426,9 +425,16 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var X=$$();
-			var TIC = $x.repeat(X).eq(X).then(callback).until();
+			var TIC = $x.repeat(X);
+			test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
+			var tic2 = TIC.eq(X).then(callback);
+			test.assertEquals("instant .repeat() should have fired once for now", 1, x);
+			test.assertEquals("instant for-loop should return same TIC object while loop not finished", tic2, TIC);
+			var $y = TIC.until();
 			test.assertEquals("instant .repeat() should have fired exactly "+(size+1)+" times", size+1, x);
-			test.assertEquals("instant for-loop should return original jQuery object", $x, TIC);
+			test.assertNotEquals("instant for-loop should return a jQuery object after instant loop", $y, TIC);
+			test.assertNotEquals("jQuery object after instant loop should not be the starting one", $x, $y);
+			test.assertEquals("jQuery object after instant loop should be empty jQuery selection", 0, $y.size());
 			window.setTimeout(function(){
 				test.assertEquals(".repeat() should not have fired anymore", size+1, x);
 				test.done();
@@ -437,8 +443,7 @@ suite = {
 		
 		".repeat(X).then(callback).eq(X).until() +…+ .then(callback)": function($, test) {
 			var x = 0;
-			var count = 10;
-			var $x = $(['<div>','<span>','<p>']);
+			var $x = $('<div>').add('<span>').add('<p>');
 			var size=3;
 			test.assertEquals("test selection has wrong size", 3, $x.size());
 			var callback = function(){
@@ -446,9 +451,16 @@ suite = {
 				if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 			}
 			var X=$$();
-			var TIC = $x.repeat(X).then(callback).eq(X).until();
+			var TIC = $x.repeat(X);
+			test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
+			var tic2 = TIC.then(callback).eq(X);
+			test.assertEquals("instant .repeat() should have fired once for now", 1, x);
+			test.assertEquals("instant for-loop should return same TIC object while loop not finished", tic2, TIC);
+			var $y = TIC.until();
 			test.assertEquals("instant .repeat() should have fired exactly "+(size+1)+" times", size+1, x);
-			test.assertEquals("instant for-loop should return original jQuery object", $x, TIC);
+			test.assertNotEquals("instant for-loop should return a jQuery object after instant loop", $y, TIC);
+			test.assertNotEquals("jQuery object after instant loop should not be the starting one", $x, $y);
+			test.assertEquals("jQuery object after instant loop should be empty jQuery selection", 0, $y.size());
 			window.setTimeout(function(){
 				test.assertEquals(".repeat() should not have fired anymore", size+1, x);
 				TIC.then(callback);
@@ -747,7 +759,7 @@ suite = {
 			test.assertEquals("instantly stopped interval-triggered loop should return original jQuery object", $x, TIC);
 			test.assertEquals(".repeat(interval) should have been run once", 1, x);
 			window.setTimeout(function(){
-				test.assertEquals(".repeat(event) should not have been triggered again", 2, x);
+				test.assertEquals(".repeat(event) should not have been triggered again", 1, x);
 				test.done();
 			}, 2*interval);
 		},		
