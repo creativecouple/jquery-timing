@@ -210,6 +210,7 @@ suite = {
 			var TIC = $x.join(callback);
 			test.assertEquals("join should fire once for multiple objects", 1, x);
 			test.assertEquals("instant .join() should return original jQuery object", $x, TIC);
+			test.done();
 		},
 
 		"joining empty default queue deferred": null,
