@@ -136,8 +136,7 @@
 				})(key);
 			}
 		}
-		runTimedInvocationChain(timedInvocationChain);
-		return placeholder;
+		return runTimedInvocationChain(timedInvocationChain) || placeholder;
 	}
 	
 	/**
@@ -150,14 +149,21 @@
 	 */
 	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
 		if (triggeredState) {
-			// inform trigger to fire
-			if (triggeredState._trigger) {
-				triggeredState._trigger._isTriggered = TRUE;
-				if (timedInvocationChain._activeExecutionPoint != triggeredState) {
-					return;
-				}
-			} else {
+			/*
+			 * Create trigger if none available.
+			 * This can happen during .join() when the FXQ is empty.
+			 */
+			if (!triggeredState._trigger) {
 				triggeredState._trigger = { _isTriggered: TRUE };
+				return;
+			}
+			/*
+			 * There was a trigger. Mark it as triggered.
+			 * If this is also the current execution point, then we go on.
+			 * Else we have to wait.
+			 */
+			triggeredState._trigger._isTriggered = TRUE;
+			if (timedInvocationChain._activeExecutionPoint != triggeredState) {
 				return;
 			}
 		}
@@ -317,20 +323,13 @@
 		}
 		// wait for each element to reach the current end of its queue
 		waitingElements = [].slice.call(executionState._context);
-		if (waitingElements.length) {			
-			executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
-				if (waitingElements.length) {
-					removeArrayElement(waitingElements, this);
-					if (!waitingElements.length) {
-						runTimedInvocationChain(timedInvocationChain, executionState);
-					}
-				}
-				next();
-			});
-		} else {
-			runTimedInvocationChain(timedInvocationChain, executionState);
-		}
-		executionState._trigger = executionState._trigger || { };
+		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
+			if (waitingElements.length && !removeArrayElement(waitingElements, this).length) {
+				runTimedInvocationChain(timedInvocationChain, executionState);
+			}
+			next();
+		});
+		executionState._trigger = { _isTriggered: !waitingElements.length };
 	}
 
 	function removeJoinTrigger(timedInvocationChain, executionState) {
