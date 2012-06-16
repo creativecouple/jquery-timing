@@ -477,8 +477,9 @@ suite = {
 			test.assertNotEquals(".join(queue) should return TIC placeholder", $x, TIC);
 			$x.dequeue(queue);
 			test.assertEquals("TIC should wait until .then()", 0, x);
-			TIC.then(callback);
+			var $y = TIC.then(callback);
 			test.assertEquals("TIC should fire after .then() because of .dequeue(queue)", 1, x);
+			test.assertEquals("instant .then() should return original object", $x, $y);
 			$x.dequeue(queue);
 			test.assertEquals(".join(queue) should not fire anymore after .dequeue(queue)", 1, x);
 			window.setTimeout(function(){
