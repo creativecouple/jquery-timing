@@ -151,11 +151,10 @@
 	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
 		if (triggeredState) {
 			/*
-			 * Create trigger if none available.
+			 * Reject triggering if none available.
 			 * This can happen during .join() when the FXQ is empty.
 			 */
 			if (!triggeredState._trigger) {
-				triggeredState._trigger = { _isTriggered: TRUE };
 				return;
 			}
 			/*
