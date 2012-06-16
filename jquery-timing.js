@@ -40,7 +40,9 @@
 	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #until, #then, and #then,
 	 * will shrink in minimization
 	 */
-	JQUERY_TIMING = {};
+	JQUERY_TIMING = {},
+	
+	ARRAY = Array.prototype;
 	
 	function isFunction(object) {
 		return typeof object == "function";
@@ -113,14 +115,14 @@
 			_openEndLoopTimeout: window.setTimeout(function(){
 				timedInvocationChain._openEndLoopTimeout = UNDEFINED;
 				runTimedInvocationChain(timedInvocationChain, chainEnd);
-			}, 0)
+			}, 0),
+			_placeholder: {}
 		},
-		placeholder = {},
 		key;
 		for (key in context) {
 			if (isFunction(context[key])) {
 				(function(name){
-					placeholder[name] = function(){
+					timedInvocationChain._placeholder[name] = function(){
 						lastAddedEntry = lastAddedEntry._next = {
 								_next: chainEnd,
 								_context: chainEnd._context,
@@ -130,12 +132,12 @@
 						return timedInvocationChain._activeExecutionPoint._isChainEnd
 							&& (timedInvocationChain._activeExecutionPoint = lastAddedEntry)
 							&& runTimedInvocationChain(timedInvocationChain)
-							|| placeholder;
+							|| timedInvocationChain._placeholder;
 					};
 				})(key);
 			}
 		}
-		return runTimedInvocationChain(timedInvocationChain) || placeholder;
+		return runTimedInvocationChain(timedInvocationChain) || timedInvocationChain._placeholder;
 	}
 	
 	/**
@@ -168,6 +170,13 @@
 		}
 		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
 			context = executionState._context;
+			/*
+			 * Super-fast copying of current elements into our placeholder object.
+			 * This enables re-using our placeholder via $(...)
+			 */
+			timedInvocationChain._placeholder.length = 0;
+			ARRAY.push.apply(timedInvocationChain._placeholder, context);
+			
 			if (executionState._isChainEnd) {
 				if (!timedInvocationChain._ongoingLoops[0]) {
 					/*
@@ -321,7 +330,7 @@
 			executionState._callback = executionState._methodArguments[1];
 		}
 		// wait for each element to reach the current end of its queue
-		waitingElements = [].slice.call(executionState._context);
+		waitingElements = ARRAY.slice.call(executionState._context);
 		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
 			if (waitingElements.length && !removeArrayElement(waitingElements, this).length) {
 				runTimedInvocationChain(timedInvocationChain, executionState);
@@ -476,7 +485,7 @@
 	 */
 	function useThread(threadName, method, args){
 		if (isString(threadName)) {
-			[].shift.apply(args);
+			ARRAY.shift.apply(args);
 		} else {
 			threadName = '';
 		}

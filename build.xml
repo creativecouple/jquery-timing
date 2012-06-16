@@ -26,9 +26,10 @@
 		<replace file="${dest}" token="_next" value="k"/>
 		<replace file="${dest}" token="_ongoingLoops" value="l"/>
 		<replace file="${dest}" token="_openEndLoopTimeout" value="m"/>
-		<replace file="${dest}" token="_trigger" value="n"/>
-		<replace file="${dest}" token="_type" value="o"/>
-		<replace file="${dest}" token="_value" value="x"/>
+		<replace file="${dest}" token="_placeholder" value="n"/>
+		<replace file="${dest}" token="_trigger" value="o"/>
+		<replace file="${dest}" token="_type" value="p"/>
+		<replace file="${dest}" token="_value" value="q"/>
 		<replace file="${dest}" token="&quot;_event_&quot;" value="1"/>
 		<replace file="${dest}" token="&quot;_interval_&quot;" value="2"/>
 		<replace file="${dest}" token="&quot;_timeout_&quot;" value="3"/>
