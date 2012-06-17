@@ -42,7 +42,10 @@
 	 */
 	JQUERY_TIMING = {},
 	
-	ARRAY = Array.prototype;
+	/**
+	 * used as prototype for quick array functions access
+	 */
+	ARRAY = [];
 	
 	function isFunction(object) {
 		return typeof object == "function";
@@ -101,28 +104,25 @@
 	function createTIC(context, firstMethodName, firstMethodArguments) {
 		var chainEnd = {
 			_isChainEnd: TRUE,
+			_context: context,
 			_trigger: {}
 		},
-		lastAddedEntry = {
-			_next: chainEnd,
-			_context: context,
-			_methodName: firstMethodName,
-			_methodArguments: firstMethodArguments
-		},
+		lastAddedEntry = {},
+		placeholder = {},
 		timedInvocationChain = {
-			_activeExecutionPoint: lastAddedEntry,
+			_activeExecutionPoint: chainEnd,
 			_ongoingLoops: [],
 			_openEndLoopTimeout: window.setTimeout(function(){
 				timedInvocationChain._openEndLoopTimeout = UNDEFINED;
 				runTimedInvocationChain(timedInvocationChain, chainEnd);
 			}, 0),
-			_placeholder: {}
+			_placeholder: placeholder
 		},
 		key;
 		for (key in context) {
 			if (isFunction(context[key])) {
 				(function(name){
-					timedInvocationChain._placeholder[name] = function(){
+					placeholder[name] = function(){
 						lastAddedEntry = lastAddedEntry._next = {
 								_next: chainEnd,
 								_context: chainEnd._context,
@@ -132,12 +132,12 @@
 						return timedInvocationChain._activeExecutionPoint._isChainEnd
 							&& (timedInvocationChain._activeExecutionPoint = lastAddedEntry)
 							&& runTimedInvocationChain(timedInvocationChain)
-							|| timedInvocationChain._placeholder;
+							|| placeholder;
 					};
 				})(key);
 			}
 		}
-		return runTimedInvocationChain(timedInvocationChain) || timedInvocationChain._placeholder;
+		return placeholder[firstMethodName].apply(context, firstMethodArguments);
 	}
 	
 	/**
