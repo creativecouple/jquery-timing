@@ -180,7 +180,7 @@
 				if (!timedInvocationChain._ongoingLoops[0]) {
 					/*
 					 * We've reached the end of our TIC
-					 * and there is nothing to wait for left.
+					 * and there is nothing left to wait.
 					 * So we can safely return the original jQuery object.
 					 */
 					return context; 
