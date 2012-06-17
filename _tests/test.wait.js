@@ -268,7 +268,8 @@ suite = {
 				test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
 				var $y = TIC.then(callback);
 				test.assertEquals(".wait() should have fired after telling TIC", 1, x);
-				test.assertEquals("instant .then() should return original object", $x, $y);
+				test.assertNotEquals("instant .then() should not return TIC object", TIC, $y);
+				test.assertEquals("instant .then() should return jQuery object", 1, $y.size());
 				$x.trigger(event);
 				test.assertEquals(".wait() should not fire anymore", 1, x);
 				window.setTimeout(function(){
@@ -613,6 +614,19 @@ suite = {
 				test.assertNotEquals("instant call to .next() should return original object instead of tic", tic, $y);
 				test.done();
 			}, 1);
-		}
+		},
+		
+		"$('.multiple').wait(event) + $('#single').trigger(event)": function($, test){
+			var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+			var event = 'myEvent';
+			var tic = $x.wait(event);
+			test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
+			test.assertEquals("tic should stay on all elements", 3, $(tic).size());
+			$x.eq(1).trigger(event);
+			test.assertEquals("tic should now stay on triggered element", '2', $(tic).text());
+			var $y = tic.then();
+			test.assertEquals("after event only matched element can go on", '2', $y.text());
+			test.done();
+		},
 		
 };
