@@ -13,14 +13,13 @@
 			<arg value="-v"/>
 		</java>
 		
-		<replace file="${dest}" token="_action" value="a"/>
+		<replace file="${dest}" token="_eventAction" value="a"/>
 		<replace file="${dest}" token="_activeExecutionPoint" value="b"/>
 		<replace file="${dest}" token="_callback" value="c"/>
 		<replace file="${dest}" token="_context" value="d"/>
 		<replace file="${dest}" token="_count" value="e"/>
 		<replace file="${dest}" token="_isChainEnd" value="f"/>
-		<replace file="${dest}" token="_isInterrupted" value="g"/>
-		<replace file="${dest}" token="_isTriggered" value="h"/>
+		<replace file="${dest}" token="_triggeredElements" value="h"/>
 		<replace file="${dest}" token="_methodArguments" value="i"/>
 		<replace file="${dest}" token="_methodName" value="j"/>
 		<replace file="${dest}" token="_next" value="k"/>

@@ -147,8 +147,9 @@
 	 * 
 	 * @param timedInvocationChain
 	 * @param triggeredState optional state to be triggered
+	 * @param sourceElement optional element as source of trigger
 	 */
-	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
+	function runTimedInvocationChain(timedInvocationChain, triggeredState, sourceElement) {
 		if (triggeredState) {
 			/*
 			 * Reject triggering if none available.
@@ -157,18 +158,21 @@
 			if (!triggeredState._trigger) {
 				return;
 			}
+			// There was a trigger. Mark the source element as triggered.
+			triggeredState._trigger._triggeredElements = !sourceElement || sourceElement === window || triggeredState._trigger._triggeredElements && triggeredState._trigger._triggeredElements.add(sourceElement) || $(sourceElement);
 			/*
-			 * There was a trigger. Mark it as triggered.
 			 * If this is also the current execution point, then we go on.
 			 * Else we have to wait.
 			 */
-			triggeredState._trigger._isTriggered = TRUE;
 			if (timedInvocationChain._activeExecutionPoint != triggeredState) {
 				return;
 			}
 		}
-		for (var executionState, context, method, trigger; executionState = timedInvocationChain._activeExecutionPoint;) {
-			context = executionState._context;
+		for (var executionState, context, method, trigger, isTriggered; executionState = timedInvocationChain._activeExecutionPoint;) {
+			// use triggered context in case of triggered execution
+			trigger = executionState._trigger;
+			isTriggered = trigger && trigger._triggeredElements;
+			context = isTriggered && trigger._triggeredElements.length ? trigger._triggeredElements : executionState._context;
 			/*
 			 * Super-fast copying of current elements into our placeholder object.
 			 * This enables re-using our placeholder via $(...)
@@ -197,25 +201,24 @@
 				}
 				break;
 			}
-			method = context[executionState._methodName];
-			trigger = executionState._trigger;
 			if (trigger) {
-				if (trigger._isTriggered && !trigger._isInterrupted) {
+				if (isTriggered) {
 					gotoNextStep(timedInvocationChain);
 				} else {
 					break;
 				}
 			}
 			
+			method = context[executionState._methodName];
 			if (method == wait) {
-				(trigger && trigger._isTriggered ? removeWaitTrigger : setupWaitTrigger)(timedInvocationChain,executionState);
+				(isTriggered ? removeWaitTrigger : setupWaitTrigger)(timedInvocationChain,executionState);
 			} else if (method == join) {
-				(trigger && trigger._isTriggered ? removeJoinTrigger : setupJoinTrigger)(timedInvocationChain,executionState);
+				(isTriggered ? removeJoinTrigger : setupJoinTrigger)(timedInvocationChain,executionState);
 			} else if (method == then) {
 				executionState._callback = executionState._methodArguments[0];
 				gotoNextStep(timedInvocationChain);
 			} else if (method == repeat) {
-				(trigger && trigger._isTriggered ? resetRepeatTrigger : setupRepeatTrigger)(timedInvocationChain,executionState);
+				(isTriggered ? resetRepeatTrigger : setupRepeatTrigger)(timedInvocationChain,executionState);
 			} else if (method == until && timedInvocationChain._ongoingLoops[0]) {
 				if (evaluateUntilCondition(timedInvocationChain, executionState)) {					
 					gotoNextStep(timedInvocationChain);
@@ -273,7 +276,7 @@
 	 */
 	function setupWaitTrigger(timedInvocationChain, executionState, trigger) {
 		function triggerAction(){
-			runTimedInvocationChain(timedInvocationChain, executionState);
+			runTimedInvocationChain(timedInvocationChain, executionState, this);
 		}
 		
 		if (isFunction(executionState._methodArguments[0])) {
@@ -284,13 +287,11 @@
 		}
 		
 		executionState._trigger = isString(trigger) ? {
-			_type: '_event_',
-			_action: triggerAction,
+			_eventAction: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger
 		} : {
-			_type: '_timeout_',
-			_action: triggerAction,
+			_context: executionState._context,
 			_value: window.setTimeout(triggerAction, Math.max(0,trigger))
 		};
 		executionState._context.each(function(index,element){
@@ -302,22 +303,34 @@
 	 * Clear timeout or remove binding for a waiting trigger.
 	 * 
 	 * @param trigger
+	 * @param contextToStop
 	 */
-	function stopWaitTrigger(trigger) {
-		if (trigger._type == '_event_') {
-			trigger._context.unbind(trigger._value, trigger._action);
+	function stopWaitTrigger(trigger, contextToStop) {
+		trigger._context = trigger._context.not(contextToStop);
+		trigger._triggeredElements = trigger._context.length && trigger._triggeredElements && trigger._triggeredElements.not(contextToStop);
+		if (trigger._eventAction) {
+			// in event case we can unbind from single elements
+			contextToStop.unbind(trigger._value, trigger._eventAction);
+		} else {
+			// in timeout case we clear the timeout only if no element left to go on
+			if (!trigger._context.length) {
+				window.clearTimeout(trigger._value);
+			}
 		}
-		if (trigger._type == '_timeout_') {
-			window.clearTimeout(trigger._value);
-		}
-		trigger._isInterrupted = TRUE;
+		// unstore trigger
+		contextToStop.each(function(index,element){
+			$(element).data(TIMEOUTS, removeArrayElement($(element).data(TIMEOUTS), trigger));
+		});
 	}
 	
+	/**
+	 * Remove wait trigger after having waited.
+	 * 
+	 * @param timedInvocationChain
+	 * @param executionState
+	 */
 	function removeWaitTrigger(timedInvocationChain, executionState) {
-		stopWaitTrigger(executionState._trigger);
-		executionState._context.each(function(index,element){
-			$(element).data(TIMEOUTS, removeArrayElement($(element).data(TIMEOUTS), executionState._trigger));
-		});
+		stopWaitTrigger(executionState._trigger, executionState._trigger._context);
 		executionState._trigger = UNDEFINED;
 	}
 
@@ -336,7 +349,10 @@
 			}
 			next();
 		});
-		executionState._trigger = { _isTriggered: !waitingElements.length };
+		executionState._trigger = {
+			_context: executionState._context,
+			_triggeredElements: !waitingElements.length && executionState._context
+		};
 	}
 
 	function removeJoinTrigger(timedInvocationChain, executionState) {
@@ -345,7 +361,7 @@
 	
 	function setupRepeatTrigger(timedInvocationChain, executionState, trigger, firstRunNow) {
 		function triggerAction(){
-			runTimedInvocationChain(timedInvocationChain, executionState);
+			runTimedInvocationChain(timedInvocationChain, executionState, this);
 		}
 		
 		// determine parameters
@@ -360,19 +376,18 @@
 			executionState._callback = executionState._methodArguments[2];
 		}
 		
-		executionState._trigger = trigger == UNDEFINED ? {
-			_isTriggered: TRUE
+		executionState._trigger = (trigger == UNDEFINED) ? {
+			_context: executionState._context,
+			_triggeredElements: executionState._context
 		} : isString(trigger) ? {
-			_type: '_event_',
-			_action: triggerAction,
+			_eventAction: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger,
-			_isTriggered: firstRunNow
+			_triggeredElements: firstRunNow && executionState._context
 		} : {
-			_type: '_interval_',
-			_action: triggerAction,
+			_context: executionState._context,
 			_value: window.setInterval(triggerAction, Math.max(0,trigger)),
-			_isTriggered: firstRunNow
+			_triggeredElements: firstRunNow && executionState._context
 		};
 		executionState._context.each(function(index,element){
 			$(element).data(INTERVALS, addArrayElement($(element).data(INTERVALS), executionState._trigger));
@@ -382,25 +397,30 @@
 	}
 	
 	function resetRepeatTrigger(timedInvocationChain, executionState) {
-		executionState._trigger._isTriggered = !executionState._trigger._type;
+		executionState._trigger._triggeredElements = !executionState._trigger._value && executionState._trigger._triggeredElements;
 	}
 
-	function stopRepeatTrigger(trigger) {
-		if (trigger._type == '_event_') {
-			trigger._context.unbind(trigger._value, trigger._action);
+	function stopRepeatTrigger(trigger, contextToStop) {
+		trigger._context = trigger._context.not(contextToStop);
+		trigger._triggeredElements = trigger._context.length && trigger._triggeredElements && trigger._triggeredElements.not(contextToStop);
+		if (trigger._eventAction) {
+			// in event case we can unbind from single elements
+			contextToStop.unbind(trigger._value, trigger._eventAction);
+		} else if (trigger._value) {
+			// in timeout case we clear the timeout only if no element left to go on
+			if (!trigger._context.length) {
+				window.clearInterval(trigger._value);
+			}
 		}
-		if (trigger._type == '_interval_') {
-			window.clearInterval(trigger._value);
-		}
-		trigger._isInterrupted = TRUE;
+		// unstore trigger
+		contextToStop.each(function(index,element){
+			$(element).data(INTERVALS, removeArrayElement($(element).data(INTERVALS), trigger));
+		});
 	}
 	
 	function removeRepeatTrigger(timedInvocationChain, executionState) {
 		executionState = timedInvocationChain._ongoingLoops.shift();
-		stopRepeatTrigger(executionState._trigger);
-		executionState._context.each(function(index,element){
-			$(element).data(INTERVALS, removeArrayElement($(element).data(INTERVALS), executionState._trigger));
-		});
+		stopRepeatTrigger(executionState._trigger, executionState._trigger._context);
 		executionState._trigger = UNDEFINED;
 	}
 	
@@ -427,28 +447,34 @@
 		return createTIC(this,'wait',arguments);
 	}
 	
-	function unwait() {
-		return this.each(function(triggers){
-			triggers = $(this).data(TIMEOUTS);
-			while (triggers && triggers.length){
-				stopWaitTrigger(triggers.pop());
-			}
+	/**
+	 * stop waiting for underlying elements  
+	 */
+	function unwait(contextToStop) {
+		contextToStop = this;
+		return contextToStop.each(function(triggers){
+			$.each($(this).data(TIMEOUTS) || [], function(){
+				stopWaitTrigger(this, contextToStop);
+			});
 		});
 	}
 
+	/**
+	 * start new timed invocation chain and apply repeat method 
+	 */
 	function repeat() {
 		return createTIC(this,'repeat',arguments);
 	}
 	
 	/**
-	 * start new timed invocation chain and apply unrepeat method 
+	 * stop repeating for underlying elements  
 	 */
-	function unrepeat() {
-		return this.each(function(triggers){
-			triggers = $(this).data(INTERVALS);
-			while (triggers && triggers.length){
-				stopRepeatTrigger(triggers.pop());
-			}
+	function unrepeat(contextToStop) {
+		contextToStop = this;
+		return contextToStop.each(function(triggers){
+			$.each($(this).data(INTERVALS) || [], function(){
+				stopRepeatTrigger(this, contextToStop);
+			});
 		});
 	}
 	
