@@ -1,6 +1,6 @@
 suite = {
 		
-		"joining empty named queue instantly": null,
+	"joining empty named queue instantly": {
 
 		".join(queue,callback) + .dequeue(queue)" : function($, test) {
 			var x = 0;
@@ -347,9 +347,11 @@ suite = {
 				test.assertEquals(".join(queue) should not have fired anymore after .dequeue(queue)", 1, x);
 				test.done();
 			}, 100);
-		},
+		}
 		
-		"joining empty named queue deferred": null,
+	},
+		
+	"joining empty named queue deferred": {
 
 		".join(queue,callback) +…+ .dequeue(queue)" : function($, test) {
 			var x = 0;
@@ -715,9 +717,11 @@ suite = {
 					test.done();
 				}, 100);
 			}, 100);
-		},
+		}
 		
-		"joining ongoing named queue": null,
+	},
+		
+	"joining ongoing named queue": {
 		
 		".delay(timeout,queue).join(queue,callback)" : function($, test) {
 			var x = 0;
@@ -1115,5 +1119,6 @@ suite = {
 					}, 100);
 				}, timeout);
 			}, timeout / 2);
-		},
+		}
+	}
 };

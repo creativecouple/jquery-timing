@@ -1,6 +1,6 @@
 suite = {
 		
-		"joining empty default queue instantly": null,
+	"joining empty default queue instantly": {
 		
 		".join(callback)" : function($, test) {
 			var x = 0;
@@ -211,9 +211,11 @@ suite = {
 			test.assertEquals("join should fire once for multiple objects", 1, x);
 			test.assertEquals("instant .join() should return original jQuery object", $x, TIC);
 			test.done();
-		},
+		}
+		
+	},
 
-		"joining empty default queue deferred": null,
+	"joining empty default queue deferred": {
 		
 		".join(callback) …" : function($, test) {
 			var x = 0;
@@ -444,9 +446,11 @@ suite = {
 					}, timeout);
 				}, timeout);
 			}, timeout*1.5);
-		},
+		}
+		
+	},
 
-		"joining ongoing default queue": null,
+	"joining ongoing default queue": {
 		
 		".delay(timeout).join(callback)" : function($, test) {
 			var x = 0;
@@ -802,6 +806,8 @@ suite = {
 					}, 100);
 				}, timeout);
 			}, timeout / 2);
-		},
+		}
+		
+	}
 		
 };

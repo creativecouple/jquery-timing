@@ -20,10 +20,6 @@ tr, th {
 th.method {
 	font-weight: normal;
 	font-family: monospace;
-	cursor: pointer;
-}
-th.method:hover {
-	background: #f8f8f8;
 }
 th.title {
 	padding: 1em;
@@ -69,6 +65,12 @@ h2 {
 	border-bottom: 1px solid navy;
 	margin: 2em 0;
 }
+th.method:hover, h2:hover, th.title:hover, th.jquery:hover, td:hover {
+	background-color: navy !important;
+	color: white;
+	cursor: pointer;
+}
+
 .summary {
 	color: maroon;
 }
@@ -139,7 +141,7 @@ function savejQuery(type) {
 <h1 class="summary"></h1>
 <h1 class="summary"></h1>
 
-<p><button onclick="window.location.reload()">Run tests again&hellip;</button></p>
+<p><button onclick="window.location.hash='';window.location.reload()">Run all tests again&hellip;</button></p>
 
 <script type="text/javascript">var tests = {}, minVersion={};</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.wait.js"></script>
@@ -152,7 +154,6 @@ function savejQuery(type) {
 <script type="text/javascript">tests[".join(queueName) functionality"] = suite; minVersion[".join(queueName) functionality"]='1.7.0'</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.var.js"></script>
 <script type="text/javascript">tests["$$() functionality"] = suite; minVersion["$$() functionality"]='1.4.0'</script>
-
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
 
@@ -212,30 +213,55 @@ $(document).ready(function(){
 		$summary.html('tests: '+count+'; passed:'+passed+'; failures:'+fails+'; errors:'+errors+'; still running:'+((still > 0) ? still+'&hellip;' : still));
 	}
 	
+	var filter = String(window.location.hash).replace(/^#/,'').split('|');
 	$.each(tests, function(part, suite){
-		var $headline = $('<h2>').text(part).insertBefore($summary.last());			
+		if (filter[0] && part != filter[0]) {
+			return;
+		}
+		var $headline = $('<h2>').text(part).insertBefore($summary.last()).click(function(){
+			window.location.replace('#'+[part].join('|'));
+			window.location.reload();
+		});			
 		var $table = $('<table>').insertBefore($summary.last());
 		
-		var $tbody = $('<tbody>').appendTo($table);
-		$.each(suite, function(name, testMethod){
-			if (!testMethod) {
-				$tbody = $('<tbody>').appendTo($table);
-				var $tr = $('<tr>').append($('<th class="title">').text(name)).appendTo($tbody);
-				$.each(jQueries, function(version){
-					$('<th colspan="2" class="jquery">').text(version).attr('title','jQuery version '+version).appendTo($tr);
-				});
-			} else {
+		$.each(suite, function(section, methods){
+			if (filter[1] && section != filter[1]) {
+				return;
+			}
+			var $tbody = $('<tbody>').appendTo($table);
+			var $tr = $('<tr>').append($('<th class="title">').text(section).click(function(){
+				window.location.replace('#'+[part,section].join('|'));
+				window.location.reload();
+			})).appendTo($tbody);
+			$.each(jQueries, function(version){
+				$('<th colspan="2" class="jquery">').text(version).attr('title','jQuery version '+version).click(function(){
+					window.location.replace('#'+[part,section,'',version].join('|'));
+					window.location.reload();
+				}).appendTo($tr);
+			});
+			$.each(methods, function(name, testMethod){
+				if (filter[2] && name != filter[2]) {
+					return;
+				}
 				var $tr = $('<tr>').append($('<th class="method">').text(name).click(function(){
-					var wnd = window.open('about:blank','_blank');
-					$(wnd.document.body).append($('<h1>').text(part)).append($('<h2>').text(name)).append($('<pre>').text(testMethod.toString()));
-					wnd.document.title = part + ': ' + name;
+					window.location.replace('#'+[part,section,name].join('|'));
+					window.location.reload();
 				})).appendTo($tbody);
 				$.each(jQueries, function(version, types){
+					
 					$.each(types, function(type, _jQuery){
-						var $td = $('<td class="result">…').addClass('run').attr('title','jQuery '+version+' + '+type).appendTo($tr);
+						
+						var $td = $('<td class="result">…').addClass('run').attr('title','jQuery '+version+' + '+type).click(function(){
+							window.location.replace('#'+[part,section,name,version,type].join('|'));
+							window.location.reload();
+						}).appendTo($tr);
+						if (filter[3] && version != filter[3] || filter[4] && type != filter[4]) {
+							$td.removeClass('run').text('-');
+							return;
+						}
 						if (minVersion[part] && (version < minVersion[part])) {
 							return $td.removeClass('run').text('-');
-						}
+						}						
 						count++;
 						window.setTimeout(function(){
 							var testCase = new TestCase(function(){
@@ -266,7 +292,7 @@ $(document).ready(function(){
 						}, 500+count*3);
 					});
 				});
-			}
+			});
 		});
 	});
 	$summary.text(count+' tests');
