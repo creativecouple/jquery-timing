@@ -138,10 +138,12 @@ function savejQuery(type) {
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
+<p><button>Run all tests again&hellip;</button></p>
+
 <h1 class="summary"></h1>
 <h1 class="summary"></h1>
 
-<p><button onclick="window.location.hash='';window.location.reload()">Run all tests again&hellip;</button></p>
+<p><button>Run all tests again&hellip;</button></p>
 
 <script type="text/javascript">var tests = {}, minVersion={};</script>
 <script charset="utf-8" type="text/javascript" src="_tests/test.wait.js"></script>
@@ -206,6 +208,10 @@ var passed=0;
 var fails=0;
 var errors=0;
 $(document).ready(function(){
+	$('h1:first, button').click(function(){
+		window.location.hash='';
+		window.location.reload();
+	});
 	var $summary = $('.summary');
 	
 	function updateResults() {
@@ -255,11 +261,7 @@ $(document).ready(function(){
 							window.location.replace('#'+[part,section,name,version,type].join('|'));
 							window.location.reload();
 						}).appendTo($tr);
-						if (filter[3] && version != filter[3] || filter[4] && type != filter[4]) {
-							$td.removeClass('run').text('-');
-							return;
-						}
-						if (minVersion[part] && (version < minVersion[part])) {
+						if (filter[3] && version != filter[3] || filter[4] && type != filter[4] || minVersion[part] && (version < minVersion[part]) && !filter[3]) {
 							return $td.removeClass('run').text('-');
 						}						
 						count++;
