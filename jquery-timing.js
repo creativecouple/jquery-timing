@@ -137,6 +137,7 @@
 				})(key);
 			}
 		}
+		placeholder._ = context._ = context;
 		return placeholder[firstMethodName].apply(context, firstMethodArguments);
 	}
 	
