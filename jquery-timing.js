@@ -178,7 +178,7 @@
 			 * This enables re-using our placeholder via $(...)
 			 */
 			timedInvocationChain._placeholder.length = 0;
-			ARRAY.push.apply(timedInvocationChain._placeholder, context);
+			ARRAY.push.apply(timedInvocationChain._placeholder, context.get());
 			
 			if (executionState._isChainEnd) {
 				if (!timedInvocationChain._ongoingLoops[0]) {
