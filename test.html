@@ -161,7 +161,8 @@ function savejQuery(type) {
 
 <script type="text/javascript">
 var assertionException = new Error("assertion violated");
-function TestCase(success, error) {
+function TestCase(success, error, $) {
+	this.$ = $;
 	this.finished = false;
 	this.check = function(){
 		if (this.finished) {
@@ -202,6 +203,12 @@ function TestCase(success, error) {
 			this.fail(msg+'\n'+expected+' == '+value+'');
 		}
 	};
+	this.version = function(version) {
+		if (this.$().jquery < version) {
+			this.finished = 1;
+			throw assertionException;
+		}
+	}
 }
 var count=0;
 var passed=0;
@@ -277,7 +284,7 @@ $(document).ready(function(){
 								$td.removeClass('run').addClass('fail').text('-').attr('title',message || 'error');
 								fails++;
 								updateResults();
-							});
+							}, _jQuery);
 							try {
 								window.setTimeout(function(){
 									try {
@@ -293,6 +300,11 @@ $(document).ready(function(){
 									updateResults();
 									throw error;
 								}
+								if (testCase.finished !== true) {
+									$td.removeClass('run').text('-');
+									count--;
+									updateResults();
+								}
 							}
 						}, 500+count*3);
 					});
@@ -300,7 +312,7 @@ $(document).ready(function(){
 			});
 		});
 	});
-	$summary.text(count+' tests');
+	$summary.text('~'+count+' tests');
 	
 	$('td:even').addClass('x');
 	$('tr:even').addClass('y');
