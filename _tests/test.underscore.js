@@ -31,6 +31,17 @@ suite = {
 				test.done();
 			},
 
+			".join(queue)._": function($, test) {
+				test.version('1.7.');
+				
+				var $x = $('<div>');
+				var TIC = $x.join('myQueue');
+				var _ = TIC._;
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
 		},
 
 		"instant usage": {
