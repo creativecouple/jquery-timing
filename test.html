@@ -36,19 +36,19 @@ td.result {
 	height: 20px;
 }
 td.run {
-	background: url(_tests/run.gif) no-repeat center center scroll;
+	background: url(tests/run.gif) no-repeat center center scroll;
 	color: transparent;
 }
 td.ok {
-	background: url(_tests/ok.png) no-repeat center center scroll;
+	background: url(tests/ok.png) no-repeat center center scroll;
 	color: transparent;
 }
 td.fail {
-	background: url(_tests/fail.png) no-repeat center center scroll;
+	background: url(tests/fail.png) no-repeat center center scroll;
 	color: transparent;
 }
 td.error {
-	background: url(_tests/error.png) no-repeat center center scroll;
+	background: url(tests/error.png) no-repeat center center scroll;
 	color: transparent;
 }
 td.x {
@@ -146,17 +146,17 @@ function savejQuery(type) {
 <p><button>Run all tests again&hellip;</button></p>
 
 <script type="text/javascript">var tests = {}, minVersion={};</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.wait.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.wait.js"></script>
 <script type="text/javascript">tests[".wait() functionality"] = suite;</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.repeat.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.repeat.js"></script>
 <script type="text/javascript">tests[".repeat() functionality"] = suite;</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.join.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.join.js"></script>
 <script type="text/javascript">tests[".join() functionality"] = suite; minVersion[".join() functionality"]='1.4.0'</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.join-named-queue.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.join-named-queue.js"></script>
 <script type="text/javascript">tests[".join(queueName) functionality"] = suite; minVersion[".join(queueName) functionality"]='1.7.0'</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.underscore.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.underscore.js"></script>
 <script type="text/javascript">tests["._ functionality"] = suite;</script>
-<script charset="utf-8" type="text/javascript" src="_tests/test.var.js"></script>
+<script charset="utf-8" type="text/javascript" src="tests/test.var.js"></script>
 <script type="text/javascript">tests["$$() functionality"] = suite; minVersion["$$() functionality"]='1.4.0'</script>
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
