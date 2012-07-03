@@ -258,6 +258,9 @@ $(document).ready(function(){
 					$.each(types, function(type, _jQuery){
 						
 						var $td = $('<td class="result">…').addClass('run').attr('title','jQuery '+version+' + '+type).click(function(){
+							if (count == 1 && filter[0] == part && filter[1] == section && filter[2] == name && filter[3] == version && filter[4] == type) {
+								return alert($(this).attr('title'));
+							}
 							window.location.replace('#'+[part,section,name,version,type].join('|'));
 							window.location.reload();
 						}).appendTo($tr);
