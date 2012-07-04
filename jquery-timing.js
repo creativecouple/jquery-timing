@@ -19,22 +19,10 @@
 (function($, window){
 	
 	/**
-	 * constants to be used as member for jQuery's data function,
-	 * will shrink in minimization 
-	 */
-	var TIMEOUTS = '__timeouts', INTERVALS = '__intervals',
-	
-	/**
-	 * constant for JavaScript constants,
-	 * will shrink in minimization
-	 */
-	UNDEFINED = undefined, TRUE = true,
-	
-	/**
 	 * jQuery default effects queue,
 	 * will shrink in minimization
 	 */
-	JQUERY_DEFAULT_EFFECTS_QUEUE = 'fx',
+	var JQUERY_DEFAULT_EFFECTS_QUEUE = 'fx',
 	
 	/**
 	 * constant token for internal usage to perceive concatenated calls of #repeat, #wait, #until, #then, and #then,
@@ -103,7 +91,7 @@
 	 */
 	function createTIC(context, firstMethodName, firstMethodArguments) {
 		var chainEnd = {
-			_isChainEnd: TRUE,
+			_isChainEnd: true,
 			_context: context,
 			_trigger: {}
 		},
@@ -113,7 +101,7 @@
 			_activeExecutionPoint: chainEnd,
 			_ongoingLoops: [],
 			_openEndLoopTimeout: window.setTimeout(function(){
-				timedInvocationChain._openEndLoopTimeout = UNDEFINED;
+				timedInvocationChain._openEndLoopTimeout = undefined;
 				runTimedInvocationChain(timedInvocationChain, chainEnd);
 			}, 0),
 			_placeholder: placeholder
@@ -296,7 +284,7 @@
 			_value: window.setTimeout(triggerAction, Math.max(0,trigger))
 		};
 		executionState._context.each(function(index,element){
-			$(element).data(TIMEOUTS, addArrayElement($(element).data(TIMEOUTS), executionState._trigger));
+			$(element).data('__timeouts', addArrayElement($(element).data('__timeouts'), executionState._trigger));
 		});
 	}
 
@@ -320,7 +308,7 @@
 		}
 		// unstore trigger
 		contextToStop.each(function(index,element){
-			$(element).data(TIMEOUTS, removeArrayElement($(element).data(TIMEOUTS), trigger));
+			$(element).data('__timeouts', removeArrayElement($(element).data('__timeouts'), trigger));
 		});
 	}
 	
@@ -332,7 +320,7 @@
 	 */
 	function removeWaitTrigger(timedInvocationChain, executionState) {
 		stopWaitTrigger(executionState._trigger, executionState._trigger._context);
-		executionState._trigger = UNDEFINED;
+		executionState._trigger = undefined;
 	}
 
 	function setupJoinTrigger(timedInvocationChain, executionState, queueName, waitingElements) {
@@ -344,7 +332,7 @@
 		}
 		// wait for each element to reach the current end of its queue
 		waitingElements = ARRAY.slice.call(executionState._context);
-		executionState._context.queue(queueName == UNDEFINED ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
+		executionState._context.queue(queueName == undefined ? JQUERY_DEFAULT_EFFECTS_QUEUE : queueName, function(next){
 			if (waitingElements.length && !removeArrayElement(waitingElements, this).length) {
 				runTimedInvocationChain(timedInvocationChain, executionState);
 			}
@@ -357,7 +345,7 @@
 	}
 
 	function removeJoinTrigger(timedInvocationChain, executionState) {
-		executionState._trigger = UNDEFINED;
+		executionState._trigger = undefined;
 	}
 	
 	function setupRepeatTrigger(timedInvocationChain, executionState, trigger, firstRunNow) {
@@ -377,7 +365,7 @@
 			executionState._callback = executionState._methodArguments[2];
 		}
 		
-		executionState._trigger = (trigger == UNDEFINED) ? {
+		executionState._trigger = (trigger == undefined) ? {
 			_context: executionState._context,
 			_triggeredElements: executionState._context
 		} : isString(trigger) ? {
@@ -391,7 +379,7 @@
 			_triggeredElements: firstRunNow && executionState._context
 		};
 		executionState._context.each(function(index,element){
-			$(element).data(INTERVALS, addArrayElement($(element).data(INTERVALS), executionState._trigger));
+			$(element).data('__intervals', addArrayElement($(element).data('__intervals'), executionState._trigger));
 		});
 		executionState._count = 0;
 		timedInvocationChain._ongoingLoops.unshift(executionState);
@@ -415,19 +403,19 @@
 		}
 		// unstore trigger
 		contextToStop.each(function(index,element){
-			$(element).data(INTERVALS, removeArrayElement($(element).data(INTERVALS), trigger));
+			$(element).data('__intervals', removeArrayElement($(element).data('__intervals'), trigger));
 		});
 	}
 	
 	function removeRepeatTrigger(timedInvocationChain, executionState) {
 		executionState = timedInvocationChain._ongoingLoops.shift();
 		stopRepeatTrigger(executionState._trigger, executionState._trigger._context);
-		executionState._trigger = UNDEFINED;
+		executionState._trigger = undefined;
 	}
 	
 	function evaluateUntilCondition(timedInvocationChain, executionState, condition) {
 		condition = executionState._methodArguments[0];
-		if (condition == UNDEFINED) {
+		if (condition == undefined) {
 			condition = !executionState._context.size();
 		}
 		if (isFunction(condition)) {
@@ -454,7 +442,7 @@
 	function unwait(contextToStop) {
 		contextToStop = this;
 		return contextToStop.each(function(triggers){
-			$.each($(this).data(TIMEOUTS) || [], function(){
+			$.each($(this).data('__timeouts') || [], function(){
 				stopWaitTrigger(this, contextToStop);
 			});
 		});
@@ -473,7 +461,7 @@
 	function unrepeat(contextToStop) {
 		contextToStop = this;
 		return contextToStop.each(function(triggers){
-			$.each($(this).data(INTERVALS) || [], function(){
+			$.each($(this).data('__intervals') || [], function(){
 				stopRepeatTrigger(this, contextToStop);
 			});
 		});
