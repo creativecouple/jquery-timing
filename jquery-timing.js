@@ -16,7 +16,7 @@
  * @see http://creativecouple.github.com/jquery-timing/
  */
 
-(function($, window){
+(function(jQuery, window){
 	
 	/**
 	 * jQuery default effects queue,
@@ -140,7 +140,7 @@
 				return;
 			}
 			// There was a trigger. Mark the source element as triggered.
-			triggeredState._trigger._triggeredElements = !sourceElement || sourceElement === window || triggeredState._trigger._triggeredElements && triggeredState._trigger._triggeredElements.add(sourceElement) || $(sourceElement);
+			triggeredState._trigger._triggeredElements = !sourceElement || sourceElement === window || triggeredState._trigger._triggeredElements && triggeredState._trigger._triggeredElements.add(sourceElement) || jQuery(sourceElement);
 			/*
 			 * If this is also the current execution point, then we go on.
 			 * Else we have to wait.
@@ -156,7 +156,7 @@
 			context = isTriggered && trigger._triggeredElements.length ? trigger._triggeredElements : executionState._context;
 			/*
 			 * Super-fast copying of current elements into our placeholder object.
-			 * This enables re-using our placeholder via $(...)
+			 * This enables re-using our placeholder via jQuery(...)
 			 */
 			timedInvocationChain._placeholder.length = 0;
 			ARRAY.push.apply(timedInvocationChain._placeholder, context.get());
@@ -242,7 +242,7 @@
 	 */
 	function callbackWithLoopCounts(timedInvocationChain, context, callback, loopCounts) {
 		loopCounts = [];
-		$.each(timedInvocationChain._ongoingLoops, function(){
+		jQuery.each(timedInvocationChain._ongoingLoops, function(){
 			loopCounts.push(this._count);
 		});
 		return callback.apply(context, loopCounts);
@@ -276,7 +276,7 @@
 			_value: window.setTimeout(triggerAction, Math.max(0,trigger))
 		};
 		executionState._context.each(function(index,element){
-			$(element).data('__timeouts', addArrayElement($(element).data('__timeouts'), executionState._trigger));
+			jQuery(element).data('__timeouts', addArrayElement(jQuery(element).data('__timeouts'), executionState._trigger));
 		});
 	}
 
@@ -300,7 +300,7 @@
 		}
 		// unstore trigger
 		contextToStop.each(function(index,element){
-			$(element).data('__timeouts', removeArrayElement($(element).data('__timeouts'), trigger));
+			jQuery(element).data('__timeouts', removeArrayElement(jQuery(element).data('__timeouts'), trigger));
 		});
 	}
 	
@@ -371,7 +371,7 @@
 			_triggeredElements: firstRunNow && executionState._context
 		};
 		executionState._context.each(function(index,element){
-			$(element).data('__intervals', addArrayElement($(element).data('__intervals'), executionState._trigger));
+			jQuery(element).data('__intervals', addArrayElement(jQuery(element).data('__intervals'), executionState._trigger));
 		});
 		executionState._count = 0;
 		timedInvocationChain._ongoingLoops.unshift(executionState);
@@ -395,7 +395,7 @@
 		}
 		// unstore trigger
 		contextToStop.each(function(index,element){
-			$(element).data('__intervals', removeArrayElement($(element).data('__intervals'), trigger));
+			jQuery(element).data('__intervals', removeArrayElement(jQuery(element).data('__intervals'), trigger));
 		});
 	}
 	
@@ -434,7 +434,7 @@
 	function unwait(contextToStop) {
 		contextToStop = this;
 		return contextToStop.each(function(triggers){
-			$.each($(this).data('__timeouts') || [], function(){
+			jQuery.each(jQuery(this).data('__timeouts') || [], function(){
 				stopWaitTrigger(this, contextToStop);
 			});
 		});
@@ -453,7 +453,7 @@
 	function unrepeat(contextToStop) {
 		contextToStop = this;
 		return contextToStop.each(function(triggers){
-			$.each($(this).data('__intervals') || [], function(){
+			jQuery.each(jQuery(this).data('__intervals') || [], function(){
 				stopRepeatTrigger(this, contextToStop);
 			});
 		});
@@ -495,7 +495,7 @@
 		} else {
 			threadName = '';
 		}
-		return method.apply(JQUERY_TIMING[threadName] = (JQUERY_TIMING[threadName] || $('<div>').text(threadName)), args);
+		return method.apply(JQUERY_TIMING[threadName] = (JQUERY_TIMING[threadName] || jQuery('<div>').text(threadName)), args);
 	}
 	
 	/**
@@ -531,7 +531,7 @@
 			return hasComputation ? compute(value) : value;				
 		}
 		evaluate.toString = evaluate;
-		$.extend(callbackVariable,{
+		jQuery.extend(callbackVariable,{
 			x: 0,
 			$: evaluate,
 			toString: evaluate,
@@ -555,7 +555,7 @@
 				return $$(compute, callbackVariable);
 			}
 		});
-		$.each('abcdefghij', function(index, character){
+		jQuery.each('abcdefghij', function(index, character){
 			callbackVariable[index] = callbackVariable[character] = function(){
 				callbackVariable(arguments[index]);
 			};
@@ -569,7 +569,7 @@
 	/*
 	 * now put the whole stuff into jQuery and let the games begin...
 	 */
-	$.fn.extend({
+	jQuery.fn.extend({
 		wait: wait,
 		unwait: unwait,
 		repeat: repeat,
@@ -577,9 +577,9 @@
 		until: until,
 		then: then,
 		join: join,
-		$: $
+		$: jQuery
 	});
-	$.extend({
+	jQuery.extend({
 		wait: function(threadName) {
 			return useThread(threadName, wait, arguments);
 		},
