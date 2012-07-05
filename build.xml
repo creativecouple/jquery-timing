@@ -25,25 +25,23 @@
 	<target name="shrinkMore" depends="minimize">
 		<length file="${script-minimized}" property="bytes-before-shrink" />
 		
-		<replace file="${script-minimized}" token="_eventAction" value="a"/>
+		<replace file="${script-minimized}" token="_unrepeatAction" value="a"/>
 		<replace file="${script-minimized}" token="_activeExecutionPoint" value="b"/>
 		<replace file="${script-minimized}" token="_callback" value="c"/>
 		<replace file="${script-minimized}" token="_context" value="d"/>
 		<replace file="${script-minimized}" token="_count" value="e"/>
 		<replace file="${script-minimized}" token="_isChainEnd" value="f"/>
-		<replace file="${script-minimized}" token="_triggeredElements" value="h"/>
+		<replace file="${script-minimized}" token="_interval" value="h"/>
 		<replace file="${script-minimized}" token="_methodArguments" value="i"/>
 		<replace file="${script-minimized}" token="_methodName" value="j"/>
 		<replace file="${script-minimized}" token="_next" value="k"/>
 		<replace file="${script-minimized}" token="_ongoingLoops" value="l"/>
 		<replace file="${script-minimized}" token="_openEndLoopTimeout" value="m"/>
 		<replace file="${script-minimized}" token="_placeholder" value="n"/>
-		<replace file="${script-minimized}" token="_trigger" value="o"/>
+		<replace file="${script-minimized}" token="_triggeredContext" value="o"/>
  		<replace file="${script-minimized}" token="_type" value="p"/>
-		<replace file="${script-minimized}" token="_value" value="q"/>
-		<replace file="${script-minimized}" token="&quot;_event_&quot;" value="1"/>
-		<replace file="${script-minimized}" token="&quot;_interval_&quot;" value="2"/>
-		<replace file="${script-minimized}" token="&quot;_timeout_&quot;" value="3"/>
+		<replace file="${script-minimized}" token="_waitingForTrigger" value="q"/>
+		<replace file="${script-minimized}" token="_triggerAlways" value="r"/>
 
 		<length file="${script-minimized}" property="bytes-after-shrink" />
 		<echo>Shrinking ${bytes-before-shrink} =&gt; ${bytes-after-shrink} Bytes</echo>
