@@ -35,14 +35,6 @@
 	 */
 	ARRAY = [];
 	
-	function isFunction(object) {
-		return typeof object == "function";
-	}
-
-	function isString(object) {
-		return typeof object == "string";
-	}
-
 	/**
 	 * Remove a specific element value from a numeric array. The value is compared with the === operator.
 	 * 
@@ -108,7 +100,7 @@
 		},
 		key;
 		for (key in context) {
-			if (isFunction(context[key])) {
+			if (typeof context[key] == "function") {
 				(function(name){
 					placeholder[name] = function(){
 						lastAddedEntry = lastAddedEntry._next = {
@@ -234,7 +226,7 @@
 	 */
 	function gotoNextStep(timedInvocationChain, executionState) {
 		executionState = timedInvocationChain._activeExecutionPoint;		
-		if (isFunction(executionState._callback)) {
+		if (typeof executionState._callback == "function") {
 			callbackWithLoopCounts(timedInvocationChain, executionState._context, executionState._callback);
 		}
 		timedInvocationChain._activeExecutionPoint = executionState._next;
@@ -268,14 +260,14 @@
 			runTimedInvocationChain(timedInvocationChain, executionState, this);
 		}
 		
-		if (isFunction(executionState._methodArguments[0])) {
+		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
 			trigger = executionState._methodArguments[0];
 			executionState._callback = executionState._methodArguments[1];
 		}
 		
-		executionState._trigger = isString(trigger) ? {
+		executionState._trigger = (typeof trigger == "string") ? {
 			_eventAction: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger
@@ -324,7 +316,7 @@
 	}
 
 	function setupJoinTrigger(timedInvocationChain, executionState, queueName, waitingElements) {
-		if (isFunction(executionState._methodArguments[0])) {
+		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
 			queueName = executionState._methodArguments[0];
@@ -354,9 +346,9 @@
 		}
 		
 		// determine parameters
-		if (isFunction(executionState._methodArguments[0])) {
+		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
-		} else if (isFunction(executionState._methodArguments[1])) {
+		} else if (typeof executionState._methodArguments[1] == "function") {
 			trigger = executionState._methodArguments[0];
 			executionState._callback = executionState._methodArguments[1];
 		} else {
@@ -368,7 +360,7 @@
 		executionState._trigger = (trigger == undefined) ? {
 			_context: executionState._context,
 			_triggeredElements: executionState._context
-		} : isString(trigger) ? {
+		} : (typeof trigger == "string") ? {
 			_eventAction: triggerAction,
 			_context: executionState._context.bind(trigger, triggerAction),
 			_value: trigger,
@@ -418,7 +410,7 @@
 		if (condition == undefined) {
 			condition = !executionState._context.size();
 		}
-		if (isFunction(condition)) {
+		if (typeof condition == "function") {
 			condition = callbackWithLoopCounts(timedInvocationChain, executionState._context, condition);
 		}
 		if (typeof condition == "object") {
@@ -498,7 +490,7 @@
 	 * @param args the original function arguments
 	 */
 	function useThread(threadName, method, args){
-		if (isString(threadName)) {
+		if (typeof threadName == "string") {
 			ARRAY.shift.apply(args);
 		} else {
 			threadName = '';
@@ -513,7 +505,7 @@
 	 * @author Peter Liske
 	 */
 	function $$(compute, Var, calculation){
-		if (isString(compute)) {
+		if (typeof compute == "string") {
 			calculation = new Function('x','return ['+compute+'\n,x]');
 			compute = function(x, result){
 				result = calculation(x);
@@ -521,8 +513,8 @@
 				return result[0];
 			};
 		}
-		var hasRelatedVariable = isFunction(Var),
-		hasComputation = isFunction(compute),
+		var hasRelatedVariable = typeof Var == "function",
+		hasComputation = typeof compute == "function",
 		
 		callbackVariable = function(value) {
 			if (arguments.length == 1) {
