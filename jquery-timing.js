@@ -46,6 +46,7 @@
 			if (activeExecutionPoint == chainEnd)
 				timedInvocationChain();
 		}, 0),
+		executionState, method, triggered,
 		
 		/**
 		 * Invoke all the methods currently in the timed invocation chain.
@@ -67,7 +68,7 @@
 					return;
 				}
 			}
-			for (var executionState, context, method, triggered; executionState = activeExecutionPoint;) {
+			while (executionState = activeExecutionPoint) {
 				// use triggered context in case of triggered execution
 				triggered = executionState._waitingForTrigger && executionState._triggeredContext;
 				context = triggered || executionState._context;
@@ -128,7 +129,6 @@
 					context = method.apply(context, executionState._methodArguments);
 					gotoNextStep();
 				}			
-				activeExecutionPoint._context = context;
 			}
 		}, 
 		key;
@@ -145,6 +145,7 @@
 				callbackWithLoopCounts(ongoingLoops, activeExecutionPoint._context, activeExecutionPoint._callback);
 			}
 			activeExecutionPoint = activeExecutionPoint._next;
+			activeExecutionPoint._context = context;
 		}
 
 		for (key in context) {
