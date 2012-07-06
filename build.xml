@@ -32,11 +32,12 @@
 		<replace file="${script-minimized}" token="_methodArguments" value="e"/>
 		<replace file="${script-minimized}" token="_methodName" value="f"/>
 		<replace file="${script-minimized}" token="_next" value="g"/>
-		<replace file="${script-minimized}" token="_triggerAlways" value="h"/>
+		<replace file="${script-minimized}" token="_trigger" value="h"/>
 		<replace file="${script-minimized}" token="_triggeredContext" value="i"/>
  		<replace file="${script-minimized}" token="_type" value="j"/>
 		<replace file="${script-minimized}" token="_unrepeatAction" value="k"/>
 		<replace file="${script-minimized}" token="_waitingForTrigger" value="l"/>
+		<replace file="${script-minimized}" token="_timingAction" value="m"/>
 
 		<length file="${script-minimized}" property="bytes-after-shrink" />
 		<echo>Shrinking ${bytes-before-shrink} =&gt; ${bytes-after-shrink} Bytes</echo>
