@@ -25,23 +25,18 @@
 	<target name="shrinkMore" depends="minimize">
 		<length file="${script-minimized}" property="bytes-before-shrink" />
 		
-		<replace file="${script-minimized}" token="_unrepeatAction" value="a"/>
-		<replace file="${script-minimized}" token="_activeExecutionPoint" value="b"/>
-		<replace file="${script-minimized}" token="_callback" value="c"/>
-		<replace file="${script-minimized}" token="_context" value="d"/>
-		<replace file="${script-minimized}" token="_count" value="e"/>
-		<replace file="${script-minimized}" token="_isChainEnd" value="f"/>
-		<replace file="${script-minimized}" token="_interval" value="h"/>
-		<replace file="${script-minimized}" token="_methodArguments" value="i"/>
-		<replace file="${script-minimized}" token="_methodName" value="j"/>
-		<replace file="${script-minimized}" token="_next" value="k"/>
-		<replace file="${script-minimized}" token="_ongoingLoops" value="l"/>
-		<replace file="${script-minimized}" token="_openEndLoopTimeout" value="m"/>
-		<replace file="${script-minimized}" token="_placeholder" value="n"/>
-		<replace file="${script-minimized}" token="_triggeredContext" value="o"/>
- 		<replace file="${script-minimized}" token="_type" value="p"/>
-		<replace file="${script-minimized}" token="_waitingForTrigger" value="q"/>
-		<replace file="${script-minimized}" token="_triggerAlways" value="r"/>
+		<replace file="${script-minimized}" token="_callback" value="a"/>
+		<replace file="${script-minimized}" token="_context" value="b"/>
+		<replace file="${script-minimized}" token="_count" value="c"/>
+		<replace file="${script-minimized}" token="_interval" value="d"/>
+		<replace file="${script-minimized}" token="_methodArguments" value="e"/>
+		<replace file="${script-minimized}" token="_methodName" value="f"/>
+		<replace file="${script-minimized}" token="_next" value="g"/>
+		<replace file="${script-minimized}" token="_triggerAlways" value="h"/>
+		<replace file="${script-minimized}" token="_triggeredContext" value="i"/>
+ 		<replace file="${script-minimized}" token="_type" value="j"/>
+		<replace file="${script-minimized}" token="_unrepeatAction" value="k"/>
+		<replace file="${script-minimized}" token="_waitingForTrigger" value="l"/>
 
 		<length file="${script-minimized}" property="bytes-after-shrink" />
 		<echo>Shrinking ${bytes-before-shrink} =&gt; ${bytes-after-shrink} Bytes</echo>

@@ -35,22 +35,118 @@
 	 */
 	function createTIC(context, firstMethodName, firstMethodArguments) {
 		var chainEnd = {
-			_isChainEnd: true,
 			_context: context
 		},
 		lastAddedEntry = {},
 		placeholder = {},
-		timedInvocationChain = {
-			_activeExecutionPoint: chainEnd,
-			_ongoingLoops: [],
-			_openEndLoopTimeout: window.setTimeout(function(){
-				timedInvocationChain._openEndLoopTimeout = undefined;
-				if (timedInvocationChain._activeExecutionPoint._isChainEnd)
-					runTimedInvocationChain(timedInvocationChain);
-			}, 0),
-			_placeholder: placeholder
-		},
+		activeExecutionPoint = chainEnd,
+		ongoingLoops = [],
+		openEndLoopTimeout = window.setTimeout(function(){
+			openEndLoopTimeout = undefined;
+			if (activeExecutionPoint == chainEnd)
+				timedInvocationChain();
+		}, 0),
+		
+		/**
+		 * Invoke all the methods currently in the timed invocation chain.
+		 * @author CreativeCouple
+		 * @author Peter Liske
+		 * 
+		 * @param timedInvocationChain
+		 * @param triggeredState optional state to be triggered
+		 */
+		timedInvocationChain = function(triggeredState) {
+			if (triggeredState) {
+				/*
+				 * Reject triggering if none available.
+				 * This can happen during .join() when the FXQ is empty.
+				 * If this is also the current execution point, then we go on.
+				 * Else we have to wait.
+				 */
+				if (!triggeredState._waitingForTrigger || activeExecutionPoint != triggeredState) {
+					return;
+				}
+			}
+			for (var executionState, context, method, triggered; executionState = activeExecutionPoint;) {
+				// use triggered context in case of triggered execution
+				triggered = executionState._waitingForTrigger && executionState._triggeredContext;
+				context = triggered || executionState._context;
+				/*
+				 * Super-fast copying of current elements into our placeholder object.
+				 * This enables re-using our placeholder via jQuery(...)
+				 */
+				placeholder.length = 0;
+				Array.prototype.push.apply(placeholder, context.get());
+				
+				if (executionState == chainEnd) {
+					if (!ongoingLoops[0]) {
+						/*
+						 * We've reached the end of our TIC
+						 * and there is nothing left to wait.
+						 * So we can safely return the original jQuery object.
+						 */
+						return context; 
+					}
+					/*
+					 * Now we have ongoing loops but reached the chain's end.
+					 * If we already waited a bit then we start over right there.
+					 */
+					if (!openEndLoopTimeout) {
+						// start open repeat loop over again at the end of the chain
+						resetRepeatTrigger(activeExecutionPoint = ongoingLoops[0]);
+						continue;
+					}
+					return;
+				}
+				if (executionState._waitingForTrigger) {
+					if (triggered) {
+						gotoNextStep();
+					} else {
+						return;
+					}
+				}
+				
+				method = context[executionState._methodName];
+				if (method == wait) {
+					if (!triggered) setupWaitTrigger(timedInvocationChain, executionState);
+				} else if (method == join) {
+					if (!triggered) setupJoinTrigger(timedInvocationChain, executionState);
+				} else if (method == repeat) {
+					if (!triggered) setupRepeatTrigger(timedInvocationChain, executionState, ongoingLoops.unshift(executionState));
+				} else if (method == until && ongoingLoops[0]) {
+					if (evaluateUntilCondition(ongoingLoops, executionState)) {					
+						gotoNextStep();
+						removeRepeatTrigger(ongoingLoops.shift());
+					} else {
+						resetRepeatTrigger(activeExecutionPoint = ongoingLoops[0]);
+						continue;
+					}
+				} else if (method == then) {
+					executionState._callback = executionState._methodArguments[0];
+					gotoNextStep();
+				} else {
+					context = method.apply(context, executionState._methodArguments);
+					gotoNextStep();
+				}			
+				activeExecutionPoint._context = context;
+			}
+		}, 
 		key;
+		
+		/**
+		 * Go on one step in the timed invocation chain.
+		 * Optionally call callback method.
+		 * 
+		 * @param timedInvocationChain
+		 */
+		function gotoNextStep() {
+			activeExecutionPoint._waitingForTrigger = activeExecutionPoint._triggeredContext = undefined;
+			if (typeof activeExecutionPoint._callback == "function") {
+				callbackWithLoopCounts(ongoingLoops, activeExecutionPoint._context, activeExecutionPoint._callback);
+			}
+			activeExecutionPoint = activeExecutionPoint._next;
+		}
+
 		for (key in context) {
 			if (typeof context[key] == "function") {
 				(function(name){
@@ -61,9 +157,9 @@
 								_methodName: name,
 								_methodArguments: arguments 
 						};
-						return timedInvocationChain._activeExecutionPoint._isChainEnd
-							&& (timedInvocationChain._activeExecutionPoint = lastAddedEntry)
-							&& runTimedInvocationChain(timedInvocationChain)
+						return activeExecutionPoint == chainEnd
+							&& (activeExecutionPoint = lastAddedEntry)
+							&& timedInvocationChain()
 							|| placeholder;
 					};
 				})(key);
@@ -74,114 +170,14 @@
 	}
 	
 	/**
-	 * Invoke all the methods currently in the timed invocation chain.
-	 * @author CreativeCouple
-	 * @author Peter Liske
-	 * 
-	 * @param timedInvocationChain
-	 * @param triggeredState optional state to be triggered
-	 * @param sourceElement optional element as source of trigger
-	 */
-	function runTimedInvocationChain(timedInvocationChain, triggeredState) {
-		if (triggeredState) {
-			/*
-			 * Reject triggering if none available.
-			 * This can happen during .join() when the FXQ is empty.
-			 * If this is also the current execution point, then we go on.
-			 * Else we have to wait.
-			 */
-			if (!triggeredState._waitingForTrigger || timedInvocationChain._activeExecutionPoint != triggeredState) {
-				return;
-			}
-		}
-		for (var executionState, context, method, triggered; executionState = timedInvocationChain._activeExecutionPoint;) {
-			// use triggered context in case of triggered execution
-			triggered = executionState._waitingForTrigger && executionState._triggeredContext;
-			context = triggered || executionState._context;
-			/*
-			 * Super-fast copying of current elements into our placeholder object.
-			 * This enables re-using our placeholder via jQuery(...)
-			 */
-			timedInvocationChain._placeholder.length = 0;
-			Array.prototype.push.apply(timedInvocationChain._placeholder, context.get());
-			
-			if (executionState._isChainEnd) {
-				if (!timedInvocationChain._ongoingLoops[0]) {
-					/*
-					 * We've reached the end of our TIC
-					 * and there is nothing left to wait.
-					 * So we can safely return the original jQuery object.
-					 */
-					return context; 
-				}
-				/*
-				 * Now we have ongoing loops but reached the chain's end.
-				 * If we already waited a bit then we start over right there.
-				 */
-				if (!timedInvocationChain._openEndLoopTimeout) {
-					// start open repeat loop over again at the end of the chain
-					resetRepeatTrigger(timedInvocationChain, timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0]);
-					continue;
-				}
-				return;
-			}
-			if (executionState._waitingForTrigger) {
-				if (triggered) {
-					gotoNextStep(timedInvocationChain, executionState);
-				} else {
-					return;
-				}
-			}
-			
-			method = context[executionState._methodName];
-			if (method == wait) {
-				if (!triggered) setupWaitTrigger(timedInvocationChain, executionState);
-			} else if (method == join) {
-				if (!triggered) setupJoinTrigger(timedInvocationChain, executionState);
-			} else if (method == repeat) {
-				if (!triggered) setupRepeatTrigger(timedInvocationChain, executionState);
-			} else if (method == until && timedInvocationChain._ongoingLoops[0]) {
-				if (evaluateUntilCondition(timedInvocationChain, executionState)) {					
-					gotoNextStep(timedInvocationChain, executionState);
-					removeRepeatTrigger(timedInvocationChain);
-				} else {
-					resetRepeatTrigger(timedInvocationChain, timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0]);
-					continue;
-				}
-			} else if (method == then) {
-				executionState._callback = executionState._methodArguments[0];
-				gotoNextStep(timedInvocationChain, executionState);
-			} else {
-				context = method.apply(context, executionState._methodArguments);
-				gotoNextStep(timedInvocationChain, executionState);
-			}			
-			timedInvocationChain._activeExecutionPoint._context = context;
-		}
-	}
-	
-	/**
-	 * Go on one step in the timed invocation chain.
-	 * Optionally call callback method.
-	 * 
-	 * @param timedInvocationChain
-	 */
-	function gotoNextStep(timedInvocationChain, executionState) {
-		executionState._waitingForTrigger = executionState._triggeredContext = undefined;
-		if (typeof executionState._callback == "function") {
-			callbackWithLoopCounts(timedInvocationChain, executionState._context, executionState._callback);
-		}
-		timedInvocationChain._activeExecutionPoint = executionState._next;
-	}
-	
-	/**
 	 * Run a callback method and hand current iteration numbers as arguments.
 	 * 
 	 * @param timedInvocationChain
 	 * @param context the context to apply on
 	 * @param callback the method to use
 	 */
-	function callbackWithLoopCounts(timedInvocationChain, context, callback) {
-		return callback.apply(context, jQuery(timedInvocationChain._ongoingLoops).map(function(){
+	function callbackWithLoopCounts(ongoingLoops, context, callback) {
+		return callback.apply(context, jQuery(ongoingLoops).map(function(){
 				return this._count;
 			}).get());
 	}
@@ -191,9 +187,10 @@
 	 * 
 	 * @param timedInvocationChain
 	 * @param executionState
-	 * @param trigger - ignored from arguments, just here without "var" to save bytes in the minimized version
 	 */
-	function setupWaitTrigger(timedInvocationChain, executionState, trigger) {
+	function setupWaitTrigger(timedInvocationChain, executionState) {
+		var trigger, triggerAction, unwaitAction, timeout;
+		
 		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
@@ -201,14 +198,13 @@
 			executionState._callback = executionState._methodArguments[1];
 		}
 		
-		var triggerAction, unwaitAction, timeout;
 		
 		if (typeof trigger == "string") {
 
 			triggerAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
 				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
-				runTimedInvocationChain(timedInvocationChain, executionState);				
+				timedInvocationChain(executionState);				
 			};
 			unwaitAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
@@ -221,7 +217,7 @@
 			triggerAction = function(){
 				executionState._context.unbind('__unwait__', unwaitAction);
 				executionState._triggeredContext = executionState._context; 
-				runTimedInvocationChain(timedInvocationChain, executionState);
+				timedInvocationChain(executionState);
 			};
 			unwaitAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction);
@@ -243,9 +239,11 @@
 	 * 
 	 * @param timedInvocationChain
 	 * @param executionState
-	 * @param queueName optional queue name 
 	 */
-	function setupJoinTrigger(timedInvocationChain, executionState, queueName) {
+	function setupJoinTrigger(timedInvocationChain, executionState) {
+		var queueName,
+		waitingElements = jQuery(executionState._context);
+		
 		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
 		} else {
@@ -254,11 +252,10 @@
 		}
 		
 		// wait for each element to reach the current end of its queue
-		var waitingElements = jQuery(executionState._context);
 		executionState._context.queue(queueName == undefined ? 'fx' : queueName, function(next){
 			if (waitingElements.length && !(waitingElements = waitingElements.not(this)).length) {
 				executionState._triggeredContext = executionState._context;
-				runTimedInvocationChain(timedInvocationChain, executionState);
+				timedInvocationChain(executionState);
 			}
 			next();
 		});
@@ -266,7 +263,9 @@
 	}
 
 
-	function setupRepeatTrigger(timedInvocationChain, executionState, trigger, firstRunNow) {
+	function setupRepeatTrigger(timedInvocationChain, executionState) {
+		var trigger, firstRunNow, triggerAction;
+		
 		if (typeof executionState._methodArguments[0] == "function") {
 			executionState._callback = executionState._methodArguments[0];
 		} else if (typeof executionState._methodArguments[1] == "function") {
@@ -291,9 +290,9 @@
 			
 		} else if (typeof trigger == "string") {
 
-			var triggerAction = function(){
+			triggerAction = function(){
 				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
-				runTimedInvocationChain(timedInvocationChain, executionState);				
+				timedInvocationChain(executionState);				
 			};
 			executionState._unrepeatAction = function(){
 				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction).unbind(trigger, triggerAction);
@@ -311,7 +310,7 @@
 			};
 			executionState._interval = window.setInterval(function(){				
 					executionState._triggeredContext = executionState._context; 
-					runTimedInvocationChain(timedInvocationChain, executionState);
+					timedInvocationChain(executionState);
 				}, Math.max(0,trigger));
 			executionState._context.bind('__unrepeat__', executionState._unrepeatAction);
 
@@ -321,35 +320,33 @@
 		}
 		executionState._count = 0;
 		executionState._waitingForTrigger = true;
-		timedInvocationChain._ongoingLoops.unshift(executionState);
 	}
 	
-	function resetRepeatTrigger(timedInvocationChain, executionState) {
+	function resetRepeatTrigger(executionState) {
 		executionState._count++;
 		executionState._waitingForTrigger = true;
 		if (executionState._triggerAlways)
 			executionState._triggeredContext = executionState._context;
 	}
 
-	function removeRepeatTrigger(timedInvocationChain) {
-		var executionState = timedInvocationChain._ongoingLoops.shift();
+	function removeRepeatTrigger(executionState) {
 		executionState._context.unbind('__unrepeat__', executionState._unrepeatAction);
 		if (executionState._interval)
 			window.clearInterval(executionState._interval);
 	}
 	
-	function evaluateUntilCondition(timedInvocationChain, executionState, condition) {
-		condition = executionState._methodArguments[0];
+	function evaluateUntilCondition(ongoingLoops, executionState) {
+		var condition = executionState._methodArguments[0];
 		if (condition == undefined) {
 			condition = !executionState._context.size();
 		}
 		if (typeof condition == "function") {
-			condition = callbackWithLoopCounts(timedInvocationChain, executionState._context, condition);
+			condition = callbackWithLoopCounts(ongoingLoops, executionState._context, condition);
 		}
 		if (typeof condition == "object") {
 			condition = condition.toString();
 		}
-		return typeof condition == "number" ? timedInvocationChain._ongoingLoops[0]._count >= condition-1 : condition;
+		return typeof condition == "number" ? ongoingLoops[0]._count >= condition-1 : condition;
 	}
 
 
