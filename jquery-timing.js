@@ -127,7 +127,7 @@
 			}
 			if (executionState._waitingForTrigger) {
 				if (triggered) {
-					gotoNextStep(timedInvocationChain);
+					gotoNextStep(timedInvocationChain, executionState);
 				} else {
 					return;
 				}
@@ -142,7 +142,7 @@
 				if (!triggered) setupRepeatTrigger(timedInvocationChain, executionState);
 			} else if (method == until && timedInvocationChain._ongoingLoops[0]) {
 				if (evaluateUntilCondition(timedInvocationChain, executionState)) {					
-					gotoNextStep(timedInvocationChain);
+					gotoNextStep(timedInvocationChain, executionState);
 					removeRepeatTrigger(timedInvocationChain);
 				} else {
 					resetRepeatTrigger(timedInvocationChain, timedInvocationChain._activeExecutionPoint = timedInvocationChain._ongoingLoops[0]);
@@ -150,10 +150,10 @@
 				}
 			} else if (method == then) {
 				executionState._callback = executionState._methodArguments[0];
-				gotoNextStep(timedInvocationChain);
+				gotoNextStep(timedInvocationChain, executionState);
 			} else {
 				context = method.apply(context, executionState._methodArguments);
-				gotoNextStep(timedInvocationChain);
+				gotoNextStep(timedInvocationChain, executionState);
 			}			
 			timedInvocationChain._activeExecutionPoint._context = context;
 		}
@@ -165,12 +165,12 @@
 	 * 
 	 * @param timedInvocationChain
 	 */
-	function gotoNextStep(timedInvocationChain) {
-		timedInvocationChain._activeExecutionPoint._waitingForTrigger = timedInvocationChain._activeExecutionPoint._triggeredContext = undefined;
-		if (typeof timedInvocationChain._activeExecutionPoint._callback == "function") {
-			callbackWithLoopCounts(timedInvocationChain, timedInvocationChain._activeExecutionPoint._context, timedInvocationChain._activeExecutionPoint._callback);
+	function gotoNextStep(timedInvocationChain, executionState) {
+		executionState._waitingForTrigger = executionState._triggeredContext = undefined;
+		if (typeof executionState._callback == "function") {
+			callbackWithLoopCounts(timedInvocationChain, executionState._context, executionState._callback);
 		}
-		timedInvocationChain._activeExecutionPoint = timedInvocationChain._activeExecutionPoint._next;
+		timedInvocationChain._activeExecutionPoint = executionState._next;
 	}
 	
 	/**
