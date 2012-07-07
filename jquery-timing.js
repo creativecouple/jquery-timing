@@ -56,18 +56,7 @@
 		 * @param timedInvocationChain
 		 * @param triggeredState optional state to be triggered
 		 */
-		timedInvocationChain = function(triggeredState) {
-			if (triggeredState) {
-				/*
-				 * Reject triggering if none available.
-				 * This can happen during .join() when the FXQ is empty.
-				 * If this is also the current execution point, then we go on.
-				 * Else we have to wait.
-				 */
-				if (!triggeredState._waitingForTrigger || activeExecutionPoint != triggeredState) {
-					return;
-				}
-			}
+		timedInvocationChain = function() {
 			while (true) {
 				// use triggered context in case of triggered execution
 				triggered = activeExecutionPoint._waitingForTrigger && activeExecutionPoint._triggeredContext;
@@ -201,7 +190,7 @@
 			triggerAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
 				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
-				timedInvocationChain(executionState);				
+				timedInvocationChain();				
 			};
 			unwaitAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
@@ -220,7 +209,7 @@
 			timeout = window.setTimeout(function(){
 					executionState._context.unbind('__unwait__', unwaitAction);
 					executionState._triggeredContext = executionState._context; 
-					timedInvocationChain(executionState);
+					timedInvocationChain();
 				}, Math.max(0,trigger));
 			executionState._context.bind('__unwait__', unwaitAction);
 
@@ -275,7 +264,7 @@
 
 			executionState._timingAction = function(){
 				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
-				timedInvocationChain(executionState);				
+				timedInvocationChain();				
 			};
 			executionState._unrepeatAction = function(){
 				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction).unbind(executionState._trigger, executionState._timingAction);
@@ -293,7 +282,7 @@
 			};
 			executionState._trigger = window.setInterval(function(){				
 					executionState._triggeredContext = executionState._context; 
-					timedInvocationChain(executionState);
+					timedInvocationChain();
 				}, Math.max(0, executionState._trigger));
 			executionState._context.bind('__unrepeat__', executionState._unrepeatAction);
 
@@ -396,7 +385,7 @@
 		executionState._context.queue(queueName == undefined ? 'fx' : queueName, function(next){
 			if (waitingElements.length && !(waitingElements = waitingElements.not(this)).length) {
 				executionState._triggeredContext = executionState._context;
-				timedInvocationChain(executionState);
+				timedInvocationChain();
 			}
 			next();
 		});
