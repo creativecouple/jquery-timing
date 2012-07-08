@@ -168,16 +168,16 @@
 	 * @param executionState
 	 */
 	wait._timingAction = function(timedInvocationChain, executionState) {
-		var trigger, triggerAction, unwaitAction, timeout;
+		var trigger, triggerAction, unwaitAction;
 		
+		executionState._triggered = 0;
+
 		if (typeof executionState._method._arguments[0] == "function") {
 			executionState._callback = executionState._method._arguments[0];
 		} else {
 			trigger = executionState._method._arguments[0];
 			executionState._callback = executionState._method._arguments[1];
 		}
-		
-		executionState._triggered = 0;
 		
 		if (typeof trigger == "string") {
 
@@ -187,15 +187,16 @@
 				timedInvocationChain();
 			};
 			unwaitAction = function(){
-				jQuery(this).unbind(trigger, triggerAction).unbind('__unwait__', unwaitAction);
+				jQuery(this).unbind('__unwait__', unwaitAction);
 				executionState._context = executionState._context.not(this);
 				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
+				jQuery(this).unbind(trigger, triggerAction);
 			};
-			executionState._context.bind(trigger, triggerAction).bind('__unwait__', unwaitAction);
+			executionState._context.bind(trigger, triggerAction);
 
 		} else {
 
-			timeout = window.setTimeout(function(){
+			triggerAction = window.setTimeout(function(){
 				executionState._context.unbind('__unwait__', unwaitAction);
 				executionState._triggered = executionState._context; 
 				timedInvocationChain();
@@ -205,11 +206,11 @@
 				executionState._context = executionState._context.not(this);
 				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 				if (!executionState._context.length)
-					window.clearTimeout(timeout);
+					window.clearTimeout(triggerAction);
 			};
-			executionState._context.bind('__unwait__', unwaitAction);
 
 		}
+		executionState._context.bind('__unwait__', unwaitAction);
 	};
 
 	/**
@@ -233,8 +234,10 @@
 	 * @param executionState
 	 */
 	repeat._timingAction = function(timedInvocationChain, executionState, ongoingLoops, firstRunNow) {
-		var trigger, triggerAction, unrepeatAction, interval;
+		var trigger, triggerAction, unrepeatAction;
 		
+		executionState._triggered = 0;
+
 		if (typeof executionState._method._arguments[0] == "function") {
 			executionState._callback = executionState._method._arguments[0];
 		} else if (typeof executionState._method._arguments[1] == "function") {
@@ -242,29 +245,27 @@
 			executionState._callback = executionState._method._arguments[1];
 		} else {
 			trigger = executionState._method._arguments[0];
-			firstRunNow = executionState._method._arguments[1];
+			executionState._triggered = !!executionState._method._arguments[1] && executionState._context;
 			executionState._callback = executionState._method._arguments[2];
 		}
-
-		executionState._triggered = 0;
 		
 		if (trigger == null) {
 			
+			triggerAction = true;
 			unrepeatAction = function(){
 				jQuery(this).unbind('__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
 				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
-				trigger = executionState._context.length && trigger;
+				triggerAction = executionState._context.length && triggerAction;
 			};
 			executionState._untilAction = function(isEnd){
-				if (!isEnd && trigger != 0) {
+				if (!isEnd && triggerAction) {
 					executionState._triggered = executionState._context;
 				} else {
 					executionState._context.unbind('__unrepeat__', unrepeatAction);
 				}
 			};
-			firstRunNow = true;
-			executionState._context.bind('__unrepeat__', unrepeatAction);
+			executionState._triggered = executionState._context;
 			
 		} else if (typeof trigger == "string") {
 
@@ -273,20 +274,21 @@
 				timedInvocationChain();				
 			};
 			unrepeatAction = function(){
-				jQuery(this).unbind(trigger, triggerAction).unbind('__unrepeat__', unrepeatAction);
+				jQuery(this).unbind('__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
 				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
+				jQuery(this).unbind(trigger, triggerAction);
 			};
 			executionState._untilAction = function(isEnd){
 				if (isEnd) {
-					executionState._context.unbind(trigger, triggerAction).unbind('__unrepeat__', unrepeatAction);
+					executionState._context.unbind('__unrepeat__', unrepeatAction).unbind(trigger, triggerAction);
 				}
 			};
-			executionState._context.bind(trigger, triggerAction).bind('__unrepeat__', unrepeatAction);
+			executionState._context.bind(trigger, triggerAction);
 
 		} else {
 
-			interval = window.setInterval(function(){				
+			triggerAction = window.setInterval(function(){				
 				executionState._triggered = executionState._context; 
 				timedInvocationChain();
 			}, Math.max(0, trigger));
@@ -295,20 +297,18 @@
 				executionState._context = executionState._context.not(this);
 				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 				if (!executionState._context.length)
-					window.clearInterval(interval);
+					window.clearInterval(triggerAction);
 			};
 			executionState._untilAction = function(isEnd){
 				if (isEnd) {
 					executionState._context.unbind('__unrepeat__', unrepeatAction);
-					window.clearInterval(interval);
+					window.clearInterval(triggerAction);
 				}
 			};
-			executionState._context.bind('__unrepeat__', unrepeatAction);
 
 		}
-		if (firstRunNow) {
-			executionState._triggered = executionState._context;
-		}
+		executionState._context.bind('__unrepeat__', unrepeatAction);
+
 		executionState._count = 0;
 		ongoingLoops.unshift(executionState);
 	};
@@ -383,14 +383,14 @@
 		var queueName, canTrigger,
 		waitingElements = jQuery(executionState._context);
 		
+		executionState._triggered = 0;
+		
 		if (typeof executionState._method._arguments[0] == "function") {
 			executionState._callback = executionState._method._arguments[0];
 		} else {
 			queueName = executionState._method._arguments[0];
 			executionState._callback = executionState._method._arguments[1];
 		}
-		
-		executionState._triggered = 0;
 		
 		// wait for each element to reach the current end of its queue
 		executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
