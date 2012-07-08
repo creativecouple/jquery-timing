@@ -34,19 +34,18 @@
 	 * @returns the placeholder to collect all concatenated function calls
 	 */
 	function createTIC(context, firstMethodName, firstMethodArguments) {
-		var chainEnd = {
-			_context: context
-		},
-		lastAddedEntry = {},
+		var lastAddedMethod = {},
 		placeholder = {},
-		executionState = chainEnd,
+		executionState = {
+				_context: context,
+				_method: lastAddedMethod
+		},
 		ongoingLoops = [],
 		openEndLoopTimeout = window.setTimeout(function(){
 			openEndLoopTimeout = null;
-			if (executionState == chainEnd)
-				timedInvocationChain();
+			timedInvocationChain();
 		}, 0),
-		method, triggered, nextStep,
+		method, nextStep,
 		
 		/**
 		 * Invoke all the methods currently in the timed invocation chain.
@@ -59,8 +58,7 @@
 		timedInvocationChain = function() {
 			while (true) {
 				// use triggered context in case of triggered execution
-				triggered = executionState._waitingForTrigger && executionState._triggeredContext;
-				context = triggered || executionState._context;
+				context = executionState._triggered || executionState._context;
 				/*
 				 * Super-fast copying of current elements into our placeholder object.
 				 * This enables re-using our placeholder via jQuery(...)
@@ -68,24 +66,23 @@
 				placeholder.length = 0;
 				Array.prototype.push.apply(placeholder, context.get());
 				
-				if (executionState._waitingForTrigger) {
-					if (!triggered) {
-						return;
-					}
-					gotoNextStep();
+				if (executionState._triggered == 0) {
+					return;
 				}
-				
-				if (executionState._methodName) {
-					method = context[executionState._methodName];
+				if (executionState._method._name) {
+					method = context[executionState._method._name];
+					if (!method) {
+						throw 'no such method: '+executionState._method._name;
+					}
 					if (method._timingAction) {
-						nextStep = !triggered && method._timingAction(timedInvocationChain, executionState, ongoingLoops);
+						nextStep = !!executionState._triggered || method._timingAction(timedInvocationChain, executionState, ongoingLoops);
 						if (nextStep === true) {
 							gotoNextStep();
 						} else {
 							executionState = nextStep || executionState; 
 						}
 					} else {
-						context = method.apply(context, executionState._methodArguments);
+						context = method.apply(context, executionState._method._arguments);
 						gotoNextStep();
 					}
 				} else {
@@ -118,28 +115,24 @@
 		 * @param timedInvocationChain
 		 */
 		function gotoNextStep() {
-			executionState._waitingForTrigger = executionState._triggeredContext = null;
+			executionState._triggered = executionState._triggered && 0;
 			if (typeof executionState._callback == "function") {
 				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
 			}
-			executionState = executionState._next;
-			executionState._context = context;
+			executionState = {
+					_method: executionState._method._next,
+					_context: context
+			};
 		}
 
 		for (key in context) {
 			if (typeof context[key] == "function") {
 				(function(name){
 					placeholder[name] = function(){
-						lastAddedEntry = lastAddedEntry._next = {
-								_next: chainEnd,
-								_context: chainEnd._context,
-								_methodName: name,
-								_methodArguments: arguments 
-						};
-						return executionState == chainEnd
-							&& (executionState = lastAddedEntry)
-							&& timedInvocationChain()
-							|| placeholder;
+						lastAddedMethod._name = name;
+						lastAddedMethod._arguments = arguments; 
+						lastAddedMethod = lastAddedMethod._next = {};
+						return timedInvocationChain() || placeholder;
 					};
 				})(key);
 			}
@@ -177,45 +170,46 @@
 	wait._timingAction = function(timedInvocationChain, executionState) {
 		var trigger, triggerAction, unwaitAction, timeout;
 		
-		if (typeof executionState._methodArguments[0] == "function") {
-			executionState._callback = executionState._methodArguments[0];
+		if (typeof executionState._method._arguments[0] == "function") {
+			executionState._callback = executionState._method._arguments[0];
 		} else {
-			trigger = executionState._methodArguments[0];
-			executionState._callback = executionState._methodArguments[1];
+			trigger = executionState._method._arguments[0];
+			executionState._callback = executionState._method._arguments[1];
 		}
 		
+		executionState._triggered = 0;
 		
 		if (typeof trigger == "string") {
 
 			triggerAction = function(){
-				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
-				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
-				timedInvocationChain();				
+				jQuery(this).unbind(trigger, triggerAction).unbind('__unwait__', unwaitAction);
+				executionState._triggered = executionState._triggered && executionState._triggered.add(this) || jQuery(this); 
+				timedInvocationChain();
 			};
 			unwaitAction = function(){
-				jQuery(this).unbind('__unwait__', unwaitAction).unbind(trigger, triggerAction);
-				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.not(this);
+				jQuery(this).unbind(trigger, triggerAction).unbind('__unwait__', unwaitAction);
+				executionState._context = executionState._context.not(this);
+				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 			};
 			executionState._context.bind(trigger, triggerAction).bind('__unwait__', unwaitAction);
 
 		} else {
 
+			timeout = window.setTimeout(function(){
+				executionState._context.unbind('__unwait__', unwaitAction);
+				executionState._triggered = executionState._context; 
+				timedInvocationChain();
+			}, Math.max(0,trigger));
 			unwaitAction = function(){
 				jQuery(this).unbind('__unwait__', unwaitAction);
 				executionState._context = executionState._context.not(this);
+				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 				if (!executionState._context.length)
 					window.clearTimeout(timeout);
 			};
-			timeout = window.setTimeout(function(){
-					executionState._context.unbind('__unwait__', unwaitAction);
-					executionState._triggeredContext = executionState._context; 
-					timedInvocationChain();
-				}, Math.max(0,trigger));
 			executionState._context.bind('__unwait__', unwaitAction);
 
 		}
-		
-		executionState._waitingForTrigger = true;
 	};
 
 	/**
@@ -239,66 +233,90 @@
 	 * @param executionState
 	 */
 	repeat._timingAction = function(timedInvocationChain, executionState, ongoingLoops, firstRunNow) {
-		if (typeof executionState._methodArguments[0] == "function") {
-			executionState._callback = executionState._methodArguments[0];
-		} else if (typeof executionState._methodArguments[1] == "function") {
-			executionState._trigger = executionState._methodArguments[0];
-			executionState._callback = executionState._methodArguments[1];
+		var trigger, triggerAction, unrepeatAction, interval;
+		
+		if (typeof executionState._method._arguments[0] == "function") {
+			executionState._callback = executionState._method._arguments[0];
+		} else if (typeof executionState._method._arguments[1] == "function") {
+			trigger = executionState._method._arguments[0];
+			executionState._callback = executionState._method._arguments[1];
 		} else {
-			executionState._trigger = executionState._methodArguments[0];
-			firstRunNow = executionState._methodArguments[1];
-			executionState._callback = executionState._methodArguments[2];
+			trigger = executionState._method._arguments[0];
+			firstRunNow = executionState._method._arguments[1];
+			executionState._callback = executionState._method._arguments[2];
 		}
 
-		if (executionState._trigger == null) {
+		executionState._triggered = 0;
+		
+		if (trigger == null) {
 			
-			executionState._unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction);
+			unrepeatAction = function(){
+				jQuery(this).unbind('__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
-				executionState._trigger = executionState._context.length && executionState._trigger;
+				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
+				trigger = executionState._context.length && trigger;
+			};
+			executionState._untilAction = function(isEnd){
+				if (!isEnd && trigger != 0) {
+					executionState._triggered = executionState._context;
+				} else {
+					executionState._context.unbind('__unrepeat__', unrepeatAction);
+				}
 			};
 			firstRunNow = true;
-			executionState._context.bind('__unrepeat__', executionState._unrepeatAction);
+			executionState._context.bind('__unrepeat__', unrepeatAction);
 			
-		} else if (typeof executionState._trigger == "string") {
+		} else if (typeof trigger == "string") {
 
-			executionState._timingAction = function(){
-				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.add(this) || jQuery(this); 
+			triggerAction = function(){
+				executionState._triggered = executionState._triggered && executionState._triggered.add(this) || jQuery(this); 
 				timedInvocationChain();				
 			};
-			executionState._unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction).unbind(executionState._trigger, executionState._timingAction);
-				executionState._triggeredContext = executionState._triggeredContext && executionState._triggeredContext.not(this);
+			unrepeatAction = function(){
+				jQuery(this).unbind(trigger, triggerAction).unbind('__unrepeat__', unrepeatAction);
+				executionState._context = executionState._context.not(this);
+				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 			};
-			executionState._context.bind(executionState._trigger, executionState._timingAction).bind('__unrepeat__', executionState._unrepeatAction);
+			executionState._untilAction = function(isEnd){
+				if (isEnd) {
+					executionState._context.unbind(trigger, triggerAction).unbind('__unrepeat__', unrepeatAction);
+				}
+			};
+			executionState._context.bind(trigger, triggerAction).bind('__unrepeat__', unrepeatAction);
 
 		} else {
 
-			executionState._unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction);
+			interval = window.setInterval(function(){				
+				executionState._triggered = executionState._context; 
+				timedInvocationChain();
+			}, Math.max(0, trigger));
+			unrepeatAction = function(){
+				jQuery(this).unbind('__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
+				executionState._triggered = executionState._context.length && executionState._triggered && executionState._triggered.not(this);
 				if (!executionState._context.length)
-					window.clearInterval(executionState._trigger);
+					window.clearInterval(interval);
 			};
-			executionState._trigger = window.setInterval(function(){				
-					executionState._triggeredContext = executionState._context; 
-					timedInvocationChain();
-				}, Math.max(0, executionState._trigger));
-			executionState._context.bind('__unrepeat__', executionState._unrepeatAction);
+			executionState._untilAction = function(isEnd){
+				if (isEnd) {
+					executionState._context.unbind('__unrepeat__', unrepeatAction);
+					window.clearInterval(interval);
+				}
+			};
+			executionState._context.bind('__unrepeat__', unrepeatAction);
 
 		}
 		if (firstRunNow) {
-			executionState._triggeredContext = executionState._context;
+			executionState._triggered = executionState._context;
 		}
 		executionState._count = 0;
-		executionState._waitingForTrigger = true;
 		ongoingLoops.unshift(executionState);
 	};
 		
 	/**
 	 * stop repeating for underlying elements  
 	 */
-	function unrepeat(contextToStop) {
+	function unrepeat() {
 		return this.trigger('__unrepeat__');
 	}
 	
@@ -310,7 +328,7 @@
 	}
 	
 	until._timingAction = function(timedInvocationChain, executionState, ongoingLoops) {
-		var condition = executionState && executionState._methodArguments[0];
+		var condition = executionState && executionState._method._arguments[0];
 		if (condition == null) {
 			condition = !executionState._context.size();
 		}
@@ -325,21 +343,12 @@
 		}
 		if (condition) {					
 			executionState = ongoingLoops.shift();
-			executionState._context.unbind('__unrepeat__', executionState._unrepeatAction);
-			if (executionState._trigger == null) {
-				executionState._trigger = 0;
-			} else if (typeof executionState._trigger == "string") {
-				executionState._context.unbind(executionState._trigger, executionState._timingAction);
-			} else {
-				window.clearInterval(executionState._trigger);
-			}
+			executionState._untilAction(true);
 			return true;
 		} else {
 			executionState = ongoingLoops[0];
 			executionState._count++;
-			executionState._waitingForTrigger = true;
-			if (executionState._trigger == null)
-				executionState._triggeredContext = executionState._context;
+			executionState._untilAction();
 			return executionState;
 		}
 	};
@@ -353,7 +362,7 @@
 	}
 	
 	then._timingAction = function(timedInvocationChain, executionState){
-		executionState._callback = executionState._methodArguments[0];
+		executionState._callback = executionState._method._arguments[0];
 		return true;
 	};
 	
@@ -371,25 +380,28 @@
 	 * @param executionState
 	 */
 	join._timingAction = function(timedInvocationChain, executionState) {
-		var queueName,
+		var queueName, canTrigger,
 		waitingElements = jQuery(executionState._context);
 		
-		if (typeof executionState._methodArguments[0] == "function") {
-			executionState._callback = executionState._methodArguments[0];
+		if (typeof executionState._method._arguments[0] == "function") {
+			executionState._callback = executionState._method._arguments[0];
 		} else {
-			queueName = executionState._methodArguments[0];
-			executionState._callback = executionState._methodArguments[1];
+			queueName = executionState._method._arguments[0];
+			executionState._callback = executionState._method._arguments[1];
 		}
+		
+		executionState._triggered = 0;
 		
 		// wait for each element to reach the current end of its queue
 		executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
 			if (waitingElements.length && !(waitingElements = waitingElements.not(this)).length) {
-				executionState._triggeredContext = executionState._context;
-				timedInvocationChain();
+				executionState._triggered = executionState._context;
+				if (canTrigger)
+					timedInvocationChain();
 			}
 			next();
 		});
-		executionState._waitingForTrigger = true;
+		canTrigger = true;
 	}
 
 
