@@ -42,7 +42,7 @@
 		executionState = chainEnd,
 		ongoingLoops = [],
 		openEndLoopTimeout = window.setTimeout(function(){
-			openEndLoopTimeout = undefined;
+			openEndLoopTimeout = null;
 			if (executionState == chainEnd)
 				timedInvocationChain();
 		}, 0),
@@ -118,7 +118,7 @@
 		 * @param timedInvocationChain
 		 */
 		function gotoNextStep() {
-			executionState._waitingForTrigger = executionState._triggeredContext = undefined;
+			executionState._waitingForTrigger = executionState._triggeredContext = null;
 			if (typeof executionState._callback == "function") {
 				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
 			}
@@ -250,7 +250,7 @@
 			executionState._callback = executionState._methodArguments[2];
 		}
 
-		if (executionState._trigger == undefined) {
+		if (executionState._trigger == null) {
 			
 			executionState._unrepeatAction = function(){
 				jQuery(this).unbind('__unrepeat__', executionState._unrepeatAction);
@@ -311,7 +311,7 @@
 	
 	until._timingAction = function(timedInvocationChain, executionState, ongoingLoops) {
 		var condition = executionState && executionState._methodArguments[0];
-		if (condition == undefined) {
+		if (condition == null) {
 			condition = !executionState._context.size();
 		}
 		if (typeof condition == "function") {
@@ -326,7 +326,7 @@
 		if (condition) {					
 			executionState = ongoingLoops.shift();
 			executionState._context.unbind('__unrepeat__', executionState._unrepeatAction);
-			if (executionState._trigger == undefined) {
+			if (executionState._trigger == null) {
 				executionState._trigger = 0;
 			} else if (typeof executionState._trigger == "string") {
 				executionState._context.unbind(executionState._trigger, executionState._timingAction);
@@ -338,7 +338,7 @@
 			executionState = ongoingLoops[0];
 			executionState._count++;
 			executionState._waitingForTrigger = true;
-			if (executionState._trigger == undefined)
+			if (executionState._trigger == null)
 				executionState._triggeredContext = executionState._context;
 			return executionState;
 		}
@@ -382,7 +382,7 @@
 		}
 		
 		// wait for each element to reach the current end of its queue
-		executionState._context.queue(queueName == undefined ? 'fx' : queueName, function(next){
+		executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
 			if (waitingElements.length && !(waitingElements = waitingElements.not(this)).length) {
 				executionState._triggeredContext = executionState._context;
 				timedInvocationChain();
