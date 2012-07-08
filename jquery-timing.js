@@ -74,8 +74,8 @@
 					if (!method) {
 						throw 'no such method: '+executionState._method._name;
 					}
-					if (method._timingAction) {
-						nextStep = !!executionState._triggered || method._timingAction(timedInvocationChain, executionState, ongoingLoops);
+					if (method._timing) {
+						nextStep = !!executionState._triggered || method._timing(timedInvocationChain, executionState, ongoingLoops);
 						if (nextStep === true) {
 							gotoNextStep();
 						} else {
@@ -102,7 +102,7 @@
 						return;
 					}
 					// start open repeat loop over again at the end of the chain
-					executionState = until._timingAction(timedInvocationChain, false, ongoingLoops);
+					executionState = until._timing(timedInvocationChain, false, ongoingLoops);
 				}
 			}
 		}, 
@@ -167,7 +167,7 @@
 	 * @param timedInvocationChain
 	 * @param executionState
 	 */
-	wait._timingAction = function(timedInvocationChain, executionState) {
+	wait._timing = function(timedInvocationChain, executionState) {
 		var trigger, triggerAction, unwaitAction;
 		
 		executionState._triggered = 0;
@@ -233,7 +233,7 @@
 	 * @param timedInvocationChain
 	 * @param executionState
 	 */
-	repeat._timingAction = function(timedInvocationChain, executionState, ongoingLoops, firstRunNow) {
+	repeat._timing = function(timedInvocationChain, executionState, ongoingLoops, firstRunNow) {
 		var trigger, triggerAction, unrepeatAction;
 		
 		executionState._triggered = 0;
@@ -327,7 +327,7 @@
 		throw '.until() method must be used after .repeat() only';
 	}
 	
-	until._timingAction = function(timedInvocationChain, executionState, ongoingLoops) {
+	until._timing = function(timedInvocationChain, executionState, ongoingLoops) {
 		var condition = executionState && executionState._method._arguments[0];
 		if (condition == null) {
 			condition = !executionState._context.size();
@@ -361,7 +361,7 @@
 		return this;
 	}
 	
-	then._timingAction = function(timedInvocationChain, executionState){
+	then._timing = function(timedInvocationChain, executionState){
 		executionState._callback = executionState._method._arguments[0];
 		return true;
 	};
@@ -379,7 +379,7 @@
 	 * @param timedInvocationChain
 	 * @param executionState
 	 */
-	join._timingAction = function(timedInvocationChain, executionState) {
+	join._timing = function(timedInvocationChain, executionState) {
 		var queueName, canTrigger,
 		waitingElements = jQuery(executionState._context);
 		

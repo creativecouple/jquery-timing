@@ -33,7 +33,6 @@
 		<replace file="${script-minimized}" token="_method" value="f"/>
 		<replace file="${script-minimized}" token="_name" value="g"/>
 		<replace file="${script-minimized}" token="_next" value="h"/>
-		<replace file="${script-minimized}" token="_timingAction" value="i"/>
 		<replace file="${script-minimized}" token="_triggered" value="j"/>
  		<replace file="${script-minimized}" token="_type" value="k"/>
 		<replace file="${script-minimized}" token="_untilAction" value="l"/>
