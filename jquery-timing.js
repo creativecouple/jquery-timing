@@ -39,11 +39,11 @@
 		},
 		lastAddedEntry = {},
 		placeholder = {},
-		activeExecutionPoint = chainEnd,
+		executionState = chainEnd,
 		ongoingLoops = [],
 		openEndLoopTimeout = window.setTimeout(function(){
 			openEndLoopTimeout = undefined;
-			if (activeExecutionPoint == chainEnd)
+			if (executionState == chainEnd)
 				timedInvocationChain();
 		}, 0),
 		method, triggered, nextStep,
@@ -59,8 +59,8 @@
 		timedInvocationChain = function() {
 			while (true) {
 				// use triggered context in case of triggered execution
-				triggered = activeExecutionPoint._waitingForTrigger && activeExecutionPoint._triggeredContext;
-				context = triggered || activeExecutionPoint._context;
+				triggered = executionState._waitingForTrigger && executionState._triggeredContext;
+				context = triggered || executionState._context;
 				/*
 				 * Super-fast copying of current elements into our placeholder object.
 				 * This enables re-using our placeholder via jQuery(...)
@@ -68,24 +68,24 @@
 				placeholder.length = 0;
 				Array.prototype.push.apply(placeholder, context.get());
 				
-				if (activeExecutionPoint._waitingForTrigger) {
+				if (executionState._waitingForTrigger) {
 					if (!triggered) {
 						return;
 					}
 					gotoNextStep();
 				}
 				
-				if (activeExecutionPoint._methodName) {
-					method = context[activeExecutionPoint._methodName];
+				if (executionState._methodName) {
+					method = context[executionState._methodName];
 					if (method._timingAction) {
-						nextStep = !triggered && method._timingAction(timedInvocationChain, activeExecutionPoint, ongoingLoops);
+						nextStep = !triggered && method._timingAction(timedInvocationChain, executionState, ongoingLoops);
 						if (nextStep === true) {
 							gotoNextStep();
 						} else {
-							activeExecutionPoint = nextStep || activeExecutionPoint; 
+							executionState = nextStep || executionState; 
 						}
 					} else {
-						context = method.apply(context, activeExecutionPoint._methodArguments);
+						context = method.apply(context, executionState._methodArguments);
 						gotoNextStep();
 					}
 				} else {
@@ -105,7 +105,7 @@
 						return;
 					}
 					// start open repeat loop over again at the end of the chain
-					activeExecutionPoint = until._timingAction(timedInvocationChain, false, ongoingLoops);
+					executionState = until._timingAction(timedInvocationChain, false, ongoingLoops);
 				}
 			}
 		}, 
@@ -118,12 +118,12 @@
 		 * @param timedInvocationChain
 		 */
 		function gotoNextStep() {
-			activeExecutionPoint._waitingForTrigger = activeExecutionPoint._triggeredContext = undefined;
-			if (typeof activeExecutionPoint._callback == "function") {
-				callbackWithLoopCounts(ongoingLoops, activeExecutionPoint._context, activeExecutionPoint._callback);
+			executionState._waitingForTrigger = executionState._triggeredContext = undefined;
+			if (typeof executionState._callback == "function") {
+				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
 			}
-			activeExecutionPoint = activeExecutionPoint._next;
-			activeExecutionPoint._context = context;
+			executionState = executionState._next;
+			executionState._context = context;
 		}
 
 		for (key in context) {
@@ -136,8 +136,8 @@
 								_methodName: name,
 								_methodArguments: arguments 
 						};
-						return activeExecutionPoint == chainEnd
-							&& (activeExecutionPoint = lastAddedEntry)
+						return executionState == chainEnd
+							&& (executionState = lastAddedEntry)
 							&& timedInvocationChain()
 							|| placeholder;
 					};
