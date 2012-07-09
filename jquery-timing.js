@@ -20,7 +20,8 @@
 	/**
 	 * object to store statically invoked threads
 	 */
-	var THREAD_GROUPS = {};
+	var THREAD_GROUPS = {},
+	all_mocked_function_names = {};
 	
 	/**
 	 * Initialize a new timed invocation chain. First entry is the given method.
@@ -31,19 +32,33 @@
 	 * @param context
 	 * @returns the placeholder to collect all concatenated function calls
 	 */
-	function createTIC(context) {
-		var lastAddedMethod = {},
-		placeholder = {},
-		executionState = {
+	function createTimedInvocationChain(context, callStack, stepCallback) {
+		var executionState = {
 				_context: context,
-				_method: lastAddedMethod
+				_method: callStack
 		},
 		ongoingLoops = [],
 		openEndLoopTimeout = window.setTimeout(function(){
 			openEndLoopTimeout = null;
 			timedInvocationChain();
 		}, 0),
-		method, nextStep,
+		method, nextStep;
+		
+		
+		/**
+		 * Go on one step in the timed invocation chain.
+		 * Optionally call callback method.
+		 */
+		function gotoNextStep() {
+			executionState._triggered = executionState._triggered && 0;
+			if (typeof executionState._callback == "function") {
+				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
+			}
+			executionState = {
+					_method: executionState._method._next,
+					_context: context
+			};
+		}
 		
 		/**
 		 * Invoke all the methods currently in the timed invocation chain.
@@ -53,16 +68,13 @@
 		 * @param timedInvocationChain
 		 * @param triggeredState optional state to be triggered
 		 */
-		timedInvocationChain = function() {
+		function timedInvocationChain() {
 			while (true) {
 				// use triggered context in case of triggered execution
 				context = executionState._triggered || executionState._context;
-				/*
-				 * Super-fast copying of current elements into our placeholder object.
-				 * This enables re-using our placeholder via jQuery(...)
-				 */
-				placeholder.length = 0;
-				Array.prototype.push.apply(placeholder, context.get());
+				if (stepCallback) {
+					stepCallback(context.get());
+				}
 				
 				if (executionState._triggered == 0) {
 					return;
@@ -103,38 +115,49 @@
 					executionState = until._timing(timedInvocationChain, false, ongoingLoops);
 				}
 			}
-		}, 
+		};
+		return timedInvocationChain;
+	}
+	
+	function createPlaceholder(context, callStack, instantInvocation) {
+		var placeholder = {},
 		key;
-		
-		/**
-		 * Go on one step in the timed invocation chain.
-		 * Optionally call callback method.
-		 */
-		function gotoNextStep() {
-			executionState._triggered = executionState._triggered && 0;
-			if (typeof executionState._callback == "function") {
-				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
-			}
-			executionState = {
-					_method: executionState._method._next,
-					_context: context
-			};
-		}
-
 		for (key in context) {
 			if (typeof context[key] == "function") {
-				(function(name){
-					placeholder[name] = function(){
-						lastAddedMethod._name = name;
-						lastAddedMethod._arguments = arguments; 
-						lastAddedMethod = lastAddedMethod._next = {};
-						return timedInvocationChain && timedInvocationChain() || placeholder;
-					};
-				})(key);
+				all_mocked_function_names[key] = key;
 			}
 		}
+		$.each(all_mocked_function_names, function(name){
+			placeholder[name] = function(){
+				callStack._name = name;
+				callStack._arguments = arguments; 
+				callStack = callStack._next = {};
+				return instantInvocation && instantInvocation() || placeholder;
+			};
+		});
+
 		placeholder._ = context._ = context;
 		return placeholder;
+	}
+	
+	// initialize default mocked function names
+	createPlaceholder(new Object());
+	createPlaceholder(new Array());
+	createPlaceholder(new String());
+	createPlaceholder(new Function());
+	
+	function createSimpleTIC(context) {
+		var callStack = {},
+		placeholder,
+		timedInvocationChain = createTimedInvocationChain(context, callStack, function(elements){
+			/*
+			 * Super-fast copying of current elements into our placeholder object.
+			 * This enables re-using our placeholder via jQuery(...)
+			 */
+			placeholder.length = 0;
+			Array.prototype.push.apply(placeholder, elements);
+		});
+		return placeholder = createPlaceholder(context, callStack, timedInvocationChain);
 	}
 	
 	/**
@@ -154,7 +177,7 @@
 	 * start new timed invocation chain and apply wait method 
 	 */
 	function wait() {
-		return createTIC(this).wait.apply(this,arguments);
+		return createSimpleTIC(this).wait.apply(this,arguments);
 	}
 	
 	/**
@@ -220,7 +243,7 @@
 	 * start new timed invocation chain and apply repeat method 
 	 */
 	function repeat() {
-		return createTIC(this).repeat.apply(this,arguments);
+		return createSimpleTIC(this).repeat.apply(this,arguments);
 	}
 	
 	/**
@@ -366,7 +389,7 @@
 	 * start new timed invocation chain and apply join method 
 	 */
 	function join() {
-		return createTIC(this).join.apply(this,arguments);
+		return createSimpleTIC(this).join.apply(this,arguments);
 	}
 	
 	/**
@@ -399,8 +422,38 @@
 		});
 		canTrigger = true;
 	};
-
-
+	
+	/*
+	 * create replacement methods for .bind(), .on(), and .one()
+	 */
+	$.each(['bind','on','one'], function(index, name){
+		var original = jQuery.fn[name];
+		jQuery.fn[name] = original && function(trigger){
+			if (typeof trigger != "object") {
+				var classicalUsage, i, callStack;
+				for(i=1; i<arguments.length; i++) {
+					if (typeof arguments[i] == "function") {
+						if (arguments[i] !== jQuery) {
+							// fix for jQuery 1.6 .one() + .unbind()
+							arguments[i].guid = arguments[i].guid || jQuery.guid++;
+							classicalUsage = true;
+						}
+						break;
+					}
+				}
+				if (!classicalUsage) {
+					callStack = {};
+					arguments[i] = function(){
+						return (createTimedInvocationChain(jQuery(this), callStack))();
+					};
+					arguments.length = Math.max(arguments.length, i+1);
+					return createPlaceholder(original.apply(this, arguments), callStack);
+				}
+			}
+			return original.apply(this, arguments);
+		};
+	});
+	
 	/**
 	 * Start or re-use a thread group to apply all the timing methods on.
 	 * This will be used in the static variants.
