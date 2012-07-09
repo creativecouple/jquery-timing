@@ -1,4 +1,4 @@
-suite = {
+var suite = {
 		
 	"joining empty default queue instantly": {
 		
@@ -211,8 +211,18 @@ suite = {
 			test.assertEquals("join should fire once for multiple objects", 1, x);
 			test.assertEquals("instant .join() should return original jQuery object", $x, TIC);
 			test.done();
-		}
+		},
 		
+		".stop().join()._": function($, test) {
+			test.version('1.4.');
+			
+			var $x = $('<div>');
+			var TIC = $x.stop().join();
+			var _ = TIC._;
+			test.assertEquals("tic must be same object because of instant invocation", $x, TIC);
+			test.assertEquals("underscore must return original object", $x, _);
+			test.done();
+		},
 	},
 
 	"joining empty default queue deferred": {
@@ -221,7 +231,7 @@ suite = {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.join(callback);
+			$x.join(callback);
 			window.setTimeout(function(){
 				test.assertEquals("instant .join() should have fired", 1, x);
 				$x.dequeue();
@@ -259,7 +269,7 @@ suite = {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.join(callback);
+			$x.join(callback);
 			window.setTimeout(function(){
 				test.assertEquals("instant .join() should fire", 1, x);
 				$x.stop();
@@ -279,7 +289,7 @@ suite = {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.join(callback);
+			$x.join(callback);
 			window.setTimeout(function(){
 				test.assertEquals("instant .join() should fire", 1, x);
 				$x.stop(true);
@@ -434,7 +444,7 @@ suite = {
 			var timeout = 100;
 			$x.eq(0).delay(timeout);
 			$x.eq(2).delay(timeout*2);
-			var TIC = $x.join(callback);
+			$x.join(callback);
 			test.assertEquals("join should wait until all elements joined", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("join should still wait until all elements joined", 0, x);
@@ -457,7 +467,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join(callback);
+			$x.delay(timeout).join(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -480,7 +490,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join().then(callback);
+			$x.delay(timeout).join().then(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -503,7 +513,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join(callback);
+			$x.delay(timeout).join(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -530,7 +540,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join(callback);
+			$x.delay(timeout).join(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -555,7 +565,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join().then(callback);
+			$x.delay(timeout).join().then(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -580,7 +590,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join().then(callback);
+			$x.delay(timeout).join().then(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -659,7 +669,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join(callback);
+			$x.delay(timeout).join(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -684,7 +694,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join().then(callback);
+			$x.delay(timeout).join().then(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -736,7 +746,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join(callback);
+			$x.delay(timeout).join(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -761,7 +771,7 @@ suite = {
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
 			var $x = $('<div>');
-			var TIC = $x.delay(timeout).join().then(callback);
+			$x.delay(timeout).join().then(callback);
 			test.assertEquals("active queue should wait", 0, x);
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
@@ -806,8 +816,18 @@ suite = {
 					}, 100);
 				}, timeout);
 			}, timeout / 2);
-		}
+		},
 		
+		".delay(timeout).join()._": function($, test) {
+
+			var $x = $('<div>');
+			var TIC = $x.delay(100).join();
+			var _ = TIC._;
+			test.assertNotEquals("tic must be new object", $x, TIC);
+			test.assertEquals("underscore must return original object", $x, _);
+			test.done();
+		},
+
 	}
 		
 };

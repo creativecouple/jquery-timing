@@ -1,20 +1,20 @@
-suite = {
+var suite = {
 		
 		"waiting short": {
 			
 			".wait(callback)" : function($, test) {
-					var x = 0;
-					var callback = function(){ x++; test.check(); };
-					var TIC = $.wait(callback);
-					test.assertEquals(".wait() should defer", 0, x);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				$.wait(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should have fired after short waiting", 1, x);
 					window.setTimeout(function(){
-						test.assertEquals(".wait() should have fired after short waiting", 1, x);
-						window.setTimeout(function(){
-							test.assertEquals(".wait() should not fire anymore", 1, x);
-							test.done();
-						}, 100);
-					}, 1);
-				},
+						test.assertEquals(".wait() should not fire anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 1);
+			},
 				
 			".wait().then(callback)" : function($, test) {
 				var x = 0;
@@ -110,8 +110,17 @@ suite = {
 						test.done();
 					}, 100);
 				}, 1);
-			}
+			},
 			
+			".wait()._": function($, test) {
+				var $x = $('<div>');
+				var TIC = $x.wait();
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				var _ = TIC._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
 		},
 		
 		"waiting for timeout": {
@@ -214,8 +223,17 @@ suite = {
 						test.done();
 					}, timeout+1);
 				}, timeout+1);
-			}
+			},
 			
+			".wait(timeout)._": function($, test) {
+				var $x = $('<div>');
+				var TIC = $x.wait(100);
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				var _ = TIC._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
 		},
 		
 		"waiting for deferred event": {
@@ -418,8 +436,17 @@ suite = {
 						test.done();
 					}, 100);
 				}, 100);
-			}
+			},
 			
+			".wait(event)._": function($, test) {
+				var $x = $('<div>');
+				var TIC = $x.wait('myEvent');
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				var _ = TIC._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
 		},
 		
 		"waiting for instant event": {

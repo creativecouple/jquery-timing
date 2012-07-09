@@ -96,10 +96,24 @@ function savejQuery(type) {
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.js')</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.min.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.js')</script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.3/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.min.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.js')</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
@@ -110,6 +124,13 @@ function savejQuery(type) {
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.js')</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.min.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.js')</script>
@@ -117,10 +138,24 @@ function savejQuery(type) {
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.js')</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.min.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
+
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.js')</script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.min.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+<script type="text/javascript" src="jquery-timing.js"></script>
+<script type="text/javascript">savejQuery('jquery-timing.js')</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
@@ -153,15 +188,30 @@ function savejQuery(type) {
 <script charset="utf-8" type="text/javascript" src="tests/test.join.js"></script>
 <script type="text/javascript">tests[".join() functionality"] = suite; minVersion[".join() functionality"]='1.4.0'</script>
 <script charset="utf-8" type="text/javascript" src="tests/test.join-named-queue.js"></script>
-<script type="text/javascript">tests[".join(queueName) functionality"] = suite; minVersion[".join(queueName) functionality"]='1.7.0'</script>
-<script charset="utf-8" type="text/javascript" src="tests/test.underscore.js"></script>
-<script type="text/javascript">tests["._ functionality"] = suite;</script>
+<script type="text/javascript">tests[".join(queueName) functionality"] = suite; minVersion[".join(queueName) functionality"]='1.4.0'</script>
+<script charset="utf-8" type="text/javascript" src="tests/test.bind.js"></script>
+<script type="text/javascript">tests[".bind() functionality"] = suite;</script>
+<script charset="utf-8" type="text/javascript" src="tests/test.on.js"></script>
+<script type="text/javascript">tests[".on() functionality"] = suite; minVersion[".on() functionality"]='1.7.0'</script>
+<script charset="utf-8" type="text/javascript" src="tests/test.one.js"></script>
+<script type="text/javascript">tests[".one() functionality"] = suite;</script>
 <script charset="utf-8" type="text/javascript" src="tests/test.var.js"></script>
 <script type="text/javascript">tests["$$() functionality"] = suite; minVersion["$$() functionality"]='1.4.0'</script>
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script type="text/javascript" src="jquery-timing.js"></script>
 
 <script type="text/javascript">
+function compareVersion(v1,v2) {
+	v1 = v1.split('.');
+	v2 = v2.split('.');
+	for (var i=0; i<3; i++) {
+		var compare = Number(v1[i]||0) - Number(v2[i]||0);
+		if (compare != 0)
+				return compare;
+	}
+	return 0;
+}
+
 var assertionException = new Error("assertion violated");
 function TestCase(success, error, $) {
 	this.$ = $;
@@ -206,7 +256,7 @@ function TestCase(success, error, $) {
 		}
 	};
 	this.version = function(version) {
-		if (this.$().jquery < version) {
+		if (compareVersion(this.$().jquery,version) < 0) {
 			this.finished = 1;
 			throw assertionException;
 		}
@@ -273,7 +323,7 @@ $(function(){
 							window.location.replace('#'+[part,section,name,version,type].join('|'));
 							window.location.reload();
 						}).appendTo($tr);
-						if (filter[3] && version != filter[3] || filter[4] && type != filter[4] || minVersion[part] && (version < minVersion[part]) && !filter[3]) {
+						if (filter[3] && version != filter[3] || filter[4] && type != filter[4] || minVersion[part] && (compareVersion(version,minVersion[part]) < 0) && !filter[3]) {
 							return $td.removeClass('run').text('-');
 						}						
 						count++;
