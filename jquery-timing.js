@@ -29,11 +29,9 @@
 	 * @author Peter Liske
 	 * 
 	 * @param context
-	 * @param firstMethodName
-	 * @param firstMethodArguments
 	 * @returns the placeholder to collect all concatenated function calls
 	 */
-	function createTIC(context, firstMethodName, firstMethodArguments) {
+	function createTIC(context) {
 		var lastAddedMethod = {},
 		placeholder = {},
 		executionState = {
@@ -111,8 +109,6 @@
 		/**
 		 * Go on one step in the timed invocation chain.
 		 * Optionally call callback method.
-		 * 
-		 * @param timedInvocationChain
 		 */
 		function gotoNextStep() {
 			executionState._triggered = executionState._triggered && 0;
@@ -132,13 +128,13 @@
 						lastAddedMethod._name = name;
 						lastAddedMethod._arguments = arguments; 
 						lastAddedMethod = lastAddedMethod._next = {};
-						return timedInvocationChain() || placeholder;
+						return timedInvocationChain && timedInvocationChain() || placeholder;
 					};
 				})(key);
 			}
 		}
 		placeholder._ = context._ = context;
-		return placeholder[firstMethodName].apply(context, firstMethodArguments);
+		return placeholder;
 	}
 	
 	/**
@@ -158,7 +154,7 @@
 	 * start new timed invocation chain and apply wait method 
 	 */
 	function wait() {
-		return createTIC(this,'wait',arguments);
+		return createTIC(this).wait.apply(this,arguments);
 	}
 	
 	/**
@@ -224,7 +220,7 @@
 	 * start new timed invocation chain and apply repeat method 
 	 */
 	function repeat() {
-		return createTIC(this,'repeat',arguments);
+		return createTIC(this).repeat.apply(this,arguments);
 	}
 	
 	/**
@@ -370,7 +366,7 @@
 	 * start new timed invocation chain and apply join method 
 	 */
 	function join() {
-		return createTIC(this,'join',arguments);
+		return createTIC(this).join.apply(this,arguments);
 	}
 	
 	/**
@@ -380,7 +376,8 @@
 	 * @param executionState
 	 */
 	join._timing = function(timedInvocationChain, executionState) {
-		var queueName, canTrigger,
+		var queueName,
+		canTrigger,
 		waitingElements = jQuery(executionState._context);
 		
 		executionState._triggered = 0;
