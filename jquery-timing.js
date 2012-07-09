@@ -20,7 +20,7 @@
 	/**
 	 * object to store statically invoked threads
 	 */
-	var TIMING_THREADS = {};
+	var THREAD_GROUPS = {};
 	
 	/**
 	 * Initialize a new timed invocation chain. First entry is the given method.
@@ -376,8 +376,7 @@
 	 * @param executionState
 	 */
 	join._timing = function(timedInvocationChain, executionState) {
-		var queueName,
-		canTrigger,
+		var canTrigger, queueName,
 		waitingElements = jQuery(executionState._context);
 		
 		executionState._triggered = 0;
@@ -399,24 +398,24 @@
 			next();
 		});
 		canTrigger = true;
-	}
+	};
 
 
 	/**
-	 * Start a new thread to apply all the timing methods on.
+	 * Start or re-use a thread group to apply all the timing methods on.
 	 * This will be used in the static variants.
 	 *   
-	 * @param threadName the optional name of the timing thread 
+	 * @param name the optional name of the timing thread 
 	 * @param method the method to be called
 	 * @param args the original function arguments
 	 */
-	function useThread(threadName, method, args){
-		if (typeof threadName == "string") {
+	function useThreadGroup(name, method, args){
+		if (typeof name == "string") {
 			Array.prototype.shift.apply(args);
 		} else {
-			threadName = '';
+			name = '';
 		}
-		return method.apply(TIMING_THREADS[threadName] = (TIMING_THREADS[threadName] || jQuery('<div>').text(threadName)), args);
+		return method.apply(THREAD_GROUPS[name] = (THREAD_GROUPS[name] || jQuery('<div>').text(name)), args);
 	}
 	
 	/**
@@ -452,7 +451,7 @@
 			return hasComputation ? compute(value) : value;				
 		}
 		evaluate.toString = evaluate;
-		jQuery.extend(callbackVariable,{
+		jQuery.extend(callbackVariable, {
 			x: 0,
 			$: evaluate,
 			toString: evaluate,
@@ -501,26 +500,25 @@
 		$: jQuery
 	});
 	jQuery.extend({
-		wait: function(threadName) {
-			return useThread(threadName, wait, arguments);
+		wait: function(name) {
+			return useThreadGroup(name, wait, arguments);
 		},
-		unwait: function(threadName) {
-			return useThread(threadName, unwait, arguments);
+		unwait: function(name) {
+			return useThreadGroup(name, unwait, arguments);
 		},
-		repeat: function(threadName) {
-			return useThread(threadName, repeat, arguments);
+		repeat: function(name) {
+			return useThreadGroup(name, repeat, arguments);
 		},
-		unrepeat: function(threadName) {
-			return useThread(threadName, unrepeat, arguments);
+		unrepeat: function(name) {
+			return useThreadGroup(name, unrepeat, arguments);
 		},
-		then: function(threadName) {
-			return useThread(threadName, then, arguments);
+		then: function(name) {
+			return useThreadGroup(name, then, arguments);
 		},
-		join: function(threadName) {
-			return useThread(threadName, join, arguments);
+		join: function(name) {
+			return useThreadGroup(name, join, arguments);
 		},
 		$$: $$
 	});
-
 
 })(jQuery, window);
