@@ -2,26 +2,26 @@ var suite = {
 		
 		"binding single event - classical style": {
 		
-			".on(event,handler) + .off(event)": function($, test) {
+			".live(event,handler) + .die(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".on(event,data,handler) + .off(event)": function($, test) {
+			".live(event,data,handler) + .die(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -29,38 +29,38 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".on(event,handler) + .off(event,handler)": function($, test) {
+			".live(event,handler) + .die(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev,handler);
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev,handler);
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".on(event,data,handler) + .off(event,handler)": function($, test) {
+			".live(event,data,handler) + .die(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -68,30 +68,30 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev,handler);
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev,handler);
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".on(event,handler) + .off(event,otherHandler)": function($, test) {
+			".live(event,handler) + .die(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.trigger(ev);
@@ -99,7 +99,7 @@ var suite = {
 				test.done();
 			},
 
-			".on(event,data,handler) + .off(event,otherHandler)": function($, test) {
+			".live(event,data,handler) + .die(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -107,11 +107,11 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.off(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.die(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .die", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.trigger(ev);
@@ -119,28 +119,28 @@ var suite = {
 				test.done();
 			},
 
-			".on(event,handler) + .trigger(event) + .off(event)": function($, test) {
+			".live(event,handler) + .trigger(event) + .die(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".on(event,data,handler) + .trigger(event) + .off(event)": function($, test) {
+			".live(event,data,handler) + .trigger(event) + .die(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -148,42 +148,42 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".on(event,handler) + .trigger(event) + .off(event,handler)": function($, test) {
+			".live(event,handler) + .trigger(event) + .die(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev, handler);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev, handler);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 			
-			".on(event,data,handler) + .trigger(event) + .off(event,handler)": function($, test) {
+			".live(event,data,handler) + .trigger(event) + .die(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -191,34 +191,34 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev, handler);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev, handler);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 			
-			".on(event,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
+			".live(event,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.trigger(ev);
@@ -226,7 +226,7 @@ var suite = {
 				test.done();
 			},
 
-			".on(event,data,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
+			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -234,13 +234,13 @@ var suite = {
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.off(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.trigger(ev);
@@ -252,7 +252,9 @@ var suite = {
 
 		"binding multiple events - classical style": {
 			
-			".on({ev1:h1, e2:h2}) + .off(ev1)": function($, test) {
+			".live({ev1:h1, e2:h2}) + .die(ev1)": function($, test) {
+				test.version('1.4.0');
+				
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){
@@ -261,15 +263,15 @@ var suite = {
 				function handler2(){
 					y++;
 				}
-				var $on = $x.on({ev1:handler1, ev2:handler2});
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live({ev1:handler1, ev2:handler2});
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, y);
-				$x.off('ev1');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev1');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered separately", 1, y);
 				$x.trigger('ev1');
@@ -279,7 +281,9 @@ var suite = {
 				test.done();
 			},
 
-			".on({ev1:h1, e2:h2},data) + .off(ev1)": function($, test) {
+			".live({ev1:h1, e2:h2},data) + .die(ev1)": function($, test) {
+				test.version('1.7.2');
+				
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(event){
@@ -290,15 +294,15 @@ var suite = {
 					y++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on({ev1:handler1, ev2:handler2}, {prop: true});
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live({ev1:handler1, ev2:handler2}, {prop: true});
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, y);
-				$x.off('ev1');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev1');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
-				test.assertEquals("because of .off trigger must not happen", 0, x);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered separately", 1, y);
 				$x.trigger('ev1');
@@ -308,20 +312,20 @@ var suite = {
 				test.done();
 			},
 
-			".on('ev1 ev2',handler) + .off(ev2)": function($, test) {
+			".live('ev1 ev2',handler) + .die(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
-				var $on = $x.on('ev1 ev2', function(){ x++; });
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live('ev1 ev2', function(){ x++; });
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.off('ev2');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev2');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
@@ -329,24 +333,24 @@ var suite = {
 				test.done();
 			},
 
-			".on('ev1 ev2',data,handler) + .off(ev2)": function($, test) {
+			".live('ev1 ev2',data,handler) + .die(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
 					x++;
 					test.assertEquals("event data must be passed", true, event.data.prop);
 				}
-				var $on = $x.on('ev1 ev2', {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $on);
+				var $live = $x.live('ev1 ev2', {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.off('ev2');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev2');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
@@ -358,7 +362,7 @@ var suite = {
 
 		"binding single event - timed invocation chain style": {
 			
-			".on(event).doSomething() + .trigger(event)": function($, test) {
+			".live(event).doSomething() + .trigger(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -366,19 +370,19 @@ var suite = {
 					x++;
 					test.assertEquals("context object must be original", $x.get(0), this.get(0));
 				}
-				var $on = $x.on(ev).then(handler);
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
+				var $live = $x.live(ev).then(handler);
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("trigger should fire", 1, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen again", 1, x);
+				test.assertEquals("because of .die trigger must not happen again", 1, x);
 				test.done();
 			},
 
-			".on(event,$).doSomething() + .trigger(event)": function($, test) {
+			".live(event,$).doSomething() + .trigger(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -386,23 +390,23 @@ var suite = {
 					x++;
 					test.assertEquals("context object must be original", $x.get(0), this.get(0));
 				}
-				var $on = $x.on(ev,$).then(handler);
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
+				var $live = $x.live(ev,$).then(handler);
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("trigger should fire", 1, x);
-				$x.off(ev);
-				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .off trigger must not happen again", 1, x);
+				test.assertEquals("because of .die trigger must not happen again", 1, x);
 				test.done();
 			},
 
-			".on(event).doSomething()._": function($, test) {
+			".live(event).doSomething()._": function($, test) {
 				var $x = $('<div>');
-				var $on = $x.on('myEvent',$).text('test');
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
-				var $y = $on._;
+				var $live = $x.live('myEvent',$).text('test');
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
+				var $y = $live._;
 				test.assertEquals("underscore must provide original object", $x, $y);
 				test.done();
 			},
@@ -411,23 +415,23 @@ var suite = {
 
 		"binding multiple events - timed invocation chain style": {
 			
-			".on('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
+			".live('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on('ev1 ev2').then(handler);
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
+				var $live = $x.live('ev1 ev2').then(handler);
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.off('ev2');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev2');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
@@ -435,23 +439,23 @@ var suite = {
 				test.done();
 			},
 
-			".on('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
+			".live('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
 					x++;
 				}
-				var $on = $x.on('ev1 ev2',$).then(handler);
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
+				var $live = $x.live('ev1 ev2',$).then(handler);
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.off('ev2');
-				test.assertEquals("ev1 must not trigger on .off", 0, x);
-				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.die('ev2');
+				test.assertEquals("ev1 must not trigger on .die", 0, x);
+				test.assertEquals("ev2 must not trigger on .die", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .off trigger must not happen", 1, x);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
@@ -459,11 +463,11 @@ var suite = {
 				test.done();
 			},
 
-			".on('ev1 ev2').doSomething()._": function($, test) {
+			".live('ev1 ev2').doSomething()._": function($, test) {
 				var $x = $('<div>');
-				var $on = $x.on('ev1 ev2',$).text('test');
-				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
-				var $y = $on._;
+				var $live = $x.live('ev1 ev2',$).text('test');
+				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
+				var $y = $live._;
 				test.assertEquals("underscore must provide original object", $x, $y);
 				test.done();
 			},

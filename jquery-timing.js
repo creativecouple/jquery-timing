@@ -386,38 +386,6 @@
 	});
 	
 	/**
-	 * create replacement methods for .bind(), .on(), and .one()
-	 * supporting chaining instead of giving a callback function
-	 */
-	jQuery.each(['bind','on','one'], function(index, name){
-		var original = jQuery.fn[name];
-		jQuery.fn[name] = original && function(trigger){
-			if (typeof trigger != "object") {
-				var classicalUsage, i, callStack;
-				for(i=1; i<arguments.length; i++) {
-					if (typeof arguments[i] == "function") {
-						if (arguments[i] !== jQuery) {
-							// fix for jQuery 1.6 .one() + .unbind()
-							arguments[i].guid = arguments[i].guid || jQuery.guid++;
-							classicalUsage = i;
-						}
-						break;
-					}
-				}
-				if (!classicalUsage) {
-					callStack = {};
-					arguments[i] = function(){
-						return (createTimedInvocationChain(jQuery(this), callStack))();
-					};
-					arguments.length = Math.max(arguments.length, i+1);
-					return createPlaceholder(original.apply(this, arguments), callStack);
-				}
-			}
-			return original.apply(this, arguments);
-		};
-	});
-	
-	/**
 	 * define all static timing methods:
 	 *  $.wait, $.repeat ,$.join, $.then, $.unwait, $.unrepeat
 	 */
@@ -428,6 +396,38 @@
 		};
 	});
 
+	/**
+	 * create replacement methods for .bind(), .on(), and .one()
+	 * supporting chaining instead of giving a callback function
+	 */
+	jQuery.each(['bind','on','one','live','delegate'], function(index, name){
+		var original = jQuery.fn[name];
+		jQuery.fn[name] = original && function(){
+			var originalUsage, i, callStack;
+			for(i=0; i<arguments.length; i++) {
+				if (typeof arguments[i] == "function" || typeof arguments[i] == "object" || arguments[i] === false) {
+					if (arguments[i] !== jQuery) {
+						// fix for jQuery 1.6 .one() + .unbind()
+						if (typeof arguments[i] == "function" && jQuery.guid) {
+							arguments[i].guid = arguments[i].guid || jQuery.guid++;
+						}
+						originalUsage = !originalUsage;
+					}
+					break;
+				}
+			}
+			if (originalUsage) {
+				return original.apply(this, arguments);
+			}
+			callStack = {};
+			arguments[i] = function(){
+				return (createTimedInvocationChain(jQuery(this), callStack))();
+			};
+			arguments.length = Math.max(arguments.length, i+1);
+			return createPlaceholder(original.apply(this, arguments), callStack);
+		};
+	});
+	
 	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
 	 * 
