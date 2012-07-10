@@ -488,7 +488,7 @@
 		return callbackVariable;
 	};
 	
-	jQuery.$$ = window.$$ = $$;
+	jQuery.$$ = window.$$ = jQuery.X = $$;
 	
 	jQuery.fn.$ = jQuery;
 	
