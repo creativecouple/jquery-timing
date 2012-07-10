@@ -1,5 +1,7 @@
 var suite = {
 		
+		_version: '1.2.4',
+		
 		"binding single event - classical style": {
 		
 			".one(event,handler) + .unbind(event)": function($, test) {

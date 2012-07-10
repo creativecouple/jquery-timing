@@ -1,6 +1,6 @@
 var suite = {
 		
-		_version: ['1.3','1.7.99'],
+		_version: ['1.3','1.8.0'],
 		
 		"binding single event - classical style": {
 		
