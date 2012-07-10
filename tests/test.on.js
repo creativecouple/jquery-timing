@@ -1,6 +1,45 @@
 var suite = {
 		
 		"binding single event - classical style": {
+		
+			".on(event,handler) + .off(event)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(){
+					x++;
+				}
+				var $bind = $x.on(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.off(ev);
+				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .off trigger must not happen", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 0, x);
+				test.done();
+			},
+
+			".on(event,data,handler) + .off(event)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.off(ev);
+				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .off trigger must not happen", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 0, x);
+				test.done();
+			},
 
 			".on(event,handler) + .off(event,handler)": function($, test) {
 				var $x = $('<div>');
@@ -10,6 +49,26 @@ var suite = {
 					x++;
 				}
 				var $bind = $x.on(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.off(ev,handler);
+				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .off trigger must not happen", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 0, x);
+				test.done();
+			},
+
+			".on(event,data,handler) + .off(event,handler)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.off(ev,handler);
@@ -40,6 +99,26 @@ var suite = {
 				test.done();
 			},
 
+			".on(event,data,handler) + .off(event,otherHandler)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.off(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .off", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still trigger expected", 2, x);
+				test.done();
+			},
+
 			".on(event,handler) + .trigger(event) + .off(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
@@ -48,6 +127,28 @@ var suite = {
 					x++;
 				}
 				var $bind = $x.on(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("first trigger should fire", 1, x);
+				$x.off(ev);
+				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .off trigger must not happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 1, x);
+				test.done();
+			},
+
+			".on(event,data,handler) + .trigger(event) + .off(event)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
@@ -82,6 +183,28 @@ var suite = {
 				test.done();
 			},
 			
+			".on(event,data,handler) + .trigger(event) + .off(event,handler)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("first trigger should fire", 1, x);
+				$x.off(ev, handler);
+				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .off trigger must not happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 1, x);
+				test.done();
+			},
+			
 			".on(event,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
@@ -90,6 +213,28 @@ var suite = {
 					x++;
 				}
 				var $bind = $x.on(ev, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("first trigger should fire", 1, x);
+				$x.off(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .off", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
+				$x.trigger(ev);
+				test.assertEquals("still trigger expected", 3, x);
+				test.done();
+			},
+
+			".on(event,data,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on(ev, {prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
@@ -134,13 +279,39 @@ var suite = {
 				test.done();
 			},
 
+			".on({ev1:h1, e2:h2},data) + .off(ev1)": function($, test) {
+				var $x = $('<div>');
+				var x=0, y=0;
+				function handler1(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				function handler2(event){
+					y++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on({ev1:handler1, ev2:handler2}, {prop: true});
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("ev1 not yet triggered", 0, x);
+				test.assertEquals("ev2 not yet triggered", 0, y);
+				$x.off('ev1');
+				test.assertEquals("ev1 must not trigger on .off", 0, x);
+				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.trigger('ev1');
+				test.assertEquals("because of .off trigger must not happen", 0, x);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 should be triggered separately", 1, y);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 still not expected to trigger", 0, x);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 should be triggered again", 2, y);
+				test.done();
+			},
+
 			".on('ev1 ev2',handler) + .off(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
-				function handler(){
-					x++;
-				}
-				var $bind = $x.on('ev1 ev2',handler);
+				var $bind = $x.on('ev1 ev2', function(){ x++; });
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
@@ -158,6 +329,31 @@ var suite = {
 				test.done();
 			},
 
+			".on('ev1 ev2',data,handler) + .off(ev2)": function($, test) {
+				var $x = $('<div>');
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $bind = $x.on('ev1 ev2', {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
+				test.assertEquals("ev1 not yet triggered", 0, x);
+				test.assertEquals("ev2 not yet triggered", 0, x);
+				$x.off('ev2');
+				test.assertEquals("ev1 must not trigger on .off", 0, x);
+				test.assertEquals("ev2 must not trigger on .off", 0, x);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 should be triggered", 1, x);
+				$x.trigger('ev2');
+				test.assertEquals("because of .off trigger must not happen", 1, x);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 should be triggered again", 2, x);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 still not expected to trigger", 2, x);
+				test.done();
+			},
+			
 		},
 
 		"binding single event - timed invocation chain style": {
