@@ -1,9 +1,13 @@
 var suite = {
 		
+		_version: ['1.3','1.7.99'],
+		
 		"binding single event - classical style": {
 		
 			".live(event,handler) + .die(event)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -18,11 +22,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live(event,data,handler) + .die(event)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .die(event)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -38,11 +46,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event,handler) + .die(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -57,11 +69,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live(event,data,handler) + .die(event,handler)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .die(event,handler)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -77,11 +93,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event,handler) + .die(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -96,11 +116,15 @@ var suite = {
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still trigger expected", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live(event,data,handler) + .die(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .die(event,otherHandler)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -116,11 +140,15 @@ var suite = {
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still trigger expected", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event,handler) + .trigger(event) + .die(event)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -137,11 +165,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live(event,data,handler) + .trigger(event) + .die(event)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .trigger(event) + .die(event)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -159,11 +191,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event,handler) + .trigger(event) + .die(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -180,11 +216,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 			
-			".live(event,data,handler) + .trigger(event) + .die(event,handler)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .trigger(event) + .die(event,handler)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -202,11 +242,15 @@ var suite = {
 				test.assertEquals("because of .die trigger must not happen", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 			
 			".live(event,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -223,11 +267,15 @@ var suite = {
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.trigger(ev);
 				test.assertEquals("still trigger expected", 3, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -245,6 +293,8 @@ var suite = {
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.trigger(ev);
 				test.assertEquals("still trigger expected", 3, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
@@ -252,10 +302,10 @@ var suite = {
 
 		"binding multiple events - classical style": {
 			
-			".live({ev1:h1, e2:h2}) + .die(ev1)": function($, test) {
-				test.version('1.4.0');
-				
-				var $x = $('<div>');
+			".live({ev1:h1, e2:h2}) + .die(ev1)|1.4.3": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -278,13 +328,15 @@ var suite = {
 				test.assertEquals("ev1 still not expected to trigger", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered again", 2, y);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live({ev1:h1, e2:h2},data) + .die(ev1)": function($, test) {
-				test.version('1.7.2');
-				
-				var $x = $('<div>');
+			".live({ev1:h1, e2:h2},data) + .die(ev1)|1.4.3": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0, y=0;
 				function handler1(event){
 					x++;
@@ -309,11 +361,15 @@ var suite = {
 				test.assertEquals("ev1 still not expected to trigger", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered again", 2, y);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live('ev1 ev2',handler) + .die(ev2)": function($, test) {
-				var $x = $('<div>');
+			".live('ev1 ev2',handler) + .die(ev2)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0;
 				var $live = $x.live('ev1 ev2', function(){ x++; });
 				test.assertEquals("classical bind must return original jQuery object", $x, $live);
@@ -330,11 +386,15 @@ var suite = {
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 still not expected to trigger", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live('ev1 ev2',data,handler) + .die(ev2)": function($, test) {
-				var $x = $('<div>');
+			".live('ev1 ev2',data,handler) + .die(ev2)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0;
 				function handler(event){
 					x++;
@@ -355,6 +415,8 @@ var suite = {
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 still not expected to trigger", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 			
@@ -363,7 +425,9 @@ var suite = {
 		"binding single event - timed invocation chain style": {
 			
 			".live(event).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -379,11 +443,15 @@ var suite = {
 				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("because of .die trigger must not happen again", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event,$).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -399,15 +467,21 @@ var suite = {
 				test.assertEquals("event must not trigger on .die", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("because of .die trigger must not happen again", 1, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
 			".live(event).doSomething()._": function($, test) {
-				var $x = $('<div>');
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var $live = $x.live('myEvent',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				var $y = $live._;
 				test.assertEquals("underscore must provide original object", $x, $y);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
@@ -415,8 +489,10 @@ var suite = {
 
 		"binding multiple events - timed invocation chain style": {
 			
-			".live('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+			".live('ev1 ev2').doSomething() + .trigger(ev1)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0;
 				function handler(){
 					x++;
@@ -436,11 +512,15 @@ var suite = {
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 still not expected to trigger", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+			".live('ev1 ev2',$).doSomething() + .trigger(ev1)|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var x=0;
 				function handler(){
 					x++;
@@ -460,15 +540,21 @@ var suite = {
 				test.assertEquals("ev1 should be triggered again", 2, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 still not expected to trigger", 2, x);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 
-			".live('ev1 ev2').doSomething()._": function($, test) {
-				var $x = $('<div>');
+			".live('ev1 ev2').doSomething()._|1.4": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
 				var $live = $x.live('ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				var $y = $live._;
 				test.assertEquals("underscore must provide original object", $x, $y);
+
+				$('div.'+clazz).remove();
 				test.done();
 			},
 

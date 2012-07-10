@@ -128,9 +128,7 @@ var suite = {
 
 		"binding multiple events - classical style": {
 			
-			".one({ev1:h1, e2:h2}) + .unbind(ev1)": function($, test) {
-				test.version('1.4.0');
-				
+			".one({ev1:h1, e2:h2}) + .unbind(ev1)|1.4": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){
@@ -157,9 +155,7 @@ var suite = {
 				test.done();
 			},
 
-			".one({ev1:h1, e2:h2}) + .unbind(ev1,h1)": function($, test) {
-				test.version('1.4.0');
-
+			".one({ev1:h1, e2:h2}) + .unbind(ev1,h1)|1.4": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){

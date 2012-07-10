@@ -1,5 +1,7 @@
 var suite = {
 		
+		_version: ['1.7.0'],
+		
 		"binding single event - classical style": {
 		
 			".on(event,handler) + .off(event)": function($, test) {

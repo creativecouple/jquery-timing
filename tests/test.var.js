@@ -237,9 +237,9 @@ var suite = {
 			
 		},
 	
-		"applications of callback variables": {
+		"applications of self-counting callback variables": {
 		
-			"$('.many').text($$('x++')) -> '0','1','2','3',…": function($, test) {
+			"$('.many').text($$('x++')) -> '0','1','2','3',…|1.4": function($, test) {
 				var $x = $('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.text($.$$('x++'));
@@ -249,7 +249,7 @@ var suite = {
 				test.done();
 			},
 			
-			"$('.many').addClass($$('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…": function($, test) {
+			"$('.many').addClass($$('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…|1.4": function($, test) {
 				var $x = $('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.addClass($.$$('"t"+(x++)'));

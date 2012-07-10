@@ -1,5 +1,7 @@
 var suite = {
 		
+		_version: ['1.0','1.8'],
+		
 		"binding single event - classical style": {
 		
 			".bind(event,handler) + .unbind(event)": function($, test) {
@@ -252,9 +254,7 @@ var suite = {
 
 		"binding multiple events - classical style": {
 			
-			".bind({ev1:h1, e2:h2}) + .unbind(ev1)": function($, test) {
-				test.version('1.4.0');
-				
+			".bind({ev1:h1, e2:h2}) + .unbind(ev1)|1.4": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){
@@ -281,9 +281,7 @@ var suite = {
 				test.done();
 			},
 
-			".bind({ev1:h1, e2:h2},data) + .unbind(ev1)": function($, test) {
-				test.version('1.7.2');
-				
+			".bind({ev1:h1, e2:h2},data) + .unbind(ev1)|1.7.2": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(event){

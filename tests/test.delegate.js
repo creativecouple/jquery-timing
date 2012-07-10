@@ -1,5 +1,7 @@
 var suite = {
 		
+		_version: ['1.4.2','1.8.0'],
+		
 		"binding single event - classical style": {
 		
 			".delegate(selector,event,handler) + .undelegate(selector,event)": function($, test) {
@@ -253,8 +255,6 @@ var suite = {
 		"binding multiple events - classical style": {
 			
 			".delegate(selector,{ev1:h1, e2:h2}) + .undelegate(selector,ev1)": function($, test) {
-				test.version('1.4.0');
-				
 				var $x = $('<div><p>');
 				var x=0, y=0;
 				function handler1(){
@@ -282,8 +282,6 @@ var suite = {
 			},
 
 			".delegate(selector,{ev1:h1, e2:h2},data) + .undelegate(selector,ev1)": function($, test) {
-				test.version('1.7.2');
-				
 				var $x = $('<div><p>');
 				var x=0, y=0;
 				function handler1(event){
