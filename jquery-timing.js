@@ -405,7 +405,7 @@
 		jQuery.fn[name] = original && function(){
 			var originalUsage, i, callStack;
 			for(i=0; i<arguments.length; i++) {
-				if (typeof arguments[i] == "function" || typeof arguments[i] == "object" || arguments[i] === false) {
+				if (typeof arguments[i] == "function" || (arguments[i] && typeof arguments[i] == "object") || arguments[i] === false) {
 					if (arguments[i] !== jQuery) {
 						// fix for jQuery 1.6 .one() + .unbind()
 						if (typeof arguments[i] == "function" && jQuery.guid) {
