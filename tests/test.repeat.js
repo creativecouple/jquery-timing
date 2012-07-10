@@ -640,7 +640,7 @@ var suite = {
 				};
 				var TIC = $x.repeat(event,true,callback).until(count);
 				test.assertNotEquals("event-triggered loop should not return original jQuery object", $x, TIC);
-				test.assertEquals(".repeat(event) should have been fired already", 1, x);
+				test.assertEquals(".repeat(event,true) should have been fired already", 1, x);
 				for (var i=1; i<=count; i++) {
 					test.assertEquals(".repeat(event) should wait for event to be triggered", i, x);
 					$x.trigger(event);
@@ -654,7 +654,69 @@ var suite = {
 					test.assertEquals("callback should not have fired anymore", count, x);
 					test.done();
 				}, 100);
-			}
+			},
+			
+			".repeat(ev1).wait(ev2).until(count)": function($, test) {
+				var x = 0, y = 0, z = 0;
+				var $x = $('<div>');
+				var TIC = $x.repeat('ev1', function(){
+						x++;
+						$x.trigger('ev2');
+						test.assertEquals('states x,y must not be mixed up by ev1:ev2', x-1, y);
+						test.assertEquals('states x,z must not be mixed up by ev1:ev2', x-1, z);
+						$x.trigger('ev1');
+						test.assertEquals('states x,y must not be mixed up by ev1:ev1', x-1, y);
+						test.assertEquals('states x,z must not be mixed up by ev1:ev1', x-1, z);
+					}).wait('ev2', function(){
+						y++;
+						$x.trigger('ev1');
+						test.assertEquals('states y,x must not be mixed up by ev2:ev1', y, x);
+						test.assertEquals('states y,z must not be mixed up by ev2:ev1', y-1, z);
+						$x.trigger('ev2');
+						test.assertEquals('states y,x must not be mixed up by ev2:ev2', y, x);
+						test.assertEquals('states y,z must not be mixed up by ev2:ev2', y-1, z);
+					}).then(function(){
+						z++;
+					}).until(3);
+				
+				test.assertNotEquals("event-triggered loop should not return original jQuery object", $x, TIC);
+				test.assertEquals(".repeat(ev1) should not have been fired already", 0, x);
+				test.assertEquals("not yet waiting for .wait(ev2)", 0, y);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 does nothing with .repeat() while waiting for ev1", 0, x);
+				test.assertEquals("ev2 does nothing with .wait() while waiting for ev1", 0, y);
+				$x.trigger('ev1');
+				test.assertEquals(".repeat() fired once", 1, x);
+				test.assertEquals(".wait() still waiting for first trigger", 0, y);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 does nothing with .repeat() while waiting for ev2", 1, x);
+				test.assertEquals("ev1 does nothing with .wait() while waiting for ev2", 0, y);
+				$x.trigger('ev2');
+				test.assertEquals(".repeat() has been fired in the meantime", 2, x);
+				test.assertEquals(".wait() fired once", 1, y);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 does nothing with .repeat() while waiting for ev2", 2, x);
+				test.assertEquals("ev1 does nothing with .wait() while waiting for ev2", 1, y);
+				$x.trigger('ev2');
+				test.assertEquals(".repeat() has been fired in the meantime", 3, x);
+				test.assertEquals(".wait() fired twice", 2, y);
+				$x.trigger('ev2');
+				test.assertEquals(".repeat() cannot fire because of end of loop", 3, x);
+				test.assertEquals(".wait() fired again", 3, y);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 does nothing with .repeat() after loop", 3, x);
+				test.assertEquals("ev1 does nothing with .wait() after loop", 3, y);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 does nothing with .repeat() after loop", 3, x);
+				test.assertEquals("ev2 does nothing with .wait() after loop", 3, y);
+				$x.trigger('ev1');
+				test.assertEquals("ev1 still does nothing with .repeat() after loop", 3, x);
+				test.assertEquals("ev1 still does nothing with .wait() after loop", 3, y);
+				$x.trigger('ev2');
+				test.assertEquals("ev2 still does nothing with .repeat() after loop", 3, x);
+				test.assertEquals("ev2 still does nothing with .wait() after loop", 3, y);
+				test.done();
+			},
 			
 		},
 		
