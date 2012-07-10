@@ -42,23 +42,7 @@
 			openEndLoopTimeout = null;
 			timedInvocationChain();
 		}, 0),
-		method, nextStep;
-		
-		
-		/**
-		 * Go on one step in the timed invocation chain.
-		 * Optionally call callback method.
-		 */
-		function gotoNextStep() {
-			executionState._triggered = executionState._triggered && 0;
-			if (typeof executionState._callback == "function") {
-				callbackWithLoopCounts(ongoingLoops, executionState._context, executionState._callback);
-			}
-			executionState = {
-					_method: executionState._method._next,
-					_context: context
-			};
-		}
+		method;
 		
 		/**
 		 * Invoke all the methods currently in the timed invocation chain.
@@ -70,31 +54,39 @@
 		 */
 		function timedInvocationChain() {
 			while (true) {
-				// use triggered context in case of triggered execution
-				context = executionState._triggered || executionState._context;
 				if (stepCallback) {
-					stepCallback(context.get());
+					stepCallback(executionState._context);
 				}
 				
 				if (executionState._triggered == 0) {
 					return;
 				}
 				if (executionState._method._name) {
-					method = context[executionState._method._name];
+					method = executionState._context[executionState._method._name];
 					if (!method) {
 						throw 'no such method: '+executionState._method._name;
 					}
-					if (method._timing) {
-						nextStep = !!executionState._triggered || method._timing(timedInvocationChain, executionState, ongoingLoops);
-						if (nextStep === true) {
-							gotoNextStep();
-						} else {
-							executionState = nextStep || executionState; 
-						}
-					} else {
-						context = method.apply(context, executionState._method._arguments);
-						gotoNextStep();
-					}
+					executionState = executionState._triggered ?
+						/*
+						 * There was some timing method that fulfilled its condition
+						 * to go on to the next step.
+						 * We use the _triggered context as next context.
+						 */
+						{
+							_context: executionState._triggered,
+							_next: typeof executionState._callback == "function" &&
+								executionState._callback.apply(executionState._triggered, jQuery(ongoingLoops).map(function(){
+									return this._count;
+								}).get()),
+							// reset _triggered here - just for the case of repeat loop states
+							_method: (executionState._triggered = 0) || executionState._method._next
+						} :
+						method._timing ?
+							method._timing(timedInvocationChain, executionState, ongoingLoops) || executionState :
+							{
+								_context: method.apply(executionState._context, executionState._method._arguments),
+								_method: executionState._method._next
+							};
 				} else {
 					if (!ongoingLoops[0]) {
 						/*
@@ -102,7 +94,7 @@
 						 * and there is nothing left to wait.
 						 * So we can safely return the original jQuery object.
 						 */
-						return context; 
+						return executionState._context; 
 					}
 					/*
 					 * Now we have ongoing loops but reached the chain's end.
@@ -155,22 +147,9 @@
 			 * This enables re-using our placeholder via jQuery(...)
 			 */
 			placeholder.length = 0;
-			Array.prototype.push.apply(placeholder, elements);
+			Array.prototype.push.apply(placeholder, jQuery.makeArray(elements));
 		});
 		return placeholder = createPlaceholder(context, callStack, timedInvocationChain);
-	}
-	
-	/**
-	 * Run a callback method and hand current iteration numbers as arguments.
-	 * 
-	 * @param timedInvocationChain
-	 * @param context the context to apply on
-	 * @param callback the method to use
-	 */
-	function callbackWithLoopCounts(ongoingLoops, context, callback) {
-		return callback.apply(context, jQuery(ongoingLoops).map(function(){
-				return this._count;
-			}).get());
 	}
 	
 	/**
@@ -352,7 +331,9 @@
 			condition = !executionState._context.size();
 		}
 		if (typeof condition == "function") {
-			condition = callbackWithLoopCounts(ongoingLoops, executionState._context, condition);
+			condition = condition.apply(executionState._context, jQuery(ongoingLoops).map(function(){
+				return this._count;
+			}).get());
 		}
 		if (typeof condition == "object") {
 			condition = condition.toString();
@@ -360,10 +341,10 @@
 		if (typeof condition == "number") {
 			condition = ongoingLoops[0]._count >= condition-1;
 		}
-		if (condition) {					
+		if (condition && executionState) {
+			executionState._triggered = executionState._context;
 			executionState = ongoingLoops.shift();
 			executionState._untilAction(true);
-			return true;
 		} else {
 			executionState = ongoingLoops[0];
 			executionState._count++;
@@ -382,7 +363,7 @@
 	
 	then._timing = function(timedInvocationChain, executionState){
 		executionState._callback = executionState._method._arguments[0];
-		return true;
+		executionState._triggered = executionState._context;
 	};
 	
 	/**
