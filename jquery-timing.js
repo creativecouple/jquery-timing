@@ -21,7 +21,8 @@
 	 * object to store statically invoked threads
 	 */
 	var THREAD_GROUPS = {},
-	all_mocked_function_names = {};
+	all_mocked_function_names = {},
+	originalEach = jQuery.fn.each;
 	
 	/**
 	 * Initialize a new timed invocation chain. First entry is the given method.
@@ -55,7 +56,7 @@
 				isRunning = !isRunning;
 				// save current context state
 				if (stepCallback) {
-					stepCallback(executionState._context);
+					stepCallback(jQuery.makeArray(executionState._context));
 				}
 				// leave the loop when waiting for a trigger
 				if (executionState._triggered == 0) {
@@ -154,16 +155,28 @@
 	createPlaceholder('');
 	createPlaceholder(jQuery());
 	
-	jQuery.each(['wait','repeat','join','then','until'], function(index, name){
+	jQuery.each(['wait','repeat','join','then','until','all'], function(index, name){
 		jQuery.fn[name] = function(){
 			var callStack = {},
 			placeholder = createPlaceholder(this, callStack, createTimedInvocationChain(this, callStack, function(elements){
 					placeholder.length = 0;
-					Array.prototype.push.apply(placeholder, jQuery.makeArray(elements));
+					Array.prototype.push.apply(placeholder, elements);
 				}));
 			return placeholder[name].apply(this, arguments);
 		};
 	});
+	
+	jQuery.fn.each = function(callback){
+		if (!callback || callback === jQuery) {
+			var callStack = {},
+			placeholder = createPlaceholder(this, callStack, createTimedInvocationChain(this, callStack, function(elements){
+					placeholder.length = 0;
+					Array.prototype.push.apply(placeholder, elements);
+				}));
+			return placeholder.each();
+		}
+		return originalEach.apply(this, arguments);
+	};
 	
 	/**
 	 * Define timeout or binding to wait for.
@@ -311,7 +324,7 @@
 	 * Defined to evaluate condition when calling .until()
 	 */
 	jQuery.fn.until.timing = function(timedInvocationChain, executionState, ongoingLoops) {
-		if (!ongoingLoops.length) {
+		if (!ongoingLoops.length || !ongoingLoops[0]._untilAction) {
 			throw '.until() method must be used after .repeat() only';
 		}
 
@@ -334,7 +347,7 @@
 			executionState._triggered = executionState._context;
 			ongoingLoops.shift()._untilAction(condition);
 		} else {
-			executionState = ongoingLoops[0];
+			executionState = ongoingLcontextChangedoops[0];
 			executionState._count++;
 			executionState._untilAction();
 			return executionState;
@@ -375,7 +388,7 @@
 			next();
 		});
 	};
-	
+
 	/**
 	 * Define unwait and unrepeat methods.
 	 */
@@ -427,6 +440,82 @@
 			return createPlaceholder(original.apply(this, arguments), callStack);
 		};
 	});
+
+
+	/**
+	 * Define interval or binding to repeat.
+	 * 
+	 * @param timedInvocationChain
+	 * @param executionState
+	 */
+	jQuery.fn.each.timing = function(timedInvocationChain, executionState, ongoingLoops) {
+		var waiting = executionState._context.length,
+		contextChanged,
+		key,
+		elementSizes = executionState._context.map(function(){
+			return 1;
+		}).get(),
+		innerTICs = executionState._context.map(function(index){
+			var $this = jQuery(this),
+			innerLoops = jQuery(ongoingLoops).map(function(){
+				return {_count: this._count};
+			}).get();
+			innerLoops.unshift({
+				_count: index,
+				_allAction: function(method){
+					if (!--waiting) {
+						if (contextChanged) {
+							executionState._triggered = jQuery(spreadPlaceholder);
+							executionState._triggered.prevObject = executionState._context.prevObject;
+						} else {
+							executionState._triggered = executionState._context;
+						}
+						// FIXME wo gehts weiter
+						timedInvocationChain();
+					}
+				}
+			});
+			return createTimedInvocationChain($this, executionState._method._next, function(elements){
+				contextChanged = contextChanged || elements.length != 1 || elements[0] !== executionState._context[index];
+				for(var i=0, pos=0; i<index; i++) {
+					pos += elementSizes[i];
+				}
+				elements.unshift(pos,elementSizes[index]);
+				Array.prototype.splice.apply(spreadPlaceholder, elements);
+				elementSizes[index] = elements.length-2;
+			}, innerLoops);
+		}),
+		spreadAction = function(){
+			for(var i=0; i<executionState._context.length; i++) {
+				(innerTICs[i])();
+			}
+			return spreadPlaceholder;
+		},
+		spreadPlaceholder = { length: 0 };
+		for (key in all_mocked_function_names) {
+			spreadPlaceholder[key] = spreadAction;
+		}
+		Array.prototype.push.apply(spreadPlaceholder, jQuery.makeArray(executionState._context))
+		
+		ongoingLoops.unshift(executionState);
+		executionState._triggered = spreadPlaceholder;
+	};
+
+	/**
+	 * Defined to evaluate condition when calling .until()
+	 */
+	jQuery.fn.all.timing = function(timedInvocationChain, executionState, ongoingLoops) {
+		if (!ongoingLoops.length || !ongoingLoops[0]._allAction) {
+			throw '.all() method must be used after .each() only';
+		}
+
+		/*
+		 * This is called within the each loop.
+		 * We have to leave the inner chain now.
+		 */
+		executionState._triggered = 0;
+		ongoingLoops[0]._allAction();
+	};
 	
 	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
