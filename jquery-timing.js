@@ -490,6 +490,14 @@
 	
 	jQuery.$$ = window.$$ = jQuery.X = $$;
 	
-	jQuery.fn.$ = jQuery;
+	/**
+	 * Define chained version of $().
+	 * This allows to use .end() to come back to previous jQuery selection.
+	 */
+	jQuery.fn.$ = function(){
+		var ret = jQuery.apply(window, arguments);
+		ret.prevObject = this;
+		return ret;
+	};
 	
 })(jQuery, window);
