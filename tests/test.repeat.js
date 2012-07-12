@@ -194,7 +194,7 @@ var suite = {
 						}, timeout);
 					}, timeout);
 				}, timeout/2);
-			}
+			},
 			
 		},
 		
@@ -326,6 +326,28 @@ var suite = {
 				}, 100);
 			},
 			
+			".wait(timeout) +…+ .repeat(callback).until(count)": function($, test) {
+				var x = 0;
+				var count = 10;
+				var $x = $('<div>');
+				var callback = function(y){
+					test.assertEquals("callback argument must be iteration number", x,y);
+					x++; test.check();
+					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+				};
+				var tic = $x.wait();
+				window.setTimeout(function(){
+					tic.repeat(callback).until(count);
+					test.assertEquals(".repeat() should fire exactly "+count+" times", count, x);
+					window.setTimeout(function(){
+						test.assertEquals(".unrepeat() should not fire again", count, x);
+						tic.then(function(){
+							test.done();
+						});
+					}, 10);
+				}, 10);
+			},
+
 			".repeat().until(1)._": function($, test) {
 				var $x = $('<div>');
 				var TIC = $x.repeat().until(1);
