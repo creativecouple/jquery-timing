@@ -1,6 +1,6 @@
 var suite = {
 		
-	_version: '1.4.0',
+	_version: ['1.4.0'],
 		
 	"joining empty default queue instantly": {
 		

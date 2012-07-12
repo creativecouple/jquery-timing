@@ -70,6 +70,10 @@ th.method:hover, h2:hover, th.title:hover, th.jquery:hover, td:hover {
 	color: white;
 	cursor: pointer;
 }
+h1:first-child:hover {
+	cursor: pointer;
+	color: blue;
+}
 
 .summary {
 	color: maroon;
@@ -188,12 +192,12 @@ function savejQuery(type, version) {
 <script type="text/javascript" src="jquery-timing.min.js"></script>
 <script type="text/javascript">savejQuery('jquery-timing.min.js')</script>
 
-<p><button>Run all tests again&hellip;</button></p>
+<p><button>Run ALL tests&hellip;</button></p>
 
 <h1 class="summary"></h1>
 <h1 class="summary"></h1>
 
-<p><button>Run all tests again&hellip;</button></p>
+<p><button>Run ALL tests&hellip;</button></p>
 
 <script type="text/javascript">var tests = {};</script>
 <script charset="utf-8" type="text/javascript" src="tests/test.wait.js"></script>
@@ -309,10 +313,18 @@ var passed=0;
 var fails=0;
 var errors=0;
 $(function(){
-	$('h1:first, button').click(function(){
-		window.location.hash='';
-		window.location.reload();
-	});
+	$.fn.makeFilter = function(filter, condition){
+		return this.click(function(){
+			if (!condition || !condition()) {
+				window.location.replace('#'+filter.join('|'));
+				window.location.reload();
+			}
+		}).append($('<a>').attr('name', filter.join('|')));
+	};
+	
+	
+	$('h1:first').makeFilter([]);
+	$('button').makeFilter(['*','*','*','*','*']);
 	var $summary = $('.summary');
 	
 	function updateResults() {
@@ -322,66 +334,56 @@ $(function(){
 	
 	var filter = String(window.location.hash).replace(/^#/,'').split('|');
 	$.each(tests, function(part, suite){
-		if (filter[0] && part != filter[0]) {
-			return;
-		}
-		var $headline = $('<h2>').text(part).insertBefore($summary.last()).click(function(){
-			window.location.replace('#'+[part].join('|'));
-			window.location.reload();
-		});			
+		var $headline = $('<h2>').text(part).insertBefore($summary.last()).makeFilter([part,'*','*','*','*']);
 		var $table = $('<table>').insertBefore($summary.last());
 		
-		var sectionBounds = [];				
+		var versionBounds = [];
 		$.each(suite, function(section, methods){
 			if (section == '_version') {
-				sectionBounds = $.makeArray(methods);
+				versionBounds.unshift(methods[0] || versionBounds[0], methods[1] || versionBounds[1]);
 				return;
 			}
-			if (filter[1] && section != filter[1]) {
-				return;
-			}
+
 			var $tbody = $('<tbody>').appendTo($table);
-			var $tr = $('<tr>').append($('<th class="title">').text(section).click(function(){
-				window.location.replace('#'+[part,section].join('|'));
-				window.location.reload();
-			})).appendTo($tbody);
+			var $tr = $('<tr>').append($('<th class="title">').text(section).makeFilter([part,section,'*','*','*'])).appendTo($tbody);
+
 			$.each(jQueries, function(version){
-				$('<th colspan="2" class="jquery">').text(version).attr('title','jQuery version '+version).click(function(){
-					window.location.replace('#'+[part,section,'',version].join('|'));
-					window.location.reload();
-				}).appendTo($tr);
+				$('<th colspan="2" class="jquery">').text(version).attr('title','jQuery version '+version).makeFilter([part,section,'*',version,'*']).appendTo($tr);
 			});
 			$.each(methods, function(name, testMethod){
-				var methodBounds = name.split('|');
-				name = methodBounds.shift();
-				methodBounds[0] = methodBounds[0] || sectionBounds[0];
-				methodBounds[1] = methodBounds[1] || sectionBounds[1];
-				
-				if (filter[2] && name != filter[2]) {
+				if (section == '_version') {
+					versionBounds.unshift(testMethod[0] || versionBounds[0], testMethod[1] || versionBounds[1]);
 					return;
 				}
-				var $tr = $('<tr>').append($('<th class="method">').text(name).click(function(){
-					window.location.replace('#'+[part,section,name].join('|'));
-					window.location.reload();
-				})).appendTo($tbody);
+
+				var methodBounds = name.split('|');
+				name = methodBounds.shift();
+				versionBounds.unshift(methodBounds[0] || versionBounds[0], methodBounds[1] || versionBounds[1]);
+				
+				var $tr = $('<tr>').append($('<th class="method">').text(name).makeFilter([part,section,name,'*','*'])).appendTo($tbody);
 				$.each(jQueries, function(version, types){
-					
-					var versionMatch = checkVersionBounds(version, methodBounds[0],methodBounds[1]);
-					
 					$.each(types, function(type, _jQuery){
 						
-						var $td = $('<td class="result">…').addClass('run').attr('title','jQuery '+version+' + '+type).click(function(){
-							if (count == 1 && filter[0] == part && filter[1] == section && filter[2] == name && filter[3] == version && filter[4] == type) {
-								return alert($(this).attr('title'));
+						var match = (filter[0] == '*' || filter[0] == part) &&
+							(filter[1] == '*' || filter[1] == section) &&
+							(filter[2] == '*' || filter[2] == name) &&
+							(filter[3] == '*' || filter[3] == version) &&
+							(filter[4] == '*' || filter[4] == type);
+						
+						var $td = $('<td class="result">*').addClass('run').attr('title','jQuery '+version+' + '+type).makeFilter([part,section,name,version,type], function(){
+							if (count == 1 && match) {
+								alert($(this).attr('title'));
+								return true;
 							}
-							window.location.replace('#'+[part,section,name,version,type].join('|'));
-							window.location.reload();
 						}).appendTo($tr);
 						
 
-						if (filter[3] && version != filter[3] || filter[4] && type != filter[4] || !versionMatch && !filter[3]) {
-							return $td.removeClass('run').text('-');
-						}						
+						if (!match) {
+							return $td.removeClass('run').text('?');
+						}
+						if (filter[3] == '*' && !checkVersionBounds(version, versionBounds[0],versionBounds[1])) {
+							return $td.removeClass('run').addClass('skip').text('-');
+						}
 						count++;
 						window.setTimeout(function(){
 							var testCase = new TestCase(function(){
@@ -412,7 +414,9 @@ $(function(){
 						}, 500+count*3);
 					});
 				});
+				versionBounds = versionBounds.slice(-4);
 			});
+			versionBounds = versionBounds.slice(-2);
 		});
 	});
 	$summary.text('~'+count+' tests');
