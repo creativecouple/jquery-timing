@@ -25,16 +25,19 @@
 	<target name="shrinkMore" depends="minimize">
 		<length file="${script-minimized}" property="bytes-before-shrink" />
 		
-		<replace file="${script-minimized}" token="_arguments" value="a"/>
-		<replace file="${script-minimized}" token="_callback" value="b"/>
-		<replace file="${script-minimized}" token="_context" value="c"/>
-		<replace file="${script-minimized}" token="_count" value="d"/>
-		<replace file="${script-minimized}" token="_method" value="f"/>
-		<replace file="${script-minimized}" token="_name" value="g"/>
-		<replace file="${script-minimized}" token="_next" value="h"/>
-		<replace file="${script-minimized}" token="_openEndAction" value="i"/>
-		<replace file="${script-minimized}" token="_triggered" value="j"/>
-		<replace file="${script-minimized}" token="_untilAction" value="l"/>
+		<replace file="${script-minimized}" token="_allAction" value="a"/>
+		<replace file="${script-minimized}" token="_arguments" value="b"/>
+		<replace file="${script-minimized}" token="_callback" value="c"/>
+		<replace file="${script-minimized}" token="_canContinue" value="d"/>
+		<replace file="${script-minimized}" token="_context" value="e"/>
+		<replace file="${script-minimized}" token="_count" value="f"/>
+		<replace file="${script-minimized}" token="_fixOpenLoop" value="g"/>
+		<replace file="${script-minimized}" token="_method" value="h"/>
+		<replace file="${script-minimized}" token="_name" value="i"/>
+		<replace file="${script-minimized}" token="_next" value="j"/>
+		<replace file="${script-minimized}" token="_openEndAction" value="k"/>
+		<replace file="${script-minimized}" token="_triggered" value="l"/>
+		<replace file="${script-minimized}" token="_untilAction" value="m"/>
 
 		<length file="${script-minimized}" property="bytes-after-shrink" />
 		<echo>Shrinking ${bytes-before-shrink} =&gt; ${bytes-after-shrink} Bytes</echo>
