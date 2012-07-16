@@ -52,10 +52,11 @@
 	function sameOrNextJQuery(before, after) {
 		after = jQuery(after);
 		after.prevObject = before;
-		if (before.length !== after.length) {
+		var i = before.length;
+		if (i !== after.length) {
 			return after;
 		}
-		for (var i=0; i < before.length; i++) {
+		while (i--) {
 			if (before[i] !== after[i]) {
 				return after;
 			}
@@ -64,10 +65,8 @@
 	}
 	
 	function loopCounts(loops) {
-		var ret = [];
-		for (var i=0; i<loops.length; i++) {
-			ret[i] = loops[i]._count;
-		}
+		var ret = [], i = loops.length;
+		while (i--) ret[i] = loops[i]._count;
 		return ret;
 	}
 	
@@ -90,7 +89,7 @@
 				_method: methodStack
 		},
 		preventRecursion = false,
-		method;
+		method, otherExecutionState;
 		
 		function hookupToMockup(state, mockup){
 			state._canContinue = false;
@@ -133,7 +132,7 @@
 					/*
 					 * Now we have ongoing loops but reached the chain's end.
 					 */
-					var otherExecutionState = ongoingLoops[0]._openEndAction && ongoingLoops[0]._openEndAction(timedInvocationChain, executionState, ongoingLoops) || executionState;
+					otherExecutionState = ongoingLoops[0]._openEndAction && ongoingLoops[0]._openEndAction(timedInvocationChain, executionState, ongoingLoops) || executionState;
 					if (otherExecutionState == executionState) {
 						// if innermost loop can't help us, just leave the chain
 						return deferredReturnValue;
@@ -202,9 +201,8 @@
 	function MockupPlaceholder(context, methodStack, onStepCallback) {
 		this['.methods'] = methodStack;
 		this['.callback'] = onStepCallback;
-		this._ = context._ = context;
 		this.length = 0;
-		Array.prototype.push.apply(this, jQuery.makeArray(context));
+		Array.prototype.push.apply(this, jQuery.makeArray(this._ = context._ = context));
 		
 		for (var key in context) {
 			if (!(key in MockupPlaceholder.prototype) && typeof context[key] == "function") {
