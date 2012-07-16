@@ -36,7 +36,7 @@ td.result {
 	height: 20px;
 }
 td.run {
-	background: url(tests/run.gif) no-repeat center center scroll;
+	background: url(tests/run.png) no-repeat center center scroll;
 	color: transparent;
 }
 td.ok {
@@ -310,11 +310,10 @@ $.extend(TestCase.prototype, {
 	
 });
 
-var count=0;
-var passed=0;
-var fails=0;
-var errors=0;
 $(function(){
+	var count=0, passed=0, fails=0, errors=0, testRuns=[];
+	
+	
 	$.fn.makeFilter = function(filter, condition){
 		return this.click(function(){
 			if (!condition || !condition()) {
@@ -387,7 +386,7 @@ $(function(){
 							return $td.removeClass('run').addClass('skip').text('-');
 						}
 						count++;
-						window.setTimeout(function(){
+						testRuns.push(function(){
 							var testCase = new TestCase(function(){
 								$td.removeClass('run').addClass('ok').text('+');
 								passed++;
@@ -413,7 +412,7 @@ $(function(){
 									throw error;
 								}
 							}
-						}, 500+count*3);
+						});
 					});
 				});
 				versionBounds = versionBounds.slice(-4);
@@ -425,6 +424,28 @@ $(function(){
 	
 	$('td:even').addClass('x');
 	$('tr:even').addClass('y');
+	
+	window.setTimeout(function(){
+		var now = (new Date()).getTime(),
+		skippedBeats = 0,
+		testCase, testRunInterval = window.setInterval(function(){
+			if (!testRuns.length) {
+				window.clearInterval(testRunInterval);
+			}
+			var then = (new Date()).getTime();
+			var diff = then - now;
+			now = then;
+			if (diff > 15 * skippedBeats * 5) {
+				// client is too slow
+				skippedBeats++;
+			} else {
+				skippedBeats = Math.max(0,skippedBeats-1);
+				for (var i=Math.max(1,10-skippedBeats); i && (testCase = testRuns.shift()); i--) {
+					testCase();
+				}
+			}
+		}, 10);
+	}, 1000);
 });
 </script>
 </body>
