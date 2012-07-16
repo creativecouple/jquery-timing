@@ -1005,6 +1005,38 @@ var suite = {
 				test.fail('tic should have left the loop');
 			}
 			
-		}
+		},
+		
+		"deferred loops": {
+			
+			".wait().repeat().until(count)": function($, test){},
+
+			".wait(timeout) +…+ .repeat().until(count)": function($, test){},
+
+			".wait(event).repeat(event).then(callback)": function($, test){},
+			
+		},
+		
+		"nested loops":  {
+		
+			".repeat().repeat().until(callback).until(count)": function($,test) {},
+			
+			".repeat(event).repeat().until(callback).until(count)": function($,test) {},
+
+			".repeat(interval).repeat().until(callback).until(count)": function($,test) {},
+
+			".repeat().repeat(event).until(callback).until(count)": function($,test) {},
+
+			".repeat(event).repeat(event).until(callback).until(count)": function($,test) {},
+
+			".repeat(interval).repeat(event).until(callback).until(count)": function($,test) {},
+
+			".repeat().repeat(interval).until(callback).until(count)": function($,test) {},
+
+			".repeat(event).repeat(interval).until(callback).until(count)": function($,test) {},
+
+			".repeat(interval).repeat(interval).until(callback).until(count)": function($,test) {},
+
+		},
 		
 };
