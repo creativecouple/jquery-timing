@@ -472,4 +472,12 @@ var suite = {
 
 		},
 		
+		"access original context from deferred chain": {
+			
+			"$(some).bind(event).doThisLater()._.doThatNow()": function(){},
+ 
+			"$(some).bind(event,$).doThisLater()._.doThatNow()": function(){},
+
+		},
+
 };

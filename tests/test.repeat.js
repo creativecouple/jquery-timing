@@ -556,21 +556,21 @@ var suite = {
 				test.assertEquals(".repeat(event) should wait for event to be triggered", 0, x);
 				for (var i=1; i<=count; i++) {
 					$x.trigger(event);
-					test.assertEquals(".repeat(event) should be fired only once for now because it is open", 1, x);
+					test.assertEquals(".repeat(event) should be fired on each trigger", i, x);
 				}
 				window.setTimeout(function(){
-					test.assertEquals(".repeat(event) should now have been fired again", 2, x);
+					test.assertEquals(".repeat(event) should not have been fired again", count, x);
 					for (var i=1; i<=count; i++) {
 						$x.trigger(event);
-						test.assertEquals(".repeat(event) should wait for event to be triggered", i+2, x);
+						test.assertEquals(".repeat(event) should wait for event to be triggered", i+count, x);
 					}
 					$x.unrepeat();
 					$x.trigger(event);
-					test.assertEquals(".repeat(event) should not fire anymore", count+2, x);
+					test.assertEquals(".repeat(event) should not fire anymore", 2*count, x);
 					$x.trigger(event);
 					window.setTimeout(function(){
 						$x.trigger(event);
-						test.assertEquals("callback should not have fired anymore", count+2, x);
+						test.assertEquals("callback should not have fired anymore", 2*count, x);
 						test.done();
 					}, 100);
 				}, 1);			
@@ -590,21 +590,21 @@ var suite = {
 				test.assertEquals(".repeat(event) should have been fired already", 1, x);
 				for (var i=1; i<=count; i++) {
 					$x.trigger(event);
-					test.assertEquals(".repeat(event) should be fired only once for now because it is open", 1, x);
+					test.assertEquals(".repeat(event) should be fired on each trigger", i+1, x);
 				}
 				window.setTimeout(function(){
-					test.assertEquals(".repeat(event) should now have been fired again", 2, x);
+					test.assertEquals(".repeat(event) should not have been fired again", count+1, x);
 					for (var i=1; i<=count; i++) {
 						$x.trigger(event);
-						test.assertEquals(".repeat(event) should wait for event to be triggered", i+2, x);
+						test.assertEquals(".repeat(event) should wait for event to be triggered", i+count+1, x);
 					}
 					$x.unrepeat();
 					$x.trigger(event);
-					test.assertEquals(".repeat(event) should not fire anymore", count+2, x);
+					test.assertEquals(".repeat(event) should not fire anymore", 2*count+1, x);
 					$x.trigger(event);
 					window.setTimeout(function(){
 						$x.trigger(event);
-						test.assertEquals("callback should not have fired anymore", count+2, x);
+						test.assertEquals("callback should not have fired anymore", 2*count+1, x);
 						test.done();
 					}, 100);
 				}, 1);			

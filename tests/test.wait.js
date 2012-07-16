@@ -633,7 +633,17 @@ var suite = {
 			
 		},
 		
-		"accessing interim states": {
+		"access original context from deferred chain": {
+			
+			"$(some).wait().doThisLater()._.doThatNow()": function(){},
+			
+			"$(some).wait(event).doThisLater()._.doThatNow()": function(){},
+			
+			"$(some).wait(timeout).doThisLater()._.doThatNow()": function(){},
+			
+		},
+
+		"access interim snapshots": {
 		
 			"tic=$('.some').wait().next() + $(tic)": function($, test){
 				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children(':first');
@@ -662,7 +672,23 @@ var suite = {
 				var $y = tic.then();
 				test.assertEquals("after event only matched element can go on", '2', $y.text());
 				test.done();
-			}
+			},
+			
+			"tic=$('.some').wait(timeout).next() + $(tic)": function($, test){
+				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children(':first');
+				var tic = $x.wait(10).next();
+				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
+				var $t = $(tic);
+				test.assertEquals("tic should currently hold one element", 1, $t.size());
+				test.assertEquals("tic should currently stay on first child", "1", $t.text());
+				window.setTimeout(function(){
+					test.assertEquals("after wait tic should stay on second child", "2", $(tic).text());
+					var $y = tic.next();
+					test.assertEquals("after second next tic should stay on third child", "3", $(tic).text());
+					test.assertNotEquals("instant call to .next() should return original object instead of tic", tic, $y);
+					test.done();
+				}, 11);
+			},
 			
 		}
 		

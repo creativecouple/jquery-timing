@@ -2032,6 +2032,12 @@ var suite = {
 			}, timeout / 2);
 		},
 
-	}
+	},
 
+	"access original context from deferred chain": {
+		
+		"$(some).fadeIn().join().doThisLater()._.doThatNow()": function(){},
+
+		"$(some).join(queue).doThisLater()._.doThatNow()": function(){},
+	},
 };

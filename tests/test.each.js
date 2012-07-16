@@ -48,7 +48,7 @@ var suite = {
 				var tic = $x.each().wait(0,callback);				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for timeout", 0, x);
-				window.setTimeot(function(){
+				window.setTimeout(function(){
 					test.assertEquals("callback must be triggered for each element after timeout", 3, x);
 					x=0;
 					var tic2 = tic.then(callback);
@@ -101,18 +101,38 @@ var suite = {
 				}, 10);
 			},
 	
-			".repeat(event).each().then(callback)": function($, test) {
+			".repeat(event).each().then(callback).all()": function($, test) {
 				var $x = $('<div>').add('<p>').add('<span>');
 				var x=0;
+				var event = 'myEvent';
 				var callback = function(i){
-					test.assertEquals("wrong order of elements?", x, i);
-					x++;
+					test.assertEquals("single element in event-loop expected", 0, i);
 					test.assertEquals("wrong context?", 1, this.size());
-					test.assertEquals("wrong context element?", $x[i], this[0]);
+					test.assertEquals("wrong context element?", $x[x], this[0]);
+					x++;
+				};
+				var tic = $x.repeat(event).each().then(callback).all();				
+				test.assertNotEquals("tic object must not be original", $x, tic);
+				test.assertEquals("callback must wait for event", 0, x);
+				$x.trigger('myEvent');
+				test.assertEquals("callback must be triggered for each element", 3, x);
+				test.done();
+			},
+	
+			".repeat(event).each().then(callback).until(false)": function($, test) {
+				var $x = $('<div>').add('<p>').add('<span>');
+				var x=0;
+				var event = 'myEvent';
+				var callback = function(i){
+					test.assertEquals("single element in event-loop expected", 0, i);
+					test.assertEquals("wrong context?", 1, this.size());
+					test.assertEquals("wrong context element?", $x[x], this[0]);
+					x++;
 				};
 				var tic = $x.repeat(event).each().then(callback).until(false);				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for event", 0, x);
+				$x.trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element", 3, x);
 				test.done();
 			},
