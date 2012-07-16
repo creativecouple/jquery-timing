@@ -171,12 +171,44 @@ var suite = {
 			
 		},
 		
-		"nested each-loops with interim states": {
+		"nested each-loops with interim snapshot states": {
 			
-			".each().children().each().wait(event).all().parent().all()": function($, test) {
+			".each().each().doSomething().all().all()": function($, test) {
 				
 			},
 			
+			".each().children().each().wait(event).all().parent() +…+ .all()": function($, test) {
+				
+			},
+			
+			".each().repeat().doSomething().until(count).all()": function($, test) {
+				
+			},
+
+			".each().children().repeat().wait(timeout) +…+ .until(count) +…+ .all()": function($, test) {
+				
+			},
+			
+		},
+		
+		"inner loops with open endings": {
+
+			".each().repeat(timeout).doSomething().all()": function($, test) {
+				
+			},
+
+			".each().repeat(timeout).doSomething().until(count)": function($, test) {
+				
+			},
+
+			".repeat(timeout).each().doSomething().all()": function($, test) {
+				
+			},
+
+			".repeat(timeout).each().doSomething().until(count)": function($, test) {
+				
+			},
+
 		},
 		
 };
