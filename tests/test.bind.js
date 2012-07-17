@@ -310,7 +310,7 @@ var suite = {
 				test.done();
 			},
 
-			".bind('ev1 ev2',handler) + .unbind(ev2)|1.2.4": function($, test) {
+			".bind('ev1 ev2',handler) + .unbind(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				var $bind = $x.bind('ev1 ev2', function(){ x++; });
@@ -331,7 +331,7 @@ var suite = {
 				test.done();
 			},
 
-			".bind('ev1 ev2',data,handler) + .unbind(ev2)|1.2.4": function($, test) {
+			".bind('ev1 ev2',data,handler) + .unbind(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -413,7 +413,7 @@ var suite = {
 
 		"binding multiple events - timed invocation chain style": {
 			
-			".bind('ev1 ev2').doSomething() + .trigger(ev1)|1.2.4": function($, test) {
+			".bind('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -437,7 +437,7 @@ var suite = {
 				test.done();
 			},
 
-			".bind('ev1 ev2',$).doSomething() + .trigger(ev1)|1.2.4": function($, test) {
+			".bind('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -461,7 +461,7 @@ var suite = {
 				test.done();
 			},
 
-			".bind('ev1 ev2').doSomething()._|1.2.4": function($, test) {
+			".bind('ev1 ev2').doSomething()._": function($, test) {
 				var $x = $('<div>');
 				var $bind = $x.bind('ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);

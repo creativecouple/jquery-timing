@@ -32,6 +32,35 @@ var suite = {
 				test.done();
 			},
 	
+			".each().text().all().get()": function($, test){
+				var $x = $('<div>foo</div>').add('<p>bar</p>').add('<span>Foo<em>Bar</em></span>');
+				test.assertEquals("jQuery's .text() method going wrong??", 'foobarFooBar', $x.text());
+				var tic = $x.each().text();
+				test.assertNotEquals("each-loop must return TIC object", $x, tic);
+				var $y = tic.all();
+				test.assertNotEquals("instant .all() must return some jQuery object", tic, $y);
+				var array = $y.get();
+				test.assertTrue(".get() must return some Array", array instanceof Array);
+				test.assertEquals("array has wrong content", 'foo::bar::FooBar', array.join('::'));
+				test.done();
+			},
+			
+			".each().attr('class').toUpperCase().all()": function($, test){
+				var $x = $('<div class="foo">').add('<p class="bar">').add('<span class="Fooo"><em class="Bar"/></span>');
+				test.assertEquals("jQuery's .attr() should only find first one", 'foo', $x.attr('class'));
+				var tic = $x.each().attr('class');
+				test.assertNotEquals("each-loop must return TIC object", $x, tic);
+				test.assertEquals("snapshot has wrong content", 'foo::bar::Fooo', $(tic).get().join('::'));
+				var $y = tic.toUpperCase().all();
+				test.assertNotEquals("instant .all() must return some jQuery object", tic, $y);
+				test.assertEquals("result has wrong content", 'FOO::BAR::FOOO', $y.get().join('::'));
+				test.done();
+			},
+			
+			".each().next().all().end()": function($, test){
+				
+			},
+			
 		},
 
 		"instant each-loop with delay": {
@@ -137,26 +166,6 @@ var suite = {
 				test.done();
 			},
 	
-		},
-		
-		"instant .each()..all()": {
-			
-			".each().text().all()": function($, test){
-				
-			},
-			
-			".each().attr('class').toUpperCase().all()": function($, test){
-				
-			},
-			
-			".each().next().all().end()": function($, test){
-				
-			},
-			
-		},
-		
-		"deferred .each()..all()": {
-			
 			".wait(timeout).each().text().all() + … + .get()": function($, test){
 				
 			},

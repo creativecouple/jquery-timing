@@ -280,7 +280,7 @@ var suite = {
 				test.done();
 			},
 
-			".load(handler) + .load() + .unbind('load')|1.2.3": function($, test) {
+			".load(handler) + .load() + .unbind('load')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -340,7 +340,7 @@ var suite = {
 				test.done();
 			},
 
-			".unload(handler) + .unload() + .unbind('unload')|1.2.3": function($, test) {
+			".unload(handler) + .unload() + .unbind('unload')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -681,7 +681,7 @@ var suite = {
 				test.done();
 			},
 
-			".load($).doSomething() + .load()|1.2.3": function($, test) {
+			".load($).doSomething() + .load()": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -738,7 +738,7 @@ var suite = {
 				test.done();
 			},
 
-			".unload($).doSomething() + .unload()|1.2.3": function($, test) {
+			".unload($).doSomething() + .unload()": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -1026,7 +1026,7 @@ var suite = {
 				test.done();
 			},
 
-			"$(some).load($).doThisLater()._.doThatNow()|1.2.3": function($, test){
+			"$(some).load($).doThisLater()._.doThatNow()": function($, test){
 				$x = $('<div>');
 				$x.load($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
@@ -1053,7 +1053,7 @@ var suite = {
 				test.done();
 			},
 
-			"$(some).unload($).doThisLater()._.doThatNow()|1.2.3": function($, test){
+			"$(some).unload($).doThisLater()._.doThatNow()": function($, test){
 				$x = $('<div>');
 				$x.unload($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
