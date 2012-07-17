@@ -403,8 +403,7 @@
 		key, methodToGoOn,
 		innerTICs = [],
 		innerElements = [],
-		allElements = [],
-		proxyPlaceholder = { };
+		proxyPlaceholder = {};
 
 		function spreadAction(){
 			for (var i=0; i<size; i++) {
@@ -416,9 +415,10 @@
 		for (key in MockupPlaceholder.prototype) {
 			proxyPlaceholder[key] = spreadAction;
 		}
+		proxyPlaceholder.length = size;
 		executionState._context.each(function(index){
 			var innerLoops = ongoingLoops.slice();
-			innerElements[index] = [allElements[index] = this];
+			innerElements[index] = [proxyPlaceholder[index] = this];
 			innerLoops.unshift({
 				_count: index,
 				_allAction: function(state){
@@ -431,12 +431,12 @@
 			});
 			innerTICs[index] = createTimedInvocationChain(jQuery(this), executionState._method._next, innerLoops, function(elements){
 				innerElements[index] = elements;
-				allElements.length = 0;
+				proxyPlaceholder.length = 0;
 				for (var i=0; i<size; i++) {
-					Array.prototype.push.apply(allElements, innerElements[i]);
+					Array.prototype.push.apply(proxyPlaceholder, innerElements[i]);
 				}
 				if (onStepCallback)
-					onStepCallback(allElements);
+					onStepCallback(jQuery.makeArray(proxyPlaceholder));
 			});
 		});
 
@@ -682,10 +682,21 @@
 
 
 	// initialize default mocked function names
-	new MockupPlaceholder([]);
-	new MockupPlaceholder('');
-	new MockupPlaceholder(jQuery());
-	new MockupPlaceholder(loopEndMethods);
+	jQuery.fn.addTimingSupport = function(){
+		var fakeObj = {};
+		this.each(function(index, elem){
+			if (typeof elem == "string") {
+				fakeObj[elem] = jQuery;
+			}
+			if (typeof elem == "object") {
+				jQuery.extend(fakeObj, elem);
+			}
+		});
+		new MockupPlaceholder(fakeObj);
+		return this;
+	};
+	// support some string methods
+	jQuery([loopEndMethods, 'indexOf','lastIndexOf','replace','substr','substring','toLowerCase','toUpperCase']).addTimingSupport();
 
 	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
