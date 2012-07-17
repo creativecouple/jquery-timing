@@ -362,10 +362,4 @@ var suite = {
 
 		},
 		
-		"access original context from deferred chain": {
-			
-			"$(some).one(event).doThisLater()._.doThatNow()": function(){},
-
-			"$(some).one(event,$).doThisLater()._.doThatNow()": function(){},
-		},
 };

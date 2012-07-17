@@ -2036,8 +2036,25 @@ var suite = {
 
 	"access original context from deferred chain": {
 		
-		"$(some).fadeIn().join().doThisLater()._.doThatNow()": function(){},
+		"$(some).fadeIn().join().doThisLater()._.doThatNow()": function($,test){
+			$x = $('<div>').hide();
+			$x.fadeIn().join().text('later')._.text('now');
+			test.assertEquals("immediate action must have happened already", 'now', $x.text());
+			$x.join(function(){
+				test.assertEquals("later action must have happened after animation", 'later', $x.text());
+				test.done();
+			});
+		},
 
-		"$(some).join(queue).doThisLater()._.doThatNow()": function(){},
+		"$(some).join(queue).doThisLater()._.doThatNow()": function($,test){
+			$x = $('<div>').hide();
+			$x.join('Q').text('later')._.text('now');
+			test.assertEquals("immediate action must have happened already", 'now', $x.text());
+			$x.join('Q', function(){
+				test.assertEquals("later action must have happened after animation", 'later', $x.text());
+				test.done();
+			});
+			$x.dequeue('Q');
+		},
 	},
 };

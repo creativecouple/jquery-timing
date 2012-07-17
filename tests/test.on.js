@@ -474,9 +474,23 @@ var suite = {
 		
 		"access original context from deferred chain": {
 			
-			"$(some).on(event).doThisLater()._.doThatNow()": function(){},
+			"$(some).on(event).doThisLater()._.doThatNow()": function($,test){
+				$x = $('<div>');
+				$x.on('evt').text('later')._.text('now');
+				test.assertEquals("immediate action must have happened already", 'now', $x.text());
+				$x.trigger('evt');
+				test.assertEquals("later action must have happened after trigger", 'later', $x.text());
+				test.done();
+			},
 
-			"$(some).on(event,$).doThisLater()._.doThatNow()": function(){},
+			"$(some).on(event,$).doThisLater()._.doThatNow()": function($,test){
+				$x = $('<div>');
+				$x.on('evt',$).text('later')._.text('now');
+				test.assertEquals("immediate action must have happened already", 'now', $x.text());
+				$x.trigger('evt');
+				test.assertEquals("later action must have happened after trigger", 'later', $x.text());
+				test.done();
+			},
 		},
 
 };

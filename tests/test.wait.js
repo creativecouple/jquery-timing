@@ -635,11 +635,34 @@ var suite = {
 		
 		"access original context from deferred chain": {
 			
-			"$(some).wait().doThisLater()._.doThatNow()": function(){},
+			"$(some).wait().doThisLater()._.doThatNow()": function($,test){
+				$x = $('<div>');
+				$x.wait().text('later')._.text('now');
+				test.assertEquals("immediate action must have happened already", 'now', $x.text());
+				window.setTimeout(function(){
+					test.assertEquals("later action must have happened after timeout", 'later', $x.text());
+					test.done();
+				}, 10);
+			},
 			
-			"$(some).wait(event).doThisLater()._.doThatNow()": function(){},
+			"$(some).wait(event).doThisLater()._.doThatNow()": function($,test){
+				$x = $('<div>');
+				$x.wait('evt').text('later')._.text('now');
+				test.assertEquals("immediate action must have happened already", 'now', $x.text());
+				$x.trigger('evt');
+				test.assertEquals("later action must have happened after trigger", 'later', $x.text());
+				test.done();
+			},
 			
-			"$(some).wait(timeout).doThisLater()._.doThatNow()": function(){},
+			"$(some).wait(timeout).doThisLater()._.doThatNow()": function($,test){
+				$x = $('<div>');
+				$x.wait(10).text('later')._.text('now');
+				test.assertEquals("immediate action must have happened already", 'now', $x.text());
+				window.setTimeout(function(){
+					test.assertEquals("later action must have happened after trigger", 'later', $x.text());
+					test.done();
+				}, 100);
+			},
 			
 		},
 
