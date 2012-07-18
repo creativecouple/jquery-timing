@@ -27,30 +27,6 @@ var suite = {
 				test.done();
 			},
 
-			".live(event,data,handler) + .die(event)|1.4": function($, test) {
-				var clazz = "c" + test.guid();
-				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
-				var ev = 'myEvent';
-				var x=0;
-				function handler(event){
-					x++;
-					test.assertEquals("event data must be passed", true, event.data.prop);
-				}
-				var $live = $x.live(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $live);
-				test.assertEquals("event not yet triggered", 0, x);
-				$x.die(ev);
-				test.assertEquals("event must not trigger on .die", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("because of .die trigger must not happen", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("still no trigger expected", 0, x);
-
-				$('div.'+clazz).remove();
-				test.done();
-			},
-
 			".live(event,handler) + .die(event,handler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
@@ -61,30 +37,6 @@ var suite = {
 					x++;
 				}
 				var $live = $x.live(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $live);
-				test.assertEquals("event not yet triggered", 0, x);
-				$x.die(ev,handler);
-				test.assertEquals("event must not trigger on .die", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("because of .die trigger must not happen", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("still no trigger expected", 0, x);
-
-				$('div.'+clazz).remove();
-				test.done();
-			},
-
-			".live(event,data,handler) + .die(event,handler)|1.4": function($, test) {
-				var clazz = "c" + test.guid();
-				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
-				var ev = 'myEvent';
-				var x=0;
-				function handler(event){
-					x++;
-					test.assertEquals("event data must be passed", true, event.data.prop);
-				}
-				var $live = $x.live(ev, {prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.die(ev,handler);
@@ -121,30 +73,6 @@ var suite = {
 				test.done();
 			},
 
-			".live(event,data,handler) + .die(event,otherHandler)|1.4": function($, test) {
-				var clazz = "c" + test.guid();
-				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
-				var ev = 'myEvent';
-				var x=0;
-				function handler(event){
-					x++;
-					test.assertEquals("event data must be passed", true, event.data.prop);
-				}
-				var $live = $x.live(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $live);
-				test.assertEquals("event not yet triggered", 0, x);
-				$x.die(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .die", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
-				$x.trigger(ev);
-				test.assertEquals("still trigger expected", 2, x);
-
-				$('div.'+clazz).remove();
-				test.done();
-			},
-
 			".live(event,handler) + .trigger(event) + .die(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
@@ -155,32 +83,6 @@ var suite = {
 					x++;
 				}
 				var $live = $x.live(ev, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $live);
-				test.assertEquals("event not yet triggered", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("first trigger should fire", 1, x);
-				$x.die(ev);
-				test.assertEquals("event must not trigger on .die", 1, x);
-				$x.trigger(ev);
-				test.assertEquals("because of .die trigger must not happen", 1, x);
-				$x.trigger(ev);
-				test.assertEquals("still no trigger expected", 1, x);
-
-				$('div.'+clazz).remove();
-				test.done();
-			},
-
-			".live(event,data,handler) + .trigger(event) + .die(event)|1.4": function($, test) {
-				var clazz = "c" + test.guid();
-				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
-				var ev = 'myEvent';
-				var x=0;
-				function handler(event){
-					x++;
-					test.assertEquals("event data must be passed", true, event.data.prop);
-				}
-				var $live = $x.live(ev, {prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $live);
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
@@ -221,32 +123,6 @@ var suite = {
 				test.done();
 			},
 			
-			".live(event,data,handler) + .trigger(event) + .die(event,handler)|1.4": function($, test) {
-				var clazz = "c" + test.guid();
-				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
-				var ev = 'myEvent';
-				var x=0;
-				function handler(event){
-					x++;
-					test.assertEquals("event data must be passed", true, event.data.prop);
-				}
-				var $live = $x.live(ev, {prop: true}, handler);
-				test.assertEquals("classical bind must return original jQuery object", $x, $live);
-				test.assertEquals("event not yet triggered", 0, x);
-				$x.trigger(ev);
-				test.assertEquals("first trigger should fire", 1, x);
-				$x.die(ev, handler);
-				test.assertEquals("event must not trigger on .die", 1, x);
-				$x.trigger(ev);
-				test.assertEquals("because of .die trigger must not happen", 1, x);
-				$x.trigger(ev);
-				test.assertEquals("still no trigger expected", 1, x);
-
-				$('div.'+clazz).remove();
-				test.done();
-			},
-			
 			".live(event,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
@@ -272,7 +148,61 @@ var suite = {
 				test.done();
 			},
 
-			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)|1.4": function($, test) {
+		},
+
+		"binding single event with data - classical style": {
+			
+			_version: ['1.4.0'],
+			
+			".live(event,data,handler) + .die(event)": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
+				test.done();
+			},
+
+			".live(event,data,handler) + .die(event,handler)": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.die(ev,handler);
+				test.assertEquals("event must not trigger on .die", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .die trigger must not happen", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 0, x);
+
+				$('div.'+clazz).remove();
+				test.done();
+			},
+
+			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -298,11 +228,89 @@ var suite = {
 				test.done();
 			},
 
+			".live(event,data,handler) + .trigger(event) + .die(event,handler)": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("first trigger should fire", 1, x);
+				$x.die(ev, handler);
+				test.assertEquals("event must not trigger on .die", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
+				test.done();
+			},
+			
+			".live(event,data,handler) + .trigger(event) + .die(event)": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("first trigger should fire", 1, x);
+				$x.die(ev);
+				test.assertEquals("event must not trigger on .die", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("because of .die trigger must not happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still no trigger expected", 1, x);
+
+				$('div.'+clazz).remove();
+				test.done();
+			},
+
+			".live(event,data,handler) + .die(event,otherHandler)": function($, test) {
+				var clazz = "c" + test.guid();
+				$('<div>').addClass(clazz).appendTo('body');
+				var $x = $('div.'+clazz);
+				var ev = 'myEvent';
+				var x=0;
+				function handler(event){
+					x++;
+					test.assertEquals("event data must be passed", true, event.data.prop);
+				}
+				var $live = $x.live(ev, {prop: true}, handler);
+				test.assertEquals("classical bind must return original jQuery object", $x, $live);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.die(ev, function(){x++;});
+				test.assertEquals("event must not trigger on .die", 0, x);
+				$x.trigger(ev);
+				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
+				$x.trigger(ev);
+				test.assertEquals("still trigger expected", 2, x);
+
+				$('div.'+clazz).remove();
+				test.done();
+			},
+
 		},
 
 		"binding multiple events - classical style": {
 			
-			".live({ev1:h1, e2:h2}) + .die(ev1)|1.4.3": function($, test) {
+			_version: ['1.4.3'],
+			
+			".live({ev1:h1, e2:h2}) + .die(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -333,7 +341,7 @@ var suite = {
 				test.done();
 			},
 
-			".live({ev1:h1, e2:h2},data) + .die(ev1)|1.4.3": function($, test) {
+			".live({ev1:h1, e2:h2},data) + .die(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -366,7 +374,7 @@ var suite = {
 				test.done();
 			},
 
-			".live('ev1 ev2',handler) + .die(ev2)|1.4": function($, test) {
+			".live('ev1 ev2',handler) + .die(ev2)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -391,7 +399,7 @@ var suite = {
 				test.done();
 			},
 
-			".live('ev1 ev2',data,handler) + .die(ev2)|1.4": function($, test) {
+			".live('ev1 ev2',data,handler) + .die(ev2)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -489,7 +497,9 @@ var suite = {
 
 		"binding multiple events - timed invocation chain style": {
 			
-			".live('ev1 ev2').doSomething() + .trigger(ev1)|1.4": function($, test) {
+			_version: ['1.4.3'],
+			
+			".live('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -517,7 +527,7 @@ var suite = {
 				test.done();
 			},
 
-			".live('ev1 ev2',$).doSomething() + .trigger(ev1)|1.4": function($, test) {
+			".live('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);
@@ -545,7 +555,7 @@ var suite = {
 				test.done();
 			},
 
-			".live('ev1 ev2').doSomething()._|1.4": function($, test) {
+			".live('ev1 ev2').doSomething()._": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
 				var $x = $('div.'+clazz);

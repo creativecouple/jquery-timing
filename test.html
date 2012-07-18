@@ -320,14 +320,14 @@ $(function(){
 	}
 	
 	var filter = String(window.location.hash).replace(/^#/,'').split('|');
+	var globalVersions = ['1','99'];
 	$.each(tests, function(part, suite){
 		var $headline = $('<h2>').text(part).insertBefore($summary.last()).makeFilter([part,'*','*','*','*']);
 		var $table = $('<table>').insertBefore($summary.last());
 		
-		var versionBounds = [];
+		var partVersions = [suite._version && suite._version[0] || globalVersions[0], suite._version && suite._version[1] || globalVersions[1]];
 		$.each(suite, function(section, methods){
 			if (section == '_version') {
-				versionBounds.unshift(methods[0] || versionBounds[0], methods[1] || versionBounds[1]);
 				return;
 			}
 
@@ -337,15 +337,15 @@ $(function(){
 			$.each(jQueries, function(version){
 				$('<th colspan="2" class="jquery">').text(version).attr('title','jQuery version '+version).makeFilter([part,section,'*',version,'*']).appendTo($tr);
 			});
+			var sectionVersions = [methods._version && methods._version[0] || partVersions[0], methods._version && methods._version[1] || partVersions[1]];
 			$.each(methods, function(name, testMethod){
-				if (section == '_version') {
-					versionBounds.unshift(testMethod[0] || versionBounds[0], testMethod[1] || versionBounds[1]);
+				if (name == '_version') {
 					return;
 				}
 
 				var methodBounds = name.split('|');
 				name = methodBounds.shift();
-				versionBounds.unshift(methodBounds[0] || versionBounds[0], methodBounds[1] || versionBounds[1]);
+				var methodVersions = [methodBounds[0] || sectionVersions[0], methodBounds[1] || sectionVersions[1]];
 				
 				var $tr = $('<tr>').append($('<th class="method">').text(name).makeFilter([part,section,name,'*','*'])).appendTo($tbody);
 				$.each(jQueries, function(version, types){
@@ -368,7 +368,7 @@ $(function(){
 						if (!match) {
 							return $td.removeClass('run').text('?');
 						}
-						if (filter[3] == '*' && !checkVersionBounds(version, versionBounds[0],versionBounds[1])) {
+						if (filter[3] == '*' && !checkVersionBounds(version, methodVersions[0],methodVersions[1])) {
 							return $td.removeClass('run').addClass('skip').text('-');
 						}
 						count++;
@@ -401,9 +401,7 @@ $(function(){
 						});
 					});
 				});
-				versionBounds = versionBounds.slice(-4);
 			});
-			versionBounds = versionBounds.slice(-2);
 		});
 	});
 	$summary.text('~'+count+' tests');
