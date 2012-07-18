@@ -680,23 +680,8 @@
 		};
 	});
 
-
-	// initialize default mocked function names
-	jQuery.fn.addTimingSupport = function(){
-		var fakeObj = {};
-		this.each(function(index, elem){
-			if (typeof elem == "string") {
-				fakeObj[elem] = jQuery;
-			}
-			if (typeof elem == "object") {
-				jQuery.extend(fakeObj, elem);
-			}
-		});
-		new MockupPlaceholder(fakeObj);
-		return this;
-	};
-	// support some string methods
-	jQuery([loopEndMethods, 'indexOf','lastIndexOf','replace','substr','substring','toLowerCase','toUpperCase']).addTimingSupport();
+	// support .until() and .all()
+	new MockupPlaceholder(loopEndMethods);
 
 	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
