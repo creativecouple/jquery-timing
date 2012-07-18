@@ -23,9 +23,19 @@
 	var THREAD_GROUPS = {},
 
 	/**
-	 * remember original core functions
+	 * remember original core function $.each()
 	 */
 	originalEach = jQuery.fn.each,
+
+	/**
+	 * remember original core function $.on() (or $.bind())
+	 */
+	originalOn = jQuery.fn.on || jQuery.fn.bind,
+	
+	/**
+	 * remember original core function $.off() (or $.unbind())
+	 */
+	originalOff = jQuery.fn.off || jQuery.fn.unbind,
 	
 	loopEndMethods = {};
 	
@@ -335,28 +345,28 @@
 		if (typeof trigger == "string") {
 
 			triggerAction = function(){
-				executionState._context.unbind(trigger, triggerAction).unbind('__unwait__', unwaitAction);
+				originalOff.call(originalOff.call(executionState._context, trigger, triggerAction), '__unwait__', unwaitAction);
 				executionState._next = jQuery(this); 
 				executionState._canContinue = true;
 				timedInvocationChain();
 			};
 			unwaitAction = function(){
-				jQuery(this).unbind(trigger, triggerAction).unbind('__unwait__', unwaitAction);
+				originalOff.call(originalOff.call(jQuery(this), trigger, triggerAction), '__unwait__', unwaitAction);
 				executionState._context = executionState._context.not(this);
 				executionState._canContinue = executionState._context.length && executionState._canContinue;
 			};
-			executionState._context.bind(trigger, triggerAction);
+			originalOn.call(executionState._context, trigger, triggerAction);
 
 		} else {
 
 			triggerAction = window.setTimeout(function(){
-				executionState._context.unbind('__unwait__', unwaitAction);
+				originalOff.call(executionState._context, '__unwait__', unwaitAction);
 				executionState._next = executionState._context;
 				executionState._canContinue = true; 
 				timedInvocationChain();
 			}, Math.max(0,trigger));
 			unwaitAction = function(){
-				jQuery(this).unbind('__unwait__', unwaitAction);
+				originalOff.call(jQuery(this), '__unwait__', unwaitAction);
 				executionState._context = executionState._context.not(this);
 				executionState._canContinue = executionState._context.length && executionState._canContinue;
 				if (!executionState._context.length)
@@ -364,7 +374,7 @@
 			};
 
 		}
-		executionState._context.bind('__unwait__', unwaitAction);
+		originalOn.call(executionState._context, '__unwait__', unwaitAction);
 	};
 
 	/**
@@ -508,7 +518,7 @@
 		if (trigger == null) {
 			
 			unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', unrepeatAction);
+				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
 				executionState._next = executionState._context;
 				executionState._canContinue = executionState._context.length && executionState._canContinue;
@@ -531,13 +541,13 @@
 		} else if (typeof trigger == "string") {
 
 			unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', unrepeatAction);
+				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
 				executionState._next = executionState._next && executionState._next.not(this);
 				executionState._canContinue = executionState._context.length && executionState._canContinue;
-				jQuery(this).unbind(trigger, triggerAction);
+				originalOff.call(jQuery(this), trigger, triggerAction);
 			};
-			executionState._context.bind(trigger, triggerAction);
+			originalOn.call(executionState._context, trigger, triggerAction);
 			executionState._openEndAction = function(){
 				if (executionState._canContinue) {
 					executionState._count++;
@@ -548,7 +558,7 @@
 		} else {
 
 			unrepeatAction = function(){
-				jQuery(this).unbind('__unrepeat__', unrepeatAction);
+				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
 				executionState._context = executionState._context.not(this);
 				executionState._next = executionState._context;
 				executionState._canContinue = executionState._context.length && executionState._canContinue;
@@ -565,7 +575,7 @@
 
 		}
 		
-		executionState._context.bind('__unrepeat__', unrepeatAction);
+		originalOn.call(executionState._context, '__unrepeat__', unrepeatAction);
 		executionState._count = 0;
 		executionState._untilAction = function(end){
 			if (end) {
@@ -628,6 +638,9 @@
 		}
 	};
 	
+	// support .until() and .all()
+	new MockupPlaceholder(loopEndMethods);
+	
 	/**
 	 * Define unwait and unrepeat methods.
 	 */
@@ -647,41 +660,6 @@
 			return jQuery.fn[name].apply(THREAD_GROUPS[group] = (THREAD_GROUPS[group] || jQuery('<div>').text(group)), arguments);
 		};
 	});
-
-	/**
-	 * create replacement methods for .bind(), .on(), and .one()
-	 * supporting chaining instead of giving a callback function
-	 */
-	jQuery.each(['bind','on','one','live','delegate'], function(index, name){
-		var original = jQuery.fn[name];
-		jQuery.fn[name] = original && function(){
-			var originalUsage, i, methodStack;
-			for(i=0; i<arguments.length; i++) {
-				if (typeof arguments[i] == "function" || (arguments[i] && typeof arguments[i] == "object") || arguments[i] === false) {
-					if (arguments[i] !== jQuery) {
-						// fix for jQuery 1.6 .one() + .unbind()
-						if (typeof arguments[i] == "function" && jQuery.guid) {
-							arguments[i].guid = arguments[i].guid || jQuery.guid++;
-						}
-						originalUsage = !originalUsage;
-					}
-					break;
-				}
-			}
-			if (originalUsage) {
-				return original.apply(this, arguments);
-			}
-			methodStack = {};
-			arguments[i] = function(){
-				return (createTimedInvocationChain(jQuery(this), methodStack))();
-			};
-			arguments.length = Math.max(arguments.length, i+1);
-			return new MockupPlaceholder(original.apply(this, arguments), methodStack);
-		};
-	});
-
-	// support .until() and .all()
-	new MockupPlaceholder(loopEndMethods);
 
 	/**
 	 * $$ defines deferred variables that can be used in timed invocation chains 
