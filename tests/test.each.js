@@ -45,20 +45,28 @@ var suite = {
 				test.done();
 			},
 			
-			".each().attr('class').toUpperCase().all()": function($, test){
-				var $x = $('<div class="foo">').add('<p class="bar">').add('<span class="Fooo"><em class="Bar"/></span>');
-				test.assertEquals("jQuery's .attr() should only find first one", 'foo', $x.attr('class'));
-				var tic = $x.each().attr('class');
+			"$($(some).each().attr('title')).map(toUpperCase)": function($, test){
+				var $x = $('<div title="foo">').add('<p title="bar">').add('<span title="Fooo"><em title="Bar"/></span>');
+				test.assertEquals("jQuery's .attr() should only find first one", 'foo', $x.attr('title'));
+				var tic = $x.each().attr('title');
 				test.assertNotEquals("each-loop must return TIC object", $x, tic);
 				test.assertEquals("snapshot has wrong content", 'foo::bar::Fooo', $(tic).get().join('::'));
-				var $y = tic.toUpperCase().all();
-				test.assertNotEquals("instant .all() must return some jQuery object", tic, $y);
+				var $y = $(tic).map(String.prototype.toUpperCase);
 				test.assertEquals("result has wrong content", 'FOO::BAR::FOOO', $y.get().join('::'));
 				test.done();
 			},
 			
 			".each().next().all().end()": function($, test){
-				
+				var $x = $('<div><div title="foo"></div><p title="bar"></p><span title="Fooo"><em title="Bar"/></span></div>').children();
+				test.assertEquals("not enough children", 3, $x.size());
+				var tic = $x.each().next();
+				test.assertNotEquals("each-loop must return TIC object", $x, tic);
+				test.assertEquals("snapshot has wrong size", 2, $(tic).size());
+				var $y = tic.all();
+				test.assertNotEquals("instant .all() must return some jQuery object", tic, $y);
+				test.assertEquals("result has wrong size", 2, $y.size());
+				test.assertEquals(".end() must return previous", $x, $y.end());
+				test.done();
 			},
 			
 		},
@@ -145,6 +153,9 @@ var suite = {
 				test.assertEquals("callback must wait for event", 0, x);
 				$x.trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element", 3, x);
+				x=0;
+				$x.trigger('myEvent');
+				test.assertEquals("callback must be triggered for each element again", 3, x);
 				test.done();
 			},
 	
@@ -163,61 +174,12 @@ var suite = {
 				test.assertEquals("callback must wait for event", 0, x);
 				$x.trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element", 3, x);
+				x=0;
+				$x.trigger('myEvent');
+				test.assertEquals("callback must be triggered for each element again", 3, x);
 				test.done();
 			},
 	
-			".wait(timeout).each().text().all() + … + .get()": function($, test){
-				
-			},
-			
-			".wait(event).each().attr('class').toUpperCase().all() + .trigger(event) + .get()": function($, test){
-				
-			},
-			
-			".delay(timeout).join().each().next().all() + … + .end()": function($, test){
-				
-			},
-			
-		},
-		
-		"nested each-loops with interim snapshot states": {
-			
-			".each().each().doSomething().all().all()": function($, test) {
-				
-			},
-			
-			".each().children().each().wait(event).all().parent() +…+ .all()": function($, test) {
-				
-			},
-			
-			".each().repeat().doSomething().until(count).all()": function($, test) {
-				
-			},
-
-			".each().children().repeat().wait(timeout) +…+ .until(count) +…+ .all()": function($, test) {
-				
-			},
-			
-		},
-		
-		"inner loops with open endings": {
-
-			".each().repeat(timeout).doSomething().all()": function($, test) {
-				
-			},
-
-			".each().repeat(timeout).doSomething().until(count)": function($, test) {
-				
-			},
-
-			".repeat(timeout).each().doSomething().all()": function($, test) {
-				
-			},
-
-			".repeat(timeout).each().doSomething().until(count)": function($, test) {
-				
-			},
-
 		},
 		
 };
