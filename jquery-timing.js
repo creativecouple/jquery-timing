@@ -21,6 +21,11 @@
 	 * object to store statically invoked threads
 	 */
 	var THREAD_GROUPS = {},
+	
+	/**
+	 * unique timing identifier for different purposes
+	 */
+	tuid = 1,
 
 	/**
 	 * remember original core function $.each()
@@ -37,6 +42,11 @@
 	 */
 	originalOff = jQuery.fn.off || jQuery.fn.unbind,
 	
+	/**
+	 * remember original core function $.animate()
+	 */
+	originalAnimate = jQuery.fn.animate,
+
 	loopEndMethods = {};
 	
 	function sameOrNextJQuery(before, after) {
@@ -239,39 +249,19 @@
 	});
 	
 	/**
-	 * Create replacement methods for .toggle() and .animate()
+	 * Create replacement method for .animate()
 	 * that support chaining if $ is given as callback function.
 	 */
-	jQuery.each(['toggle','animate'], function(index, name){
-		if (jQuery.fn[name]) {
-			var original = jQuery.fn[name];
-			jQuery.fn[name] = function(){
-				if (arguments[arguments.length-1] === jQuery) {
-					var methodStack = {},
-					placeholder = new MockupPlaceholder(this, methodStack, createTimedInvocationChain(this, methodStack, [], function(elements){
-						placeholder.length = 0;
-						Array.prototype.push.apply(placeholder, elements);
-					}));
-					return placeholder[name].apply(placeholder, arguments);
-				}
-				return original.apply(this, arguments);
+	jQuery.fn.animate = function(){
+		if (arguments[arguments.length-1] === jQuery) {
+			var event = '_timing'+tuid++;
+			arguments[arguments.length-1] = function(){
+				jQuery(this).trigger(event);
 			};
-			jQuery.fn[name].timing = function(timedInvocationChain, executionState) {
-				var waitingElements = executionState._context.length,
-				methodArgs = Array.prototype.slice.apply(executionState._method._arguments);
-				
-				if (methodArgs[methodArgs.length-1] === jQuery) {
-					methodArgs[methodArgs.length-1] = function(){
-						executionState._canContinue = !--waitingElements;
-						timedInvocationChain();
-					};
-				} else {
-					executionState._canContinue = true;
-				}
-				original.apply(executionState._context, methodArgs);
-			};
+			return this.each().one(event).all(originalAnimate.apply(this, arguments));
 		}
-	});
+		return originalAnimate.apply(this, arguments);
+	};
 		
 	/**
 	 * Define new methods .wait(), .repeat(), .join(), .then()
