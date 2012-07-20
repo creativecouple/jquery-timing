@@ -143,7 +143,7 @@ var suite = {
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){
-					test.assertEquals("single element in event-loop expected", 0, i);
+					test.assertEquals("single element in event-loop expected", x, i);
 					test.assertEquals("wrong context?", 1, this.size());
 					test.assertEquals("wrong context element?", $x[x], this[0]);
 					x++;
@@ -151,10 +151,10 @@ var suite = {
 				var tic = $x.repeat(event).each().then(callback).all();				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for event", 0, x);
-				$x.trigger('myEvent');
+				$x.eq(0).trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element", 3, x);
 				x=0;
-				$x.trigger('myEvent');
+				$x.eq(1).trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element again", 3, x);
 				test.done();
 			},
@@ -164,7 +164,7 @@ var suite = {
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){
-					test.assertEquals("single element in event-loop expected", 0, i);
+					test.assertEquals("single element in event-loop expected", x, i);
 					test.assertEquals("wrong context?", 1, this.size());
 					test.assertEquals("wrong context element?", $x[x], this[0]);
 					x++;
@@ -172,10 +172,10 @@ var suite = {
 				var tic = $x.repeat(event).each().then(callback).until(false);				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for event", 0, x);
-				$x.trigger('myEvent');
+				$x.eq(2).trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element", 3, x);
 				x=0;
-				$x.trigger('myEvent');
+				$x.eq(1).trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element again", 3, x);
 				test.done();
 			},

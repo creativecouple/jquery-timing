@@ -918,50 +918,87 @@ var suite = {
 				}, timeout / 2);
 			},
 			
-			"$('.multiple').repeat(event) + $('#single').trigger(event)": function($, test){
+			"$('.multiple').repeat(event).next() + $('#single').trigger(event)": function($, test){
 				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event = 'myEvent';
 				var $y=null;
-				var tic = $x.repeat(event).then(function(){$y=this;}).until(2);
+				var tic = $x.repeat(event).then(function(){$y=this;}).next().until(2);
 				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
 				test.assertEquals("tic should stay on all elements", 3, $(tic).size());
 				$x.eq(2).trigger(event);
-				test.assertEquals("tic should have visited triggered element only", '3', $y.text());
+				test.assertEquals("tic should stay again on all elements", '123', $y.text());
 				$x.eq(1).trigger(event);
-				test.assertEquals("tic should have visited triggered element only", '2', $y.text());
+				test.assertEquals("tic should have used all elements again", '123', $y.text());
 				$x.eq(0).trigger(event);
-				test.assertEquals("tic should not use the event after the loop", '2', $y.text());
-				test.assertEquals("tic should stay on last triggered element", '2', $(tic).text());
-				var $y = tic.then();
-				test.assertEquals("after event only matched element can go on", '2', $y.text());
+				test.assertEquals("tic should stay on last element set after .next()", '23', $(tic).text());
+				$y = tic.then();
+				test.assertEquals("after loop last context goes on", '23', $y.text());
 				test.done();
 			},
 			
-			"$('.multiple').repeat(event).wait() + $('#single').unrepeat()": function($, test){
+			"$('.multiple').repeat(event).next().until(null,true) + $('#single').trigger(event)": function($, test){
+				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var event = 'myEvent';
+				var $y=null;
+				var tic = $x.repeat(event).next().until(function(){$y=this; return null;},true);
+				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
+				test.assertEquals("tic should stay on all elements", 3, $(tic).size());
+				$x.eq(2).trigger(event);
+				test.assertEquals("tic should have used .next() elements only", '23', $y.text());
+				test.assertEquals("tic should stay on .next() elements only", '23', $(tic).text());
+				$x.eq(0).trigger(event);
+				test.assertEquals("repeat should again have used .next() elements", '3', $y.text());
+				test.assertEquals("repeat should again stay on .next() elements", '3', $(tic).text());
+				$x.eq(2).unrepeat();
+				test.assertEquals(".unrepeat() should not change the context", '3', $y.text());
+				$x.eq(2).trigger(event);
+				test.assertEquals("tic should ignore trigger from unrepeated element", '3', $(tic).text());
+				$x.eq(1).trigger(event);
+				test.assertEquals("repeat should go on with new context", '', $y.text());
+				$y = tic.then();
+				test.assertEquals("after loop last context goes on", 0, $y.size());
+				test.done();
+			},
+			
+			"$('.multiple').repeat().one(event) + $('#single').unrepeat()": function($, test){
 				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event1 = 'myEvent';
 				var event2 = 'myOtherEvent';
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
-				var callback2 = function(){ y++; test.check(); };
-				var tic = $x.repeat(event1, callback1).wait(event2, callback2).until(3);
+				var callback2 = function(){ test.assertEquals("context must contain first triggered element only", 1, this.size()); y++; test.check(); };
+				var tic = $x.repeat(event1,callback1).one(event2).then(callback2).until(3);
 				$x.eq(2).trigger(event1);
-				test.assertEquals("repeat started once", '3', $(tic).text());			
-				test.assertEquals("tic should visit triggered element only", '3', $(tic).text());			
+				test.assertEquals("repeat started once", 1, x);			
+				test.assertEquals("tic should stay on all elements", '123', $(tic).text());			
+				test.assertEquals(".one() should wait for trigger", 0, y);			
 				$x.eq(1).trigger(event1);
-				test.assertEquals("tic should still stay on triggered element in first repeat", '3', $(tic).text());			
+				test.assertEquals("tic should still stay on all elements in first repeat", '123', $(tic).text());			
+				test.assertEquals(".one() should still wait for trigger", 0, y);
 				$x.eq(2).trigger(event2);
-				test.assertEquals("tic should wait after element triggered in meantime", '2', $(tic).text());
+				test.assertEquals(".one() should have fired once", 1, y);
+				test.assertEquals("repeat started over", 2, x);
+				test.assertEquals("tic should wait again for all elements", '123', $(tic).text());
 				$x.eq(1).trigger(event2);
-				test.assertEquals("tic should wait for all elements again", 3, $(tic).size());
+				test.assertEquals(".one() should have fired again", 2, y);
+				test.assertEquals("repeat still waiting for third event2", 2, x);
+				test.assertEquals("tic should wait for all elements again", '123', $(tic).text());
 				$x.eq(0).unrepeat().trigger(event1);
-				test.assertNotEquals("tic should ignore unrepeated element's trigger", 1, $(tic).size());
+				test.assertEquals("repeat still waiting for third event", 2, x);
+				test.assertEquals(".one() still waiting for third event", 2, y);
+				test.assertEquals("tic should wait for remaining elements", '23', $(tic).text());
 				$x.eq(1).trigger(event2);
-				test.assertNotEquals("tic should ignore event2 when waiting for repeat event1", 1, $(tic).size());
+				test.assertEquals("repeat should ignore event2 when waiting for event1", 2, x);
+				test.assertEquals(".one() still waiting for third event2 after event1", 2, y);
+				test.assertEquals("tic should wait for remaining elements", '23', $(tic).text());
 				$x.eq(1).trigger(event1);
-				test.assertEquals("tic should now wait for trigered element", 1, $(tic).size());
+				test.assertEquals("repeat started over", 3, x);
+				test.assertEquals(".one() should still wait for third event2", 2, y);
+				test.assertEquals("tic should wait again for all remaining elements", '23', $(tic).text());
 				$x.eq(1).trigger(event2);
-				test.assertEquals("tic should have left the loop with single element", 1, $(tic).size());
+				test.assertEquals(".one() should have fired third time", 3, y);
+				test.assertEquals("repeat did not start over", 3, x);
+				test.assertEquals("tic should have left the loop with single element", '2', $(tic).text());
 				tic.then(function(){
 					test.done();
 				});
