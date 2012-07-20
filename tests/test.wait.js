@@ -689,11 +689,11 @@ var suite = {
 				var event = 'myEvent';
 				var tic = $x.wait(event);
 				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
-				test.assertEquals("tic should stay on all elements", 3, $(tic).size());
+				test.assertEquals("tic should wait for all elements", 3, $(tic).size());
 				$x.eq(1).trigger(event);
-				test.assertEquals("tic should now stay on triggered element", '2', $(tic).text());
+				test.assertEquals("tic should stay on all elements", '123', $(tic).text());
 				var $y = tic.then();
-				test.assertEquals("after event only matched element can go on", '2', $y.text());
+				test.assertEquals("after event same context is used", '123', $y.text());
 				test.done();
 			},
 			
@@ -712,6 +712,32 @@ var suite = {
 					test.done();
 				}, 11);
 			},
+			
+			"$('.multiple').wait(event) + $('#single').unwait()": function($, test){
+				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var event = 'myEvent';
+				var x=0;
+				var callback = function(){ x++; test.check(); };
+				var tic = $x.wait(event).then(callback);
+				test.assertEquals("tic should wait for all elements", '123', $(tic).text());			
+				$x.eq(2).trigger(event);
+				test.assertEquals("wait fired once", 1, x);
+				test.assertEquals("tic should stay on all elements", '123', $(tic).text());
+				
+				tic = $x.wait(event).then(callback);
+				$x.eq(0).unwait().trigger(event);
+				test.assertEquals("wait still waiting for next event", 1, x);
+				test.assertEquals("tic should wait for remaining elements", '23', $(tic).text());
+				
+				$x.eq(1).trigger(event);
+				test.assertEquals("wait fired again", 2, x);
+				test.assertEquals("tic should wait again for all remaining elements", '23', $(tic).text());
+				
+				tic.then(function(){
+					test.done();
+				});
+				test.fail('tic should go on');
+			}
 			
 		}
 		
