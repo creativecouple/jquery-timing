@@ -113,7 +113,7 @@
 				preventRecursion = !preventRecursion;
 				// save current context state
 				if (onStepCallback) {
-					onStepCallback(jQuery.makeArray(executionState._context));
+					onStepCallback(jQuery.makeArray(executionState._next || executionState._context));
 				}
 				// leave the chain when waiting for a trigger
 				if (executionState._canContinue == false) {
@@ -156,7 +156,7 @@
 					if (!method.timing && !executionState._canContinue) {
 						// prevent automatic re-trigger in case of loops
 						executionState._next = executionState._context[executionState._method._name].apply(executionState._context, executionState._method._arguments);
-						if (executionState._next instanceof MockupPlaceholder) {
+						if (ongoingLoops.length && executionState._next instanceof MockupPlaceholder) {
 							hookupToMockup(executionState, executionState._next);
 							continue;
 						}
@@ -168,7 +168,6 @@
 					};
 					// prevent automatic re-trigger in case of loops
 					executionState._canContinue = false;
-					executionState._next = null;
 					// invoke callback method with given arguments
 					if (typeof executionState._callback == "function") {
 						executionState._callback.apply(executionState._context, loopCounts(ongoingLoops));
@@ -227,7 +226,7 @@
 		if (jQuery.fn[name]) {
 			var original = jQuery.fn[name];
 			jQuery.fn[name] = function(){
-				var i, methodStack = {};
+				var i, methodStack, placeholder, timedInvocationChain;
 				for(i=0; i<arguments.length; i++) {
 					if (typeof arguments[i] == "function" || (arguments[i] && typeof arguments[i] == "object") || arguments[i] === false) {
 						if (arguments[i] !== jQuery) {
@@ -241,9 +240,15 @@
 					}
 				}
 				Array.prototype.splice.call(arguments, i, 1, function(event){
-					return (createTimedInvocationChain(jQuery(this), methodStack, [{ _count: event }]))();
+					timedInvocationChain = createTimedInvocationChain(jQuery(this), methodStack, [{ _count: event }], function(elements){
+						placeholder.length = 0;
+						Array.prototype.push.apply(placeholder, elements);
+					});
+					return timedInvocationChain();
 				});
-				return new MockupPlaceholder(original.apply(this, arguments), methodStack);
+				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}, function(){
+					return timedInvocationChain ? timedInvocationChain(placeholder) : placeholder;
+				});
 			};
 		}
 	});
@@ -485,8 +490,9 @@
 	jQuery.fn.repeat.timing = function(timedInvocationChain, executionState, ongoingLoops) {
 		var trigger,
 		firstRunNow,
-		unrepeatAction,
-		openLoopWaiting;
+		openLoopTimeout,
+		event='',
+		interval;
 
 		if (typeof executionState._method._arguments[0] == "function") {
 			executionState._callback = executionState._method._arguments[0];
@@ -500,77 +506,57 @@
 		}
 		
 		function triggerAction() {
-			executionState._next = (this === window) ? executionState._context : (executionState._next ? executionState._next.add(this) : jQuery(this));
+			executionState._next = executionState._next || executionState._context;
 			executionState._canContinue = true;
 			timedInvocationChain();
 		}
 		
-		if (trigger == null) {
-			
-			unrepeatAction = function(){
-				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
-				executionState._context = executionState._context.not(this);
-				executionState._next = executionState._context;
-				executionState._canContinue = executionState._context.length && executionState._canContinue;
-				trigger = executionState._context.length && trigger;
-			};
-			firstRunNow = true;
-			openLoopWaiting = window.setTimeout(function(){
-				openLoopWaiting = false;
-				timedInvocationChain();
-			},0);
-			executionState._openEndAction = function(){
-				if (!openLoopWaiting) {
-					executionState._count++;
-					executionState._next = executionState._context;
-					executionState._canContinue = trigger == null && executionState._context.length;
-					return executionState;
-				}
-			};
-			
-		} else if (typeof trigger == "string") {
-
-			unrepeatAction = function(){
-				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
-				executionState._context = executionState._context.not(this);
-				executionState._next = executionState._next && executionState._next.not(this);
-				executionState._canContinue = executionState._context.length && executionState._canContinue;
-				originalOff.call(jQuery(this), trigger, triggerAction);
-			};
-			originalOn.call(executionState._context, trigger, triggerAction);
-			executionState._openEndAction = function(){
-				if (executionState._canContinue) {
-					executionState._count++;
-					return executionState;
-				}
-			};
-
-		} else {
-
-			unrepeatAction = function(){
-				originalOff.call(jQuery(this), '__unrepeat__', unrepeatAction);
-				executionState._context = executionState._context.not(this);
-				executionState._next = executionState._context;
-				executionState._canContinue = executionState._context.length && executionState._canContinue;
-				if (!executionState._context.length)
-					window.clearInterval(trigger);
-			};
-			trigger = window.setInterval(triggerAction, Math.max(0, trigger));
-			executionState._openEndAction = function(){
-				if (executionState._canContinue) {
-					executionState._count++;
-					return executionState;
-				}
-			};
-
+		function unrepeatAction(){
+			originalOff.call(originalOff.call(jQuery(this), event, triggerAction), '__unrepeat__', unrepeatAction);
+			executionState._context = executionState._context.not(this);
+			executionState._next = (executionState._next == executionState._context.end()) ? executionState._context : executionState._next;
+			executionState._canContinue = executionState._context.length && executionState._canContinue;
+			trigger = executionState._context.length && trigger;
+			window.clearInterval(!executionState._context.length && interval);
+			// just update the snapshot info
+			timedInvocationChain();
 		}
 		
+		executionState._openEndAction = function(){
+			if (executionState._canContinue || openLoopTimeout) {
+				executionState._count++;
+				executionState._next = executionState._next || executionState._context;
+				executionState._canContinue = executionState._canContinue || trigger;
+				return executionState;
+			}
+		};
+
+		if (trigger == null) {
+			
+			firstRunNow = trigger = true;
+			window.setTimeout(function(){
+				openLoopTimeout = true;
+				timedInvocationChain();
+			},0);
+			
+		} else {
+			if (typeof trigger == "string") {
+				originalOn.call(executionState._context, event = trigger, triggerAction);
+			} else {
+				interval = window.setInterval(triggerAction, Math.max(0, trigger));				
+			}
+			trigger = false;
+		}
+
 		originalOn.call(executionState._context, '__unrepeat__', unrepeatAction);
+		
+		executionState._next = executionState._context;
 		executionState._count = 0;
-		executionState._untilAction = function(end){
+		executionState._untilAction = function(end, loopContext){
 			if (end) {
 				unrepeatAction.apply(executionState._context);
-			} else if (trigger == null) {
+			}
+			if (trigger) {
 				triggerAction();
 			}
 		};
@@ -603,12 +589,13 @@
 			return;
 		}
 
-		var condition = !!executionState && executionState._method._arguments[0];
-		if (condition == null) {
-			condition = !executionState._context.size();
-		}
+		var condition = executionState._method._arguments[0],
+		loopContext = executionState._method._arguments[1];
 		if (typeof condition == "function") {
 			condition = condition.apply(executionState._context, loopCounts(ongoingLoops));
+		}
+		if (condition == null) {
+			condition = !executionState._context.size();
 		}
 		if (typeof condition == "object") {
 			condition = condition.toString();
@@ -621,9 +608,12 @@
 			executionState._next = executionState._context;
 			ongoingLoops.shift()._untilAction(condition);
 		} else {
+			if (loopContext) {
+				ongoingLoops[0]._next = executionState._context;
+			}
 			executionState = ongoingLoops[0];
 			executionState._count++;
-			executionState._untilAction();
+			executionState._untilAction(condition);
 			return executionState;
 		}
 	};
