@@ -328,7 +328,7 @@
 	 * @param executionState
 	 */
 	jQuery.fn.wait.timing = function(timedInvocationChain, executionState) {
-		var trigger, triggerAction, unwaitAction;
+		var trigger, event, timeout;
 		
 		if (typeof executionState._method._arguments[0] == "function") {
 			executionState._callback = executionState._method._arguments[0];
@@ -336,40 +336,34 @@
 			trigger = executionState._method._arguments[0];
 			executionState._callback = executionState._method._arguments[1];
 		}
+
+		function triggerAction() {
+			originalOff.call(event ? originalOff.call(executionState._context, event, triggerAction) : executionState._context, '__unwait__', unwaitAction);
+			executionState._canContinue = true;
+			timedInvocationChain();
+		}
 		
+		function unwaitAction(){
+			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), '__unwait__', unwaitAction);
+			executionState._next = executionState._context = executionState._context.not(this);
+			executionState._canContinue = executionState._context.length && executionState._canContinue;
+			window.clearTimeout(!executionState._context.length && timeout);
+			// just update the snapshot info
+			timedInvocationChain();
+		}
+
 		if (typeof trigger == "string") {
 
-			triggerAction = function(){
-				originalOff.call(originalOff.call(executionState._context, trigger, triggerAction), '__unwait__', unwaitAction);
-				executionState._next = jQuery(this); 
-				executionState._canContinue = true;
-				timedInvocationChain();
-			};
-			unwaitAction = function(){
-				originalOff.call(originalOff.call(jQuery(this), trigger, triggerAction), '__unwait__', unwaitAction);
-				executionState._context = executionState._context.not(this);
-				executionState._canContinue = executionState._context.length && executionState._canContinue;
-			};
-			originalOn.call(executionState._context, trigger, triggerAction);
+			originalOn.call(executionState._context, event = trigger, triggerAction);
 
 		} else {
 
-			triggerAction = window.setTimeout(function(){
-				originalOff.call(executionState._context, '__unwait__', unwaitAction);
-				executionState._next = executionState._context;
-				executionState._canContinue = true; 
-				timedInvocationChain();
-			}, Math.max(0,trigger));
-			unwaitAction = function(){
-				originalOff.call(jQuery(this), '__unwait__', unwaitAction);
-				executionState._context = executionState._context.not(this);
-				executionState._canContinue = executionState._context.length && executionState._canContinue;
-				if (!executionState._context.length)
-					window.clearTimeout(triggerAction);
-			};
+			timeout = window.setTimeout(triggerAction, Math.max(0,trigger));
 
 		}
+		
 		originalOn.call(executionState._context, '__unwait__', unwaitAction);
+		executionState._next = executionState._context;
 	};
 
 	/**
@@ -491,7 +485,7 @@
 		var trigger,
 		firstRunNow,
 		openLoopTimeout,
-		event='',
+		event,
 		interval;
 
 		if (typeof executionState._method._arguments[0] == "function") {
@@ -512,9 +506,10 @@
 		}
 		
 		function unrepeatAction(){
-			originalOff.call(originalOff.call(jQuery(this), event, triggerAction), '__unrepeat__', unrepeatAction);
-			executionState._context = executionState._context.not(this);
-			executionState._next = (executionState._next == executionState._context.end()) ? executionState._context : executionState._next;
+			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), '__unrepeat__', unrepeatAction);
+			var context = executionState._context.not(this);
+			executionState._next = (executionState._next == executionState._context) ? context : executionState._next;
+			executionState._context = context;
 			executionState._canContinue = executionState._context.length && executionState._canContinue;
 			trigger = executionState._context.length && trigger;
 			window.clearInterval(!executionState._context.length && interval);
