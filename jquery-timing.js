@@ -352,13 +352,13 @@
 		}
 
 		function triggerAction() {
-			originalOff.call(event ? originalOff.call(executionState._context, event, triggerAction) : executionState._context, '__unwait__', unwaitAction);
+			originalOff.call(event ? originalOff.call(executionState._context, event, triggerAction) : executionState._context, 'unwait', unwaitAction);
 			executionState._canContinue = true;
 			timedInvocationChain();
 		}
 		
 		function unwaitAction(){
-			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), '__unwait__', unwaitAction);
+			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), 'unwait', unwaitAction);
 			executionState._next = executionState._context = executionState._context.not(this);
 			executionState._canContinue = executionState._context.length && executionState._canContinue;
 			window.clearTimeout(!executionState._context.length && timeout);
@@ -376,7 +376,7 @@
 
 		}
 		
-		originalOn.call(executionState._context, '__unwait__', unwaitAction);
+		originalOn.call(executionState._context, 'unwait', unwaitAction);
 		executionState._next = executionState._context;
 	};
 
@@ -520,7 +520,7 @@
 		}
 		
 		function unrepeatAction(){
-			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), '__unrepeat__', unrepeatAction);
+			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), 'unrepeat', unrepeatAction);
 			var context = executionState._context.not(this);
 			executionState._next = (executionState._next == executionState._context) ? context : executionState._next;
 			executionState._context = context;
@@ -557,7 +557,7 @@
 			trigger = false;
 		}
 
-		originalOn.call(executionState._context, '__unrepeat__', unrepeatAction);
+		originalOn.call(executionState._context, 'unrepeat', unrepeatAction);
 		
 		executionState._next = executionState._context;
 		executionState._count = 0;
@@ -635,7 +635,7 @@
 	 */
 	jQuery.each(['unwait','unrepeat'], function(index, name){
 		jQuery.fn[name] = function(){
-			return this.trigger('__'+name+'__');
+			return this.trigger(name);
 		};
 	});
 	
