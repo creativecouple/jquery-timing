@@ -1009,33 +1009,302 @@ var suite = {
 		
 		"deferred loops": {
 			
-			".wait().repeat().until(count)": function($, test){},
+			".wait().repeat().until(count)": function($, test){
+				var $x = $('<div>');
+				var x=0, y=0;
+				var callback1 = function(){ x++; test.check(); };
+				var callback2 = function(){ y++; test.check(); };
+				$x.wait(callback1).repeat(callback2).until(3);
+				test.assertEquals("waiting for little timeout", 0, x);
+				test.assertEquals("waiting for loop start", 0, y);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() passed by", 1, x);
+					test.assertEquals(".repeat()..until() also ended", 3, y);
+					test.done();
+				}, 10);
+			},
 
-			".wait(timeout) +…+ .repeat().until(count)": function($, test){},
+			".wait(timeout) +…+ .repeat().until(count)": function($, test){
+				var $x = $('<div>');
+				var x=0, y=0;
+				var callback1 = function(){ x++; test.check(); };
+				var callback2 = function(){ y++; test.check(); };
+				var tic = $x.wait(1,callback1);
+				test.assertEquals("waiting for little timeout", 0, x);
+				test.assertEquals("waiting for loop start", 0, y);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() passed by", 1, x);
+					test.assertEquals(".repeat() not yet defined", 0, y);
+					tic.repeat(callback2).until(3);
+					test.assertEquals(".wait() is past", 1, x);
+					test.assertEquals(".repeat()..until() also ended", 3, y);
+					test.done();
+				}, 10);
+			},
 
-			".wait(event).repeat(event).then(callback)": function($, test){},
+			".wait(event).repeat(event).then(callback)": function($, test){
+				var $x = $('<div>');
+				var x=0, y=0;
+				var callback1 = function(){ x++; test.check(); };
+				var callback2 = function(){ y++; test.check(); };
+				$x.wait('evt', callback1).repeat('evt').then(callback2);
+				test.assertEquals("waiting for event", 0, x);
+				test.assertEquals("loop start waiting for event", 0, y);
+				$x.trigger('evt');
+				test.assertEquals(".wait() passed by", 1, x);
+				test.assertEquals("loop start still waiting for event", 0, y);
+				$x.trigger('evt');
+				test.assertEquals(".wait() is past", 1, x);
+				test.assertEquals(".repeat()..until() run once", 1, y);
+				$x.trigger('evt');
+				test.assertEquals(".wait() is past", 1, x);
+				test.assertEquals(".repeat()..until() run again", 2, y);
+				$x.trigger('evt');
+				test.assertEquals(".wait() is past", 1, x);
+				test.assertEquals("and again...", 3, y);
+				test.done();
+			},
 			
 		},
 		
 		"nested loops":  {
 		
-			".repeat().repeat().until(callback).until(count)": function($,test) {},
+			".repeat().repeat().until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 			
-			".repeat(event).repeat().until(callback).until(count)": function($,test) {},
+			".repeat(event).repeat().until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat('evt', function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.repeat().trigger('evt').until(5)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 5, x);
+					test.assertEquals("inner loop count wrong", 15, y);
+				})
+				.repeat().trigger('evt').until(10)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 
-			".repeat(interval).repeat().until(callback).until(count)": function($,test) {},
+			".repeat(interval).repeat().until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(10, function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.wait(500)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 
-			".repeat().repeat(event).until(callback).until(count)": function($,test) {},
+			".repeat().repeat(event).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat('evt', function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 6, x);
+					test.assertEquals("inner loop count wrong", 20, y);
+				})
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 9, x);
+					test.assertEquals("inner loop count wrong", 40, y);
+				})
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 
-			".repeat(event).repeat(event).until(callback).until(count)": function($,test) {},
+			".repeat(event).repeat(event).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat('evt', function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat('evt', function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 6, x);
+					test.assertEquals("inner loop count wrong", 19, y);
+				})
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 9, x);
+					test.assertEquals("inner loop count wrong", 39, y);
+				})
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 
-			".repeat(interval).repeat(event).until(callback).until(count)": function($,test) {},
+			".repeat(interval).repeat(event).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(10, function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat('evt', function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(10)
+				._
+				.repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop must wait", 0, x);
+					test.assertEquals("inner loop must wait", 0, y);
+				})
+				.wait(50).repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 2, x);
+					test.assertEquals("inner loop count wrong", 3, y);
+				})
+				.wait(50).repeat().trigger('evt').until(20)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 4, x);
+					test.assertEquals("inner loop count wrong", 10, y);
+				})
+				.repeat().wait(50).repeat().trigger('evt').until(20).until(3)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 10, x);
+					test.assertEquals("inner loop count wrong", 55, y);
+					test.done();
+				});
+			},
 
-			".repeat().repeat(interval).until(callback).until(count)": function($,test) {},
+			".repeat().repeat(interval).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(10, function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(5)
+				._
+				.wait(500)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 5, x);
+					test.assertEquals("inner loop count wrong", 15, y);
+					test.done();
+				});
+			},
 
-			".repeat(event).repeat(interval).until(callback).until(count)": function($,test) {},
+			".repeat(event).repeat(interval).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat('evt', function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(10, function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(5)
+				._
+				.trigger('evt')
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 1, x);
+					test.assertEquals("inner loop count wrong", 0, y);
+				}).wait(50)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 1, x);
+					test.assertEquals("inner loop count wrong", 1, y);
+				})
+				.repeat().trigger('evt').wait(50).until(10)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 5, x);
+					test.assertEquals("inner loop count wrong", 15, y);
+					test.done();
+				});
+			},
 
-			".repeat(interval).repeat(interval).until(callback).until(count)": function($,test) {},
+			".repeat(interval).repeat(interval).until(callback).until(count)": function($,test) {
+				var x=0, y=0;
+				$('<div>').repeat(10, function(i){
+					test.assertEquals("outer loop count wrong", x, i);
+					x++;
+				}).repeat(10, function(i,j){
+					test.assertEquals("outer loop count wrong", x, j+1);
+					test.assertEquals("inner loop count wrong", y, j*(j+1)/2+i);
+					y++;
+				}).until(function(){
+					return x;
+				}).until(5)
+				._
+				.wait(500)
+				.then(function(){
+					test.assertEquals("outer loop count wrong", 5, x);
+					test.assertEquals("inner loop count wrong", 15, y);
+					test.done();
+				});
+			},
 
 		},
 		
