@@ -642,7 +642,7 @@ var suite = {
 				window.setTimeout(function(){
 					test.assertEquals("later action must have happened after timeout", 'later', $x.text());
 					test.done();
-				}, 10);
+				}, 100);
 			},
 			
 			"$(some).wait(event).doThisLater()._.doThatNow()": function($,test){
