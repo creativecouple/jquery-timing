@@ -246,9 +246,9 @@
 					});
 					return timedInvocationChain();
 				});
-				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}, function(){
+				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}/*, function(){
 					return timedInvocationChain ? timedInvocationChain(placeholder) : placeholder;
-				});
+				}*/);
 			};
 		}
 	});
