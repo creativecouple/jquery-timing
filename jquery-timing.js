@@ -98,7 +98,7 @@
 				state._next = sameOrNextJQuery(state._context, state._next);
 				state._canContinue = true;
 				timedInvocationChain();
-			});
+			}, true);
 		}
 		
 		/**
@@ -326,7 +326,10 @@
 	 * @param executionState
 	 */
 	jQuery.fn.then.timing = function(timedInvocationChain, executionState){
-		executionState._callback = executionState._method._arguments[0];
+		executionState._callback = (executionState._method._arguments[1] && typeof executionState._method._arguments[0] == "function") ? function(){
+			executionState._method._arguments[0].apply(this, arguments);
+			executionState._method._arguments[0] = null;
+		} : executionState._method._arguments[0];		
 		executionState._next = executionState._context;
 		executionState._canContinue = true;
 	};
