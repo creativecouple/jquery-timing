@@ -247,8 +247,10 @@
 						break;
 					}
 				}
-				Array.prototype.splice.call(arguments, i, 1, function(event){
-					timedInvocationChain = createTimedInvocationChain(jQuery(this), methodStack, [{ _count: event }], function(elements){
+				Array.prototype.splice.call(arguments, i, 1, function(){
+					timedInvocationChain = createTimedInvocationChain(jQuery(this), methodStack, [{
+						_count: jQuery.extend(Array.prototype.shift.apply(arguments), arguments)
+						}], function(elements){
 						placeholder.length = 0;
 						Array.prototype.push.apply(placeholder, elements);
 					});
