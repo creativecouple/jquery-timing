@@ -207,16 +207,24 @@
 		Array.prototype.push.apply(this, jQuery.makeArray(context));
 		
 		for (var key in context) {
-			if (!MockupPlaceholder.prototype[key] && typeof context[key] == "function") (function(name){
-				this[key] = MockupPlaceholder.prototype[key] = function(){
-					this['.methods']._name = name;
-					this['.methods']._arguments = arguments;
-					this['.methods'] = this['.methods']._next = {};
-					return this['.callback'] ? this['.callback'](this, name, arguments) : this;
-				};
-			})(key);
+			if (!(key in MockupPlaceholder.prototype) && typeof context[key] == "function") {
+				this[key] = extendMockupPrototype(key);
+			}
 		}
 	}
+	
+	/**
+	 * Create and return a new placeholder function on the prototype of MockupPlaceholder. 
+	 */
+	function extendMockupPrototype(name){
+		return MockupPlaceholder.prototype[name] = function(){
+			this['.methods']._name = name;
+			this['.methods']._arguments = arguments;
+			this['.methods'] = this['.methods']._next = {};
+			return this['.callback'] ? this['.callback'](this, name, arguments) : this;
+		};
+	}
+	
 	
 	/**
 	 * Create replacement methods for .bind(), .on(), .one(), .live(), and .delegate()
@@ -246,9 +254,9 @@
 					});
 					return timedInvocationChain();
 				});
-				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}/*, function(){
+				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}, function(){
 					return timedInvocationChain ? timedInvocationChain(placeholder) : placeholder;
-				}*/);
+				});
 			};
 		}
 	});
