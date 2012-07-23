@@ -268,6 +268,9 @@
 	 * that support chaining if $ is given as callback function.
 	 */
 	jQuery.fn.animate = function(){
+		while (arguments.length && arguments[arguments.length-1] == null) {
+			Array.prototype.pop.apply(arguments);
+		}
 		if (arguments[arguments.length-1] === jQuery) {
 			var event = '_timing'+tuid++;
 			arguments[arguments.length-1] = function(){
