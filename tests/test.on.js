@@ -380,6 +380,35 @@ var suite = {
 				test.done();
 			},
 
+			".on(event).doSomething() + .trigger(event) + .doSomething() + .trigger(event) + .doSomething()": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				var d=null;
+				function handler(evt){
+					test.assertEquals("context object must be original", $x.get(0), this.get(0));
+					test.assertNotEquals("triggered event parameter missing", null, evt && evt[0]);
+					x++;
+					d=evt[0];
+				}
+				var $on = $x.on(ev).then(handler);
+				test.assertNotEquals("timed on must return placeholder object", $x, $on);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev, ['first']);
+				test.assertEquals("handler should fire once", 1, x);
+				test.assertEquals("event data wrong", 'first', d);
+				$on.then(handler);
+				test.assertEquals("handler should fire once again", 2, x); 
+				test.assertEquals("event data wrong", 'first', d);
+				$x.trigger(ev, ['second']);
+				test.assertEquals("handler should fire twice on next trigger", 4, x);
+				test.assertEquals("event data wrong", 'second', d);
+				$on.then(handler);
+				test.assertEquals("handler should fire only once again", 5, x);
+				test.assertEquals("event data wrong", 'second', d);
+				test.done();
+			},
+
 			".on(event,$).doSomething() + .trigger(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
@@ -397,6 +426,35 @@ var suite = {
 				test.assertEquals("event must not trigger on .off", 1, x);
 				$x.trigger(ev);
 				test.assertEquals("because of .off trigger must not happen again", 1, x);
+				test.done();
+			},
+
+			".on(event,$).doSomething() + .trigger(event) + .doSomething() + .trigger(event) + .doSomething()": function($, test) {
+				var $x = $('<div>');
+				var ev = 'myEvent';
+				var x=0;
+				var d=null;
+				function handler(evt){
+					test.assertEquals("context object must be original", $x.get(0), this.get(0));
+					test.assertNotEquals("triggered event parameter missing", null, evt && evt[0]);
+					x++;
+					d=evt[0];
+				}
+				var $on = $x.on(ev,$).then(handler);
+				test.assertNotEquals("timed on must return placeholder object", $x, $on);
+				test.assertEquals("event not yet triggered", 0, x);
+				$x.trigger(ev, ['first']);
+				test.assertEquals("handler should fire once", 1, x);
+				test.assertEquals("event data wrong", 'first', d);
+				$on.then(handler);
+				test.assertEquals("handler should fire once again", 2, x); 
+				test.assertEquals("event data wrong", 'first', d);
+				$x.trigger(ev, ['second']);
+				test.assertEquals("handler should fire twice on next trigger", 4, x);
+				test.assertEquals("event data wrong", 'second', d);
+				$on.then(handler);
+				test.assertEquals("handler should fire only once again", 5, x);
+				test.assertEquals("event data wrong", 'second', d);
 				test.done();
 			},
 
