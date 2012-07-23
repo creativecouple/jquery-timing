@@ -1,8 +1,13 @@
+function unbind() {
+	var $q = Array.prototype.shift.apply(arguments);
+	return $q.unbind.apply($q, arguments);
+}
+
 var suite = {
 		
 		"binding click event - classical style": {
 		
-			".click(handler) + .unbind('click')": function($, test) {
+			".click(handler) + .unbind/.off('click')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -11,16 +16,16 @@ var suite = {
 				var $bind = $x.click(handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click');
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click');
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".click(handler) + .unbind('click',handler)": function($, test) {
+			".click(handler) + .unbind/.off('click',handler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -29,16 +34,16 @@ var suite = {
 				var $bind = $x.click(handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click',handler);
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click',handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".click(handler) + .unbind('click',otherHandler)": function($, test) {
+			".click(handler) + .unbind/.off('click',otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -47,8 +52,8 @@ var suite = {
 				var $bind = $x.click(handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click', function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click', function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.click();
@@ -56,7 +61,7 @@ var suite = {
 				test.done();
 			},
 
-			".click(handler) + .click() + .unbind('click')": function($, test) {
+			".click(handler) + .click() + .unbind/.off('click')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -67,16 +72,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".click(handler) + .click() + .unbind('click',handler)": function($, test) {
+			".click(handler) + .click() + .unbind/.off('click',handler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -87,16 +92,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click', handler);
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click', handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 			
-			".click(handler) + .click() + .unbind('click',otherHandler)": function($, test) {
+			".click(handler) + .click() + .unbind/.off('click',otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -107,8 +112,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click', function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click', function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.click();
@@ -122,7 +127,7 @@ var suite = {
 			
 			_version: ['1.4.3'],
 			
-			".click(data,handler) + .unbind('click')": function($, test) {
+			".click(data,handler) + .unbind/.off('click')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -132,16 +137,16 @@ var suite = {
 				var $bind = $x.click({prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click');
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click');
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".click(data,handler) + .unbind('click',handler)": function($, test) {
+			".click(data,handler) + .unbind/.off('click',handler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -151,16 +156,16 @@ var suite = {
 				var $bind = $x.click({prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click',handler);
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click',handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".click(data,handler) + .unbind('click',otherHandler)": function($, test) {
+			".click(data,handler) + .unbind/.off('click',otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -170,8 +175,8 @@ var suite = {
 				var $bind = $x.click({prop: true}, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind('click', function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,'click', function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.click();
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.click();
@@ -179,7 +184,7 @@ var suite = {
 				test.done();
 			},
 
-			".click(data,handler) + .click() + .unbind('click')": function($, test) {
+			".click(data,handler) + .click() + .unbind/.off('click')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -191,16 +196,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".click(data,handler) + .click() + .unbind('click',handler)": function($, test) {
+			".click(data,handler) + .click() + .unbind/.off('click',handler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -212,16 +217,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click', handler);
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click', handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.click();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 			
-			".click(data,handler) + .click() + .unbind('click',otherHandler)": function($, test) {
+			".click(data,handler) + .click() + .unbind/.off('click',otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(event){
@@ -233,8 +238,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('click', function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click', function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
 				test.assertEquals("because of unbinding other handler trigger must happen", 2, x);
 				$x.click();
@@ -246,7 +251,7 @@ var suite = {
 		
 		"binding other DOM events - classical style": {
 
-			".blur(handler) + .blur() + .unbind('blur')": function($, test) {
+			".blur(handler) + .blur() + .unbind/.off('blur')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -257,16 +262,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.blur();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('blur');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'blur');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.blur();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.blur();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".focus(handler) + .focus() + .unbind('focus')": function($, test) {
+			".focus(handler) + .focus() + .unbind/.off('focus')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -277,16 +282,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.focus();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('focus');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'focus');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.focus();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.focus();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".load(handler) + .load() + .unbind('load')": function($, test) {
+			".load(handler) + .load() + .unbind/.off('load')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -297,16 +302,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.load();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('load');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'load');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.load();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.load();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".resize(handler) + .resize() + .unbind('resize')": function($, test) {
+			".resize(handler) + .resize() + .unbind/.off('resize')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -317,16 +322,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.resize();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('resize');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'resize');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.resize();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.resize();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".scroll(handler) + .scroll() + .unbind('scroll')": function($, test) {
+			".scroll(handler) + .scroll() + .unbind/.off('scroll')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -337,16 +342,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.scroll();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('scroll');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'scroll');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.scroll();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.scroll();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".unload(handler) + .unload() + .unbind('unload')": function($, test) {
+			".unload(handler) + .unload() + .unbind/.off('unload')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -357,16 +362,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.unload();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('unload');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'unload');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.unload();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.unload();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".dblclick(handler) + .dblclick() + .unbind('dblclick')": function($, test) {
+			".dblclick(handler) + .dblclick() + .unbind/.off('dblclick')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -377,16 +382,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.dblclick();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('dblclick');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'dblclick');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.dblclick();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.dblclick();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".mousedown(handler) + .mousedown() + .unbind('mousedown')": function($, test) {
+			".mousedown(handler) + .mousedown() + .unbind/.off('mousedown')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -397,16 +402,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousedown();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('mousedown');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mousedown');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousedown();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.mousedown();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".mouseup(handler) + .mouseup() + .unbind('mouseup')": function($, test) {
+			".mouseup(handler) + .mouseup() + .unbind/.off('mouseup')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -417,16 +422,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseup();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('mouseup');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseup');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseup();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.mouseup();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".mousemove(handler) + .mousemove() + .unbind('mousemove')": function($, test) {
+			".mousemove(handler) + .mousemove() + .unbind/.off('mousemove')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -437,16 +442,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousemove();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('mousemove');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mousemove');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousemove();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.mousemove();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".mouseover(handler) + .mouseover() + .unbind('mouseover')": function($, test) {
+			".mouseover(handler) + .mouseover() + .unbind/.off('mouseover')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -457,16 +462,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseover();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('mouseover');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseover');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseover();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.mouseover();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".mouseout(handler) + .mouseout() + .unbind('mouseout')": function($, test) {
+			".mouseout(handler) + .mouseout() + .unbind/.off('mouseout')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -477,16 +482,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseout();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('mouseout');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseout');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseout();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.mouseout();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".change(handler) + .change() + .unbind('change')": function($, test) {
+			".change(handler) + .change() + .unbind/.off('change')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -497,16 +502,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.change();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('change');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'change');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.change();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.change();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".select(handler) + .select() + .unbind('select')": function($, test) {
+			".select(handler) + .select() + .unbind/.off('select')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -517,16 +522,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.select();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('select');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'select');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.select();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.select();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".submit(handler) + .submit() + .unbind('submit')": function($, test) {
+			".submit(handler) + .submit() + .unbind/.off('submit')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -537,16 +542,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.submit();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('submit');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'submit');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.submit();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.submit();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".keydown(handler) + .keydown() + .unbind('keydown')": function($, test) {
+			".keydown(handler) + .keydown() + .unbind/.off('keydown')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -557,16 +562,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keydown();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('keydown');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keydown');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keydown();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.keydown();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".keypress(handler) + .keypress() + .unbind('keypress')": function($, test) {
+			".keypress(handler) + .keypress() + .unbind/.off('keypress')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -577,16 +582,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keypress();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('keypress');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keypress');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keypress();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.keypress();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".keyup(handler) + .keyup() + .unbind('keyup')": function($, test) {
+			".keyup(handler) + .keyup() + .unbind/.off('keyup')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -597,16 +602,16 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keyup();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('keyup');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keyup');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keyup();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.keyup();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
 			},
 
-			".error(handler) + .error() + .unbind('error')": function($, test) {
+			".error(handler) + .error() + .unbind/.off('error')": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -617,10 +622,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.error();
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind('error');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'error');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.error();
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.error();
 				test.assertEquals("still no trigger expected", 1, x);
 				test.done();
@@ -642,10 +647,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('click');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'click');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -661,10 +666,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.blur();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('blur');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'blur');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.blur();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -680,10 +685,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.focus();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('focus');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'focus');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.focus();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -699,10 +704,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.load();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('load');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'load');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.load();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -718,10 +723,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.resize();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('resize');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'resize');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.resize();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -737,10 +742,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.scroll();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('scroll');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'scroll');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.scroll();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -756,10 +761,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.unload();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('unload');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'unload');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.unload();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -775,10 +780,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.dblclick();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('dblclick');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'dblclick');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.dblclick();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -794,10 +799,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousedown();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('mousedown');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mousedown');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousedown();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -813,10 +818,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseup();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('mouseup');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseup');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseup();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -832,10 +837,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousemove();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('mousemove');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mousemove');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousemove();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -851,10 +856,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseover();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('mouseover');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseover');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseover();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -870,10 +875,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseout();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('mouseout');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'mouseout');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseout();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -889,10 +894,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.change();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('change');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'change');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.change();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -908,10 +913,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.select();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('select');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'select');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.select();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -927,10 +932,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.submit();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('submit');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'submit');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.submit();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -946,10 +951,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keydown();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('keydown');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keydown');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keydown();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -965,10 +970,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keypress();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('keypress');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keypress');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keypress();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -984,10 +989,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keyup();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('keyup');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'keyup');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keyup();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -1003,10 +1008,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.error();
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind('error');
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,'error');
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.error();
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 

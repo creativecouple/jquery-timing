@@ -1,10 +1,15 @@
+function unbind() {
+	var $q = Array.prototype.shift.apply(arguments);
+	return ($q.off || $q.unbind).apply($q, arguments);
+}
+
 var suite = {
 		
 		_version: ['1.2.4'],
 		
 		"binding single event - classical style": {
 		
-			".one(event,handler) + .unbind(event)": function($, test) {
+			".one(event,handler) + .unbind/.off(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -14,16 +19,16 @@ var suite = {
 				var $bind = $x.one(ev, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind(ev);
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,ev);
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".one(event,handler) + .unbind(event,handler)": function($, test) {
+			".one(event,handler) + .unbind/.off(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -33,16 +38,16 @@ var suite = {
 				var $bind = $x.one(ev, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind(ev,handler);
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,ev,handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("still no trigger expected", 0, x);
 				test.done();
 			},
 
-			".one(event,handler) + .unbind(event,otherHandler)": function($, test) {
+			".one(event,handler) + .unbind/.off(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -52,8 +57,8 @@ var suite = {
 				var $bind = $x.one(ev, handler);
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 0, x);
+				unbind($x,ev, function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("because of unbinding other handler trigger must happen", 1, x);
 				$x.trigger(ev);
@@ -63,7 +68,7 @@ var suite = {
 				test.done();
 			},
 
-			".one(event,handler) + .trigger(event) + .unbind(event)": function($, test) {
+			".one(event,handler) + .trigger(event) + .unbind/.off(event)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -75,8 +80,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind(ev);
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,ev);
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.trigger(ev);
 				test.assertEquals(".one only triggers once", 1, x);
 				$x.trigger(ev);
@@ -84,7 +89,7 @@ var suite = {
 				test.done();
 			},
 
-			".one(event,handler) + .trigger(event) + .unbind(event,handler)": function($, test) {
+			".one(event,handler) + .trigger(event) + .unbind/.off(event,handler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -96,8 +101,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind(ev, handler);
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,ev, handler);
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.trigger(ev);
 				test.assertEquals(".one only triggers once", 1, x);
 				$x.trigger(ev);
@@ -105,7 +110,7 @@ var suite = {
 				test.done();
 			},
 			
-			".one(event,handler) + .trigger(event) + .unbind(event,otherHandler)": function($, test) {
+			".one(event,handler) + .trigger(event) + .unbind/.off(event,otherHandler)": function($, test) {
 				var $x = $('<div>');
 				var ev = 'myEvent';
 				var x=0;
@@ -117,8 +122,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("first trigger should fire", 1, x);
-				$x.unbind(ev, function(){x++;});
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,ev, function(){x++;});
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.trigger(ev);
 				test.assertEquals(".one only triggers once", 1, x);
 				$x.trigger(ev);
@@ -130,7 +135,7 @@ var suite = {
 
 		"binding multiple events - classical style": {
 			
-			".one({ev1:h1, e2:h2}) + .unbind(ev1)|1.4": function($, test) {
+			".one({ev1:h1, e2:h2}) + .unbind/.off(ev1)|1.4": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){
@@ -143,11 +148,11 @@ var suite = {
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, y);
-				$x.unbind('ev1');
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				unbind($x,'ev1');
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered separately", 1, y);
 				$x.trigger('ev1');
@@ -157,7 +162,7 @@ var suite = {
 				test.done();
 			},
 
-			".one({ev1:h1, e2:h2}) + .unbind(ev1,h1)|1.4": function($, test) {
+			".one({ev1:h1, e2:h2}) + .unbind/.off(ev1,h1)|1.4": function($, test) {
 				var $x = $('<div>');
 				var x=0, y=0;
 				function handler1(){
@@ -170,11 +175,11 @@ var suite = {
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, y);
-				$x.unbind('ev1',handler1);
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				unbind($x,'ev1',handler1);
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
-				test.assertEquals("because of .unbind trigger must not happen", 0, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 0, x);
 				$x.trigger('ev2');
 				test.assertEquals("ev2 should be triggered separately", 1, y);
 				$x.trigger('ev1');
@@ -184,7 +189,7 @@ var suite = {
 				test.done();
 			},
 
-			".one('ev1 ev2',handler) + .unbind(ev2)": function($, test) {
+			".one('ev1 ev2',handler) + .unbind/.off(ev2)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -194,13 +199,13 @@ var suite = {
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.unbind('ev2');
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				unbind($x,'ev2');
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should not trigger again - only once", 1, x);
 				$x.trigger('ev2');
@@ -208,7 +213,7 @@ var suite = {
 				test.done();
 			},
 
-			".one('ev1 ev2',handler) + .unbind(ev2,handler)": function($, test) {
+			".one('ev1 ev2',handler) + .unbind/.off(ev2,handler)": function($, test) {
 				var $x = $('<div>');
 				var x=0;
 				function handler(){
@@ -218,13 +223,13 @@ var suite = {
 				test.assertEquals("classical bind must return original jQuery object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.unbind('ev2',handler);
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				unbind($x,'ev2',handler);
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should not trigger again - only once", 1, x);
 				$x.trigger('ev2');
@@ -265,8 +270,8 @@ var suite = {
 				var $bind = $x.one(ev).then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);
 				test.assertEquals("event not yet triggered", 0, x);
-				$x.unbind(ev).trigger(ev);
-				test.assertEquals("trigger should not fire because of .unbind()", 0, x);
+				unbind($x,ev).trigger(ev);
+				test.assertEquals("trigger should not fire because of .unbind/.off()", 0, x);
 				test.done();
 			},
 
@@ -283,10 +288,10 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.trigger(ev);
 				test.assertEquals("trigger should fire", 1, x);
-				$x.unbind(ev);
-				test.assertEquals("event must not trigger on .unbind", 1, x);
+				unbind($x,ev);
+				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.trigger(ev);
-				test.assertEquals("because of .unbind trigger must not happen again", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen again", 1, x);
 				test.done();
 			},
 
@@ -314,12 +319,12 @@ var suite = {
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
 				$x.unbind('ev2');
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should not trigger again - only once", 1, x);
 				$x.trigger('ev2');
@@ -337,13 +342,13 @@ var suite = {
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);
 				test.assertEquals("ev1 not yet triggered", 0, x);
 				test.assertEquals("ev2 not yet triggered", 0, x);
-				$x.unbind('ev2');
-				test.assertEquals("ev1 must not trigger on .unbind", 0, x);
-				test.assertEquals("ev2 must not trigger on .unbind", 0, x);
+				unbind($x,'ev2');
+				test.assertEquals("ev1 must not trigger on .unbind/.off", 0, x);
+				test.assertEquals("ev2 must not trigger on .unbind/.off", 0, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should be triggered", 1, x);
 				$x.trigger('ev2');
-				test.assertEquals("because of .unbind trigger must not happen", 1, x);
+				test.assertEquals("because of .unbind/.off trigger must not happen", 1, x);
 				$x.trigger('ev1');
 				test.assertEquals("ev1 should not trigger again - only once", 1, x);
 				$x.trigger('ev2');
