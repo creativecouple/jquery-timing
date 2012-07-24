@@ -66,7 +66,9 @@
 	
 	function loopCounts(loops) {
 		var ret = [], i = loops.length;
-		while (i--) ret[i] = loops[i]._count;
+		while (i--) {
+			ret[i] = loops[i]._count;
+		}
 		return ret;
 	}
 	
@@ -111,7 +113,7 @@
 				// keep recursive calls away
 				preventRecursion = !preventRecursion;
 				// save current context state
-				if (onStepCallback) {
+				if (typeof onStepCallback == "function") {
 					onStepCallback(jQuery.makeArray(executionState._next || executionState._context));
 				}
 				// leave the chain when waiting for a trigger
