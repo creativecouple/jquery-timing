@@ -373,7 +373,7 @@ $(function(){
 							(filter[3] == '*' || filter[3] == version) &&
 							(filter[4] == '*' || filter[4] == type);
 						
-						var $td = $('<td class="result">*').addClass('run').attr('title','jQuery '+version+' + '+type).makeFilter([part,section,name,version,type], function(){
+						var $td = $('<td class="result">*</td>').addClass('run').attr('title','jQuery '+version+' + '+type).makeFilter([part,section,name,version,type], function(){
 							if (count == 1 && match) {
 								alert($(this).attr('title'));
 								return true;
@@ -401,7 +401,7 @@ $(function(){
 							try {
 								window.setTimeout(function(){
 									try {
-										testCase.assertTrue(testCase.finished || !$td.addClass('error'), 'processing timeout exceeded');										
+										testCase.assertTrue('processing timeout exceeded', testCase.finished || !$td.addClass('error'));										
 									} catch (error) {}
 								}, 10000)
 								testMethod(_jQuery, testCase);
@@ -427,24 +427,17 @@ $(function(){
 	
 	window.setTimeout(function(){
 		var now = (new Date()).getTime(),
-		skippedBeats = 0,
-		testCase, testRunInterval = window.setInterval(function(){
+		testRunInterval = window.setInterval(function(){
 			if (!testRuns.length) {
-				window.clearInterval(testRunInterval);
+				return window.clearInterval(testRunInterval);
 			}
-			var then = (new Date()).getTime();
-			var diff = then - now;
-			now = then;
-			if (diff > 15 * skippedBeats * 5) {
-				// client is too slow
-				skippedBeats++;
-			} else {
-				skippedBeats = Math.max(0,skippedBeats-1);
-				for (var i=Math.max(1,10-skippedBeats); i && (testCase = testRuns.shift()); i--) {
-					testCase();
-				}
+			var i=Math.floor(Math.random()*testRuns.length);
+			(testRuns[i])();
+			var testCase = testRuns.pop();
+			if (i < testRuns.length) {
+				testRuns[i] = testCase;
 			}
-		}, 10);
+		}, 5);
 	}, 1000);
 });
 </script>
