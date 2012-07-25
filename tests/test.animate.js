@@ -483,11 +483,11 @@ var suite = {
 			"$('.many').animate(props,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.animate({left:100},$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .animate($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -505,11 +505,11 @@ var suite = {
 			"$('#single').animate(props,duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.animate({left:100},200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .animate($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -527,11 +527,11 @@ var suite = {
 			".repeat().animate(props,$).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().animate({left:100},$).text($.$$('"c"+x++')).css({left:0}).until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .animate($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -557,11 +557,11 @@ var suite = {
 			"$('.many').fadeIn($).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.fadeIn($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .fadeIn($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -579,11 +579,11 @@ var suite = {
 			"$('#single').fadeIn(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.fadeIn(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeIn($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -601,11 +601,11 @@ var suite = {
 			".repeat().fadeIn($).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().fadeIn($).text($.$$('"c"+x++')).hide().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeIn($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -627,11 +627,11 @@ var suite = {
 			"$('.many').fadeOut($).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.fadeOut($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .fadeOut($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -649,11 +649,11 @@ var suite = {
 			"$('#single').fadeOut(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.fadeOut(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeOut($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -671,11 +671,11 @@ var suite = {
 			".repeat().fadeOut($).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().fadeOut(200,$).text($.$$('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeOut($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -698,11 +698,11 @@ var suite = {
 			"$('.many').fadeToggle($).doLater()._.doNow()|1.4.4": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.fadeToggle($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .fadeToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -720,11 +720,11 @@ var suite = {
 			"$('#single').fadeToggle(duration,$).doLater()._.doNow()|1.4.4": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.fadeToggle(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -742,11 +742,11 @@ var suite = {
 			".repeat().fadeToggle($).until(count).doLater()|1.4.4": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().fadeToggle(200,$).text($.$$('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .fadeToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -773,11 +773,11 @@ var suite = {
 			"$('.many').slideUp($).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.slideUp($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .slideUp($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -795,11 +795,11 @@ var suite = {
 			"$('#single').slideUp(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.slideUp(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideUp($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -817,11 +817,11 @@ var suite = {
 			".repeat().slideUp($).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().slideUp($).text($.$$('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideUp($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -843,11 +843,11 @@ var suite = {
 			"$('.many').slideDown($).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.slideDown($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .slideDown($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -865,11 +865,11 @@ var suite = {
 			"$('#single').slideDown(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.slideDown(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideDown($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -887,11 +887,11 @@ var suite = {
 			".repeat().slideDown($).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().slideDown(200,$).text($.$$('"c"+x++')).hide().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideDown($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -914,11 +914,11 @@ var suite = {
 			"$('.many').slideToggle($).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'aa', $x.text());
 				var tic = $x.slideToggle($).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'aa', $x.text());
 				test.assertNotEquals("timed .slideToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -936,11 +936,11 @@ var suite = {
 			"$('#single').slideToggle(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.slideToggle(200,$).text($.$$('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
@@ -958,11 +958,11 @@ var suite = {
 			".repeat().slideToggle($).until(count).doLater()": function($, test) {
 				var c = 0;
 				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
-				test.assertEquals("wrong text", 'a', $x.text());
 				var tic = $x.repeat().slideToggle(200,$).text($.$$('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
 				});
+				test.assertEquals("wrong text", 'a', $x.text());
 				test.assertNotEquals("timed .slideToggle($) must return tic object", $x, tic);
 				tic._.text($.$$('"b"+x++')).join(function(){
 					c+=10;
