@@ -430,11 +430,11 @@ $(function(){
 	$('tr:even').addClass('y');
 	
 	function startNextTest() {
-		window.setTimeout(testRuns.splice(Math.floor(Math.random()*testRuns.length),1)[0] || '', 0);
+		window.setTimeout(testRuns.splice(Math.floor(Math.random()*testRuns.length),1)[0] || '', 10);
 	}
 	
 	window.setTimeout(function(){
-		for (var i=0; i<20; i++) {
+		for (var i=0; i<10; i++) {
 			startNextTest();
 		}
 	}, 1000);
