@@ -217,6 +217,9 @@ function savejQuery(type, version) {
 <script charset="utf-8" type="text/javascript" src="tests/test.repeat.js"></script>
 <script type="text/javascript">tests[".repeat() functionality"] = suite;</script>
 
+<script charset="utf-8" type="text/javascript" src="tests/test.then.js"></script>
+<script type="text/javascript">tests[".then() functionality"] = suite;</script>
+
 <script charset="utf-8" type="text/javascript" src="tests/test.wait.js"></script>
 <script type="text/javascript">tests[".wait() functionality"] = suite;</script>
 
@@ -313,7 +316,7 @@ $.extend(TestCase.prototype, {
 });
 
 $(function(){
-	var count=0, passed=0, fails=0, errors=0, testRuns=[];
+	var count=0, passed=0, fails=0, errors=0, started, testRuns=[];
 	
 	
 	$.fn.makeFilter = function(filter, condition){
@@ -332,6 +335,7 @@ $(function(){
 	
 	function updateResults() {
 		var still = count-passed-fails-errors;
+		startNextTest();
 		$summary.html('tests: '+count+'; passed:'+passed+'; failures:'+fails+'; errors:'+errors+'; still running:'+((still > 0) ? still+'&hellip;' : still));
 	}
 	
@@ -425,19 +429,14 @@ $(function(){
 	$('td:even').addClass('x');
 	$('tr:even').addClass('y');
 	
+	function startNextTest() {
+		window.setTimeout(testRuns.splice(Math.floor(Math.random()*testRuns.length),1)[0] || '', 0);
+	}
+	
 	window.setTimeout(function(){
-		var now = (new Date()).getTime(),
-		testRunInterval = window.setInterval(function(){
-			if (!testRuns.length) {
-				return window.clearInterval(testRunInterval);
-			}
-			var i=Math.floor(Math.random()*testRuns.length);
-			(testRuns[i])();
-			var testCase = testRuns.pop();
-			if (i < testRuns.length) {
-				testRuns[i] = testCase;
-			}
-		}, 5);
+		for (var i=0; i<20; i++) {
+			startNextTest();
+		}
 	}, 1000);
 });
 </script>
