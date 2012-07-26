@@ -223,6 +223,14 @@ var suite = {
 			test.assertEquals("underscore must return original object", $x, _);
 			test.done();
 		},
+
+		"$('empty').join().doNow()": function($, test) {
+			$('none').join().then(function(){
+				test.done();
+			});
+			test.fail("empty .join() must return immediately");
+		},
+		
 	},
 
 	"joining empty default queue deferred": {

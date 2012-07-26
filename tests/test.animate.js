@@ -70,6 +70,19 @@ var suite = {
 				},10);});
 			},
 			
+			"$('empty').animate(props,callback) + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.animate({left:100},function(){
+					c++;
+				});
+				test.assertEquals("classical .animate must ignore empty sets", 0, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
+			},
+			
 		},
 		
 		"classical usage of .fade*()": {
@@ -271,6 +284,19 @@ var suite = {
 					$x.remove();
 					test.done();
 				},10);});
+			},
+			
+			"$('empty').fadeOut(callback) + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.fadeIn().fadeOut(function(){
+					c++;
+				});
+				test.assertEquals("classical .fadeOut must ignore empty sets", 0, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
 			},
 			
 		},
@@ -476,6 +502,19 @@ var suite = {
 				},10);});
 			},
 			
+			"$('empty').slideToggle(callback) + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.slideToggle(function(){
+					c++;
+				});
+				test.assertEquals("classical .slideToggle must ignore empty sets", 0, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
+			},
+			
 		},
 			
 		"timed invocation chain usage of .animate($)": {
@@ -548,6 +587,19 @@ var suite = {
 						test.done();
 					},10);});
 				},10);});
+			},
+			
+			"$('empty').animate(props,$).doNow() + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.animate($).then(function(){
+					c++;
+				});
+				test.assertEquals("timed .animate($) must ignore empty sets", 1, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
 			},
 			
 		},
@@ -765,6 +817,19 @@ var suite = {
 				},10);});
 			},
 			
+			"$('empty').fadeOut($).doNow() + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.fadeIn().fadeOut($).then(function(){
+					c++;
+				});
+				test.assertEquals("timed .fadeOut($) must ignore empty sets", 1, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
+			},
+			
 		},
 		
 
@@ -979,6 +1044,19 @@ var suite = {
 						test.done();
 					},10);});
 				},10);});
+			},
+			
+			"$('empty').slideToggle($).doNow() + .join().doNow()": function($, test) {
+				var c = 0;
+				var $x = $('none');
+				$x.slideToggle($).then(function(){
+					c++;
+				});
+				test.assertEquals("timed .slideToggle($) must ignore empty sets", 1, c);
+				$x.join().then(function(){
+					test.done();
+				});
+				test.fail("empty .join() must return immediately");
 			},
 			
 		},
