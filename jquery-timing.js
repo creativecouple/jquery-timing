@@ -271,7 +271,7 @@
 		while (arguments.length && arguments[arguments.length-1] == null) {
 			Array.prototype.pop.apply(arguments);
 		}
-		if (arguments[arguments.length-1] === jQuery) {
+		if (this.length && arguments[arguments.length-1] === jQuery) {
 			var event = '_timing'+tuid++;
 			arguments[arguments.length-1] = function(){
 				jQuery(this).trigger(event);
@@ -316,10 +316,12 @@
 		// wait for each element to reach the current end of its queue
 		executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
 			executionState._canContinue = !--waitingElements;
-			executionState._next = executionState._context;
 			timedInvocationChain();
 			next();
 		});
+
+		executionState._next = executionState._context;
+		executionState._canContinue = !waitingElements;
 	};
 
 	/**
