@@ -535,11 +535,11 @@
 			timedInvocationChain();
 		}
 		
-		executionState._openEndAction = function(){
+		executionState._openEndAction = function(tic, state){
 			if (executionState._canContinue || openLoopTimeout) {
 				executionState._count++;
 				executionState._next = executionState._next || executionState._context;
-				executionState._canContinue = executionState._canContinue || trigger;
+				executionState._canContinue = executionState._canContinue || (trigger && state._context && state._context.length);
 				return executionState;
 			}
 		};
@@ -565,7 +565,7 @@
 		
 		executionState._next = executionState._context;
 		executionState._count = 0;
-		executionState._untilAction = function(end, loopContext){
+		executionState._untilAction = function(end){
 			if (end) {
 				unrepeatAction.apply(executionState._context);
 			}
@@ -589,7 +589,7 @@
 		jQuery.extend(executionState._method, {
 			_next: jQuery.extend({}, executionState._method),
 			_name: 'until',
-			_arguments: [false]
+			_arguments: []
 		});
 		executionState._canContinue = null;
 	};
@@ -604,6 +604,10 @@
 
 		var condition = executionState._method._arguments[0],
 		loopContext = executionState._method._arguments[1];
+		if (condition === jQuery) {
+			condition = null;
+			loopContext = executionState._method._arguments.length <= 1 || loopContext;
+		}
 		if (typeof condition == "function") {
 			condition = condition.apply(executionState._context, loopCounts(ongoingLoops));
 		}
