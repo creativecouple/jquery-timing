@@ -82,8 +82,25 @@ var suite = {
 						test.done();
 					}, 100);
 				}, 0);
-			}
+			},
 			
+			".repeat(X).eq(X).doSomething()": function($, test) {
+				var x = 0;
+				var $x = $('<div>').add('<p>').add('<span>');
+				var callback = function(i){
+					test.assertEquals("loop iteration must match", i, x);
+					x++; test.check();
+					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+				};
+				var X=$.$$();
+				var TIC = $x.repeat(X).eq(X).then(callback);
+				test.assertEquals("then must be run first time", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".repeat() should have run until empty selection", 4, x);
+					test.done();
+				}, 100);
+			},
+	
 		},
 
 		"open for-loop with delay": {
@@ -506,8 +523,50 @@ var suite = {
 					test.assertEquals(".repeat() should have fired once more after .then()", size+2, x);
 					test.done();
 				}, 100);
-			}
+			},
 			
+			".repeat(X).eq(X).until($,false)": function($, test) {
+				var x = 0;
+				var $x = $('<div>').add('<span>').add('<p>');
+				var size=3;
+				test.assertEquals("test selection has wrong size", 3, $x.size());
+				var callback = function(y){
+					test.assertEquals("callback argument must be iteration number", x,y);
+					x++; test.check();
+					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+				};
+				var X=$$();
+				var TIC = $x.repeat(X);
+				test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
+				var tic2 = TIC.eq(X).then(callback);
+				test.assertEquals("instant .repeat() should have fired once for now", 1, x);
+				test.assertEquals("instant for-loop should return same TIC object while loop not finished", tic2, TIC);
+				var $y = TIC.until($,false);
+				test.assertEquals("instant .repeat() should have fired exactly "+(size+1)+" times", size+1, x);
+				test.assertNotEquals("instant for-loop should return a jQuery object after instant loop", $y, TIC);
+				test.assertNotEquals("jQuery object after instant loop should not be the starting one", $x, $y);
+				test.assertEquals("jQuery object after instant loop should be empty jQuery selection", 0, $y.size());
+				window.setTimeout(function(){
+					test.assertEquals(".repeat() should not have fired anymore", size+1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".repeat().doSomething().next().until($)": function($, test) {
+				var x = 0;
+				var $x = $('<div><p></p><span></span><div></div></div>').children();
+				var callback = function(){
+					x++; test.check();
+					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
+				};
+				var $y = $x.eq(0).repeat().then(callback).next().until($);
+				test.assertEquals("instant .repeat() should have fired for each element", 3, x);
+				test.assertEquals("instant loop must return with empty jQuery object", 0, $y.length);
+				$y.then(function(){
+					test.done();
+				});
+			},
+	
 		},
 		
 		"infinite for-loop": {
