@@ -249,6 +249,18 @@ var suite = {
 				test.done();
 			},
 			
+			"$('.many').wait().text($$('x++')) -> '0','1','2','3',…|1.4": function($, test) {
+				var $x = $('<div>').add('<span>').add('<p>');
+				test.assertEquals("not enough objects", 3, $x.size());
+				$x.wait().text($.$$('x++'));
+				window.setTimeout(function(){
+					for (var i=0; i<3; i++) {
+						test.assertEquals('element should have right text: '+i, i, $x.eq(i).text());
+					}
+					test.done();
+				}, 100);
+			},
+			
 			"$('.many').addClass($$('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…|1.4": function($, test) {
 				var $x = $('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
@@ -257,8 +269,35 @@ var suite = {
 					test.assertTrue('element should have right class: t'+i, $x.eq(i).hasClass('t'+i));
 				}
 				test.done();
-			}
+			},
 			
+			"$('.many').wait().addClass($$('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…|1.4": function($, test) {
+				var $x = $('<div>').add('<span>').add('<p>');
+				test.assertEquals("not enough objects", 3, $x.size());
+				$x.wait().addClass($.$$('"t"+(x++)'));
+				window.setTimeout(function(){
+					for (var i=0; i<3; i++) {
+						test.assertTrue('element should have right class: t'+i, $x.eq(i).hasClass('t'+i));
+					}
+					test.done();
+				}, 100);
+			},
+			
+			"$('.many').repeat(X).eq(X).doSomething.until()": function($, test) {
+				var $x = $('<div>').add('<span>').add('<p>');
+				test.assertEquals("not enough objects", 3, $x.size());
+				var X = $.$$();
+				var x=0;
+				$x.repeat(X).eq(X).then(function(i){
+					if (i<3) {
+						test.assertEquals("wrong element chosen", 1, this.size());
+					}
+					x++;
+				}).until();
+				test.assertEquals("wrong number of iterations", 4, x);
+				test.done();
+			}
+
 		}
 		
 };
