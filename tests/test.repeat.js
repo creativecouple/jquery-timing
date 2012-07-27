@@ -92,7 +92,7 @@ var suite = {
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 				};
-				var X=$.$$();
+				var X=$.X();
 				var TIC = $x.repeat(X).eq(X).then(callback);
 				test.assertEquals("then must be run first time", 1, x);
 				window.setTimeout(function(){
@@ -480,7 +480,7 @@ var suite = {
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 				};
-				var X=$$();
+				var X=$.X();
 				var TIC = $x.repeat(X);
 				test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
 				var tic2 = TIC.eq(X).then(callback);
@@ -506,7 +506,7 @@ var suite = {
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 				};
-				var X=$$();
+				var X=$.X();
 				var TIC = $x.repeat(X);
 				test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
 				var tic2 = TIC.then(callback).eq(X);
@@ -535,7 +535,7 @@ var suite = {
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 				};
-				var X=$$();
+				var X=$.X();
 				var TIC = $x.repeat(X);
 				test.assertNotEquals("instant for-loop should return TIC object during the loop", $x, TIC);
 				var tic2 = TIC.eq(X).then(callback);
@@ -951,7 +951,7 @@ var suite = {
 				var size = 3;
 				test.assertEquals("test object has too less children", size, $x.children().size());
 				
-				var X=$$();
+				var X=$.X();
 				var tic = $x.children().repeat(X).eq(X).wait(timeout).until(size);
 				
 				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);

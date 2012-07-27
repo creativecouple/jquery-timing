@@ -659,12 +659,12 @@
 	});
 
 	/**
-	 * $$ defines deferred variables that can be used in timed invocation chains 
+	 * X defines deferred variables that can be used in timed invocation chains 
 	 * 
 	 * @author CreativeCouple
 	 * @author Peter Liske
 	 */
-	function $$(compute, Var, calculation){
+	function X(compute, Var, calculation){
 		if (typeof compute == "string") {
 			calculation = new Function('x','return ['+compute+'\n,x]');
 			compute = function(x, result){
@@ -694,20 +694,20 @@
 		callbackVariable.x = 0;
 		callbackVariable._ = { toString: callbackVariable.$ = callbackVariable.toString = evaluate.toString = evaluate };
 		callbackVariable.mod = function(val){
-			return $$(function(x){
+			return X(function(x){
 				return x % val;
 			}, callbackVariable);
 		};
 		callbackVariable.add = function(val){
-			return $$(function(x){
+			return X(function(x){
 				return x + val;
 			}, callbackVariable);
 		};
 		callbackVariable.neg = function(){
-			return $$('-x', callbackVariable);
+			return X('-x', callbackVariable);
 		};
-		callbackVariable.$$ = function(compute){
-			return $$(compute, callbackVariable);
+		callbackVariable.X = function(compute){
+			return X(compute, callbackVariable);
 		};
 		jQuery.each('abcdefghij', function(index, character){
 			callbackVariable[index] = callbackVariable[character] = function(){
@@ -718,7 +718,7 @@
 		return callbackVariable;
 	};
 	
-	jQuery.$$ = window.$$ = jQuery.X = $$;
+	jQuery.X = X;
 	
 	/**
 	 * Define chained version of $().
