@@ -2,36 +2,62 @@ var suite = {
 		
 		"instant each-loop": {
 		
-			".each($).then(callback)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
-				var x=0;
-				var callback = function(i){
-					test.assertEquals("wrong order of elements?", x, i);
-					x++;
-					test.assertEquals("wrong context?", 1, this.size());
-					test.assertEquals("wrong context element?", $x[i], this[0]);
-				};
-				var tic = $x.each($).then(callback);				
-				test.assertNotEquals("tic object must not be original", $x, tic);
-				test.assertEquals("callback must be triggered for each element", 3, x);
-				test.done();
-			},
-	
 			".each().then(callback)": function($, test) {
 				var $x = $('<div>').add('<p>').add('<span>');
 				var x=0;
-				var callback = function(i){
+				var callbackX = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
 					x++;
 					test.assertEquals("wrong context?", 1, this.size());
 					test.assertEquals("wrong context element?", $x[i], this[0]);
+					test.assertEquals("because we are running parallel, all callbackY must be processed after", 0, y);
 				};
-				var tic = $x.each().then(callback);				
+				var y=0;
+				var callbackY = function(i){
+					test.assertEquals("wrong order of elements?", y, i);
+					y++;
+					test.assertEquals("wrong context?", 1, this.size());
+					test.assertEquals("wrong context element?", $x[i], this[0]);
+					test.assertEquals("because we are running parallel, all callbackX must be processed before", 3, x);
+				};
+				var tic = $x.each().then(callbackX).then(callbackY);
 				test.assertNotEquals("tic object must not be original", $x, tic);
-				test.assertEquals("callback must be triggered for each element", 3, x);
+				test.assertEquals("callbackX must be triggered for each element", 3, x);
+				test.assertEquals("callbackY must be triggered for each element", 3, y);
+				var $y = tic.all();
+				test.assertEquals("instant .each()..all() must return original object", $x, $y);
 				test.done();
 			},
 	
+			".each($).then(callback).all()": function($, test) {
+				var $x = $('<div>').add('<p>').add('<span>');
+				var x=0;
+				var callbackX = function(i){
+					test.assertEquals("wrong order of elements?", x, i);
+					x++;
+					test.assertEquals("wrong context?", 1, this.size());
+					test.assertEquals("wrong context element?", $x[i], this[0]);
+					test.assertEquals("because we are running serial, all callbackY must be processed step by step", x-1, y);
+				};
+				var y=0;
+				var callbackY = function(i){
+					test.assertEquals("wrong order of elements?", y, i);
+					y++;
+					test.assertEquals("wrong context?", 1, this.size());
+					test.assertEquals("wrong context element?", $x[i], this[0]);
+					test.assertEquals("because we are running serial, each callbackX must be processed step by step", y, x);
+				};
+				var tic = $x.each($).then(callbackX).then(callbackY);
+				test.assertNotEquals("tic object must not be original", $x, tic);
+				test.assertEquals("callbackX must be triggered once for now", 1, x);
+				test.assertEquals("callbackY must be triggered once for now", 1, y);
+				var $y = tic.all();
+				test.assertEquals("instant .each($)..all() must return original object", $x, $y);
+				test.assertEquals("callbackX must be triggered for each element", 3, x);
+				test.assertEquals("callbackY must be triggered for each element", 3, y);
+				test.done();
+			},
+			
 			".each().text().all().get()": function($, test){
 				var $x = $('<div>foo</div>').add('<p>bar</p>').add('<span>Foo<em>Bar</em></span>');
 				test.assertEquals("jQuery's .text() method going wrong??", 'foobarFooBar', $x.text());
@@ -120,7 +146,7 @@ var suite = {
 		
 		"deferred each-loop": {
 
-			".wait(timeout).each($).then(callback)": function($, test) {
+			".wait(timeout).each().then(callback)": function($, test) {
 				var $x = $('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callback = function(i){
@@ -129,7 +155,7 @@ var suite = {
 					test.assertEquals("wrong context?", 1, this.size());
 					test.assertEquals("wrong context element?", $x[i], this[0]);
 				};
-				var tic = $x.wait(0).each($).then(callback);				
+				var tic = $x.wait(0).each().then(callback);				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for timeout", 0, x);
 				window.setTimeout(function(){
@@ -138,7 +164,7 @@ var suite = {
 				}, 10);
 			},
 	
-			".repeat(event).each().then(callback).all()": function($, test) {
+			".repeat(event).each($).then(callback).all()": function($, test) {
 				var $x = $('<div>').add('<p>').add('<span>');
 				var x=0;
 				var event = 'myEvent';
@@ -148,7 +174,7 @@ var suite = {
 					test.assertEquals("wrong context element?", $x[x], this[0]);
 					x++;
 				};
-				var tic = $x.repeat(event).each().then(callback).all();				
+				var tic = $x.repeat(event).each($).then(callback).all();				
 				test.assertNotEquals("tic object must not be original", $x, tic);
 				test.assertEquals("callback must wait for event", 0, x);
 				$x.eq(0).trigger('myEvent');
