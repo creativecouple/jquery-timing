@@ -134,8 +134,8 @@
 					/*
 					 * Now we have ongoing loops but reached the chain's end.
 					 */
-					otherExecutionState = ongoingLoops[0]._openEndAction && ongoingLoops[0]._openEndAction(timedInvocationChain, executionState, ongoingLoops) || executionState;
-					if (otherExecutionState == executionState) {
+					otherExecutionState = ongoingLoops[0]._openEndAction && ongoingLoops[0]._openEndAction(timedInvocationChain, executionState, ongoingLoops);
+					if (!otherExecutionState) {
 						// if innermost loop can't help us, just leave the chain
 						return deferredReturnValue;
 					}
@@ -397,7 +397,7 @@
 					placeholder.length = 0;
 					Array.prototype.push.apply(placeholder, elements);
 				}));
-			return placeholder.each();
+			return placeholder.each(callback);
 		}
 		return originalEach.apply(this, arguments);
 	};
@@ -416,15 +416,20 @@
 		}
 		
 		var size = executionState._context.length,
-		waiting = size,
+		finished = 0,
 		key, methodToGoOn,
 		innerTICs = [],
 		innerElements = [],
-		proxyPlaceholder = {};
+		proxyPlaceholder = {},
+		stepByStep = executionState._method._arguments[0] === jQuery;
 
 		function spreadAction(){
-			for (var i=0; i<size; i++) {
-				(innerTICs[i])();
+			if (stepByStep && finished < size) {
+				(innerTICs[finished])();
+			} else {
+				for (var i=0; i<size; i++) {
+					(innerTICs[i])();
+				}
 			}
 			return proxyPlaceholder;
 		}
@@ -439,10 +444,11 @@
 			innerLoops.unshift({
 				_count: index,
 				_allAction: function(state){
-					if (!--waiting) {
+					finished++;
+					if (finished == size) {
 						methodToGoOn = state._method._next;
-						timedInvocationChain();
 					}
+					timedInvocationChain();
 				},
 				_fixOpenLoop: loopEndMethods.all				
 			});
@@ -459,13 +465,18 @@
 
 		executionState._next = proxyPlaceholder;
 		executionState._canContinue = true;
-		executionState._openEndAction = function(){
-			if (!waiting) {
+		executionState._openEndAction = function(tic, state){			
+			if (finished == size) {
 				ongoingLoops.shift();
 				return {
 					_context: sameOrNextJQuery(executionState._context, proxyPlaceholder),
 					_method: methodToGoOn
-				}
+				};
+			}
+			var finishedBefore = finished;
+			spreadAction();
+			if (finished != finishedBefore) {
+				return state;
 			}
 		};
 		executionState._count = size;
