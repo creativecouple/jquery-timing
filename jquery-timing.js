@@ -43,10 +43,8 @@
 	originalOff = jQuery.fn.off || jQuery.fn.unbind,
 	
 	/**
-	 * remember original core function $.animate()
+	 * .until() and .all() have special meanings
 	 */
-	originalAnimate = jQuery.fn.animate,
-
 	loopEndMethods = {};
 	
 	function sameOrNextJQuery(before, after) {
@@ -264,22 +262,27 @@
 	});
 	
 	/**
-	 * Create replacement method for .animate()
+	 * Create replacement method for .animate() and .load()
 	 * that support chaining if $ is given as callback function.
 	 */
-	jQuery.fn.animate = function(){
-		while (arguments.length && arguments[arguments.length-1] == null) {
-			Array.prototype.pop.apply(arguments);
-		}
-		if (this.length && arguments[arguments.length-1] === jQuery) {
-			var event = '_timing'+tuid++;
-			arguments[arguments.length-1] = function(){
-				jQuery(this).trigger(event);
+	jQuery.each(['animate','load'], function(index, name){
+		if (jQuery.fn[name]) {
+			var original = jQuery.fn[name];
+			jQuery.fn[name] = function(){
+				while (arguments.length && arguments[arguments.length-1] == null) {
+					Array.prototype.pop.apply(arguments);
+				}
+				if (this.length && arguments[arguments.length-1] === jQuery) {
+					var event = '_timing'+tuid++;
+					arguments[arguments.length-1] = function(){
+						jQuery(this).trigger(event);
+					};
+					return this.each().one(event).all(original.apply(this, arguments));
+				}
+				return original.apply(this, arguments);
 			};
-			return this.each().one(event).all(originalAnimate.apply(this, arguments));
 		}
-		return originalAnimate.apply(this, arguments);
-	};
+	});
 		
 	/**
 	 * Define new methods .wait(), .repeat(), .join(), .then()
