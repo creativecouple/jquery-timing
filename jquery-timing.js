@@ -141,7 +141,7 @@
 					continue;
 				}
 				// check if user tries to use a non-existing function call
-				method = executionState._context[executionState._method._name] || loopEndMethods[executionState._method._name];
+				method = executionState._context && executionState._context[executionState._method._name] || loopEndMethods[executionState._method._name];
 				if (!method) {					
 					throw 'no such method "'+executionState._method._name+'" on object ('+executionState._context+')';
 				}
