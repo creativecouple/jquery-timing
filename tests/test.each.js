@@ -71,6 +71,18 @@ var suite = {
 				test.done();
 			},
 			
+			".each().data('unknown').all().get()": function($, test){
+				var $x = $('<div>foo</div>');
+				var tic = $x.each().data('unknown');
+				test.assertNotEquals("each-loop must return TIC object", $x, tic);
+				var $y = tic.all();
+				test.assertNotEquals("instant .all() must return some jQuery object", tic, $y);
+				var array = $y.get();
+				test.assertTrue(".get() must return some Array", array instanceof Array);
+				test.assertEquals(".get() must return empty Array", 0, array.length);
+				test.done();
+			},
+			
 			"$($(some).each().attr('title')).map(toUpperCase)": function($, test){
 				var $x = $('<div title="foo">').add('<p title="bar">').add('<span title="Fooo"><em title="Bar"/></span>');
 				test.assertEquals("jQuery's .attr() should only find first one", 'foo', $x.attr('title'));
