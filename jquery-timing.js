@@ -272,7 +272,7 @@
 				while (arguments.length && arguments[arguments.length-1] == null) {
 					Array.prototype.pop.apply(arguments);
 				}
-				if (this.length > 1 && arguments[arguments.length-1] === jQuery) {
+				if (this.length && arguments.length > 1 && arguments[arguments.length-1] === jQuery) {
 					var event = '_timing'+tuid++;
 					arguments[arguments.length-1] = function(){
 						jQuery(this).trigger(event);
