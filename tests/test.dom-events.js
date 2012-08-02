@@ -262,6 +262,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.blur();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.blur();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'blur');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.blur();
@@ -282,6 +284,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.focus();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.focus();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'focus');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.focus();
@@ -302,6 +306,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.load();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.load();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'load');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.load();
@@ -322,6 +328,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.resize();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.resize();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'resize');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.resize();
@@ -342,6 +350,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.scroll();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.scroll();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'scroll');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.scroll();
@@ -362,6 +372,9 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.unload();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.unload();
+				if (compareVersion($.fn.jquery,'1.7.0') >= 0) {	x--; }
+				test.assertEquals("trigger should fire again", 1, x);
 				unbind($x,'unload');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.unload();
@@ -382,6 +395,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.dblclick();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.dblclick();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'dblclick');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.dblclick();
@@ -402,6 +417,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousedown();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.mousedown();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mousedown');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousedown();
@@ -422,6 +439,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseup();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.mouseup();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseup');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseup();
@@ -442,6 +461,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousemove();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.mousemove();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mousemove');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousemove();
@@ -462,6 +483,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseover();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.mouseover();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseover');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseover();
@@ -482,6 +505,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseout();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.mouseout();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseout');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseout();
@@ -502,6 +527,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.change();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.change();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'change');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.change();
@@ -522,6 +549,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.select();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.select();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'select');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.select();
@@ -542,6 +571,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.submit();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.submit();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'submit');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.submit();
@@ -562,6 +593,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keydown();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.keydown();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keydown');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keydown();
@@ -582,6 +615,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keypress();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.keypress();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keypress');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keypress();
@@ -602,6 +637,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keyup();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.keyup();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keyup');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keyup();
@@ -622,6 +659,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.error();
 				test.assertEquals("first trigger should fire", 1, x);
+				$x.error();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'error');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.error();
@@ -647,6 +686,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.click();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.click();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'click');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.click();
@@ -666,6 +707,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.blur();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.blur();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'blur');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.blur();
@@ -685,6 +728,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.focus();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.focus();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'focus');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.focus();
@@ -704,6 +749,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.load();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.load();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'load');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.load();
@@ -723,6 +770,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.resize();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.resize();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'resize');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.resize();
@@ -742,6 +791,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.scroll();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.scroll();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'scroll');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.scroll();
@@ -761,6 +812,9 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.unload();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.unload();
+				if (compareVersion($.fn.jquery,'1.7.0') >= 0) {	x--; }
+				test.assertEquals("trigger should fire again", 1, x);
 				unbind($x,'unload');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.unload();
@@ -780,6 +834,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.dblclick();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.dblclick();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'dblclick');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.dblclick();
@@ -799,6 +855,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousedown();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.mousedown();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mousedown');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousedown();
@@ -818,6 +876,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseup();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.mouseup();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseup');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseup();
@@ -837,6 +897,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mousemove();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.mousemove();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mousemove');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mousemove();
@@ -856,6 +918,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseover();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.mouseover();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseover');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseover();
@@ -875,6 +939,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.mouseout();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.mouseout();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'mouseout');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.mouseout();
@@ -894,6 +960,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.change();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.change();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'change');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.change();
@@ -913,6 +981,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.select();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.select();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'select');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.select();
@@ -932,6 +1002,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.submit();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.submit();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'submit');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.submit();
@@ -951,6 +1023,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keydown();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.keydown();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keydown');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keydown();
@@ -970,6 +1044,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keypress();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.keypress();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keypress');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keypress();
@@ -989,6 +1065,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.keyup();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.keyup();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'keyup');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.keyup();
@@ -1008,6 +1086,8 @@ var suite = {
 				test.assertEquals("event not yet triggered", 0, x);
 				$x.error();
 				test.assertEquals("trigger should fire", 1, x);
+				$x.error();
+				test.assertEquals("trigger should fire again", 1, --x);
 				unbind($x,'error');
 				test.assertEquals("event must not trigger on .unbind/.off", 1, x);
 				$x.error();
