@@ -633,6 +633,407 @@ var suite = {
 			
 		},
 		
+		"waiting for jQuery.Deferred": {
+			
+			_version : ['1.5'],
+
+			".wait(deferred,callback) +…+ deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should have fired after resolving the deferred", 1, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) +…+ deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should have fired after resolving the deferred", 1, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred) +…+ deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					var $y = TIC.then(callback);
+					test.assertEquals(".wait() should have fired after telling TIC", 1, x);
+					test.assertNotEquals("instant .then() should not return TIC object", TIC, $y);
+					test.assertEquals("instant .then() should return jQuery object", 1, $y.size());
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred,callback) +…+ .unwait() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unwait();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 0, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) +…+ .unwait() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unwait();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 0, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred) +…+ .unwait() + deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unwait();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					TIC.then(callback);
+					test.assertEquals(".wait() should have not fired after telling TIC because of .unwait()", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 0, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+	
+			".wait(deferred,callback) +…+ .unrepeat() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) +…+ .unrepeat() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred) +…+ .unrepeat() + deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					TIC.then(callback);
+					test.assertEquals(".wait() should have fired after telling TIC because it ignores .unrepeat()", 1, x);
+					deferred.resolve();
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						deferred.resolve();
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 100);
+			},
+			
+			".wait(deferred)._": function($, test) {
+				var $x = $('<div>');
+				var TIC = $x.wait(new $.Deferred());
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				var _ = TIC._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
+		},
+		
+		_version : ['1.5'],
+
+		"waiting for instant deferred": {
+
+			".wait(deferred,callback) + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have fired after resolving the deferred", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have fired after resolving the deferred", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred) + deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+				TIC.then(callback);
+				test.assertEquals(".wait() should have fired after telling TIC", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred,callback) + .unwait() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 0, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) + .unwait() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 0, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred) + .unwait() + deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+				TIC.then(callback);
+				test.assertEquals(".wait() should have not fired after telling TIC because of .unwait()", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 0, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 0, x);
+					test.done();
+				}, 100);
+			},
+	
+			".wait(deferred,callback) + .unrepeat() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unrepeat();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred).then(callback) + .unrepeat() + deferred.resolve()" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				$x.wait(deferred).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unrepeat();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(deferred) + .unrepeat() + deferred.resolve() + .then(callback)" : function($, test) {
+				var deferred = new $.Deferred();
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = $('<div>');
+				var TIC = $x.wait(deferred);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unrepeat();
+				test.assertEquals(".wait() should not have fired before resolving the deferred", 0, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+				TIC.then(callback);
+				test.assertEquals(".wait() should have fired after telling TIC because it ignores .unrepeat()", 1, x);
+				deferred.resolve();
+				test.assertEquals(".wait() should not fire anymore", 1, x);
+				window.setTimeout(function(){
+					deferred.resolve();
+					test.assertEquals(".wait() should not have fired anymore", 1, x);
+					test.done();
+				}, 100);
+			}
+			
+		},
+		
 		"access original context from deferred chain": {
 			
 			"$(some).wait().doThisLater()._.doThatNow()": function($,test){
