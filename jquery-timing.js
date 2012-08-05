@@ -367,8 +367,11 @@
 		function unwaitAction(){
 			originalOff.call(event ? originalOff.call(jQuery(this), event, triggerAction) : jQuery(this), 'unwait', unwaitAction);
 			executionState._next = executionState._context = executionState._context.not(this);
-			executionState._canContinue = executionState._context.length && executionState._canContinue;
-			window.clearTimeout(!executionState._context.length && timeout);
+			if (!executionState._context.length) {
+				executionState._canContinue = false;
+				window.clearTimeout(timeout);
+				executionState = { _context: executionState._context };
+			} 
 			// just update the snapshot info
 			timedInvocationChain();
 		}
@@ -377,6 +380,10 @@
 
 			originalOn.call(executionState._context, event = trigger, triggerAction);
 
+		} else if (typeof trigger == "object" && typeof trigger.done == "function") {
+			
+			trigger.done(triggerAction);
+			
 		} else {
 
 			timeout = window.setTimeout(triggerAction, Math.max(0,trigger));
