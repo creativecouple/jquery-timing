@@ -307,24 +307,42 @@
 	 */
 	jQuery.fn.join.timing = function(timedInvocationChain, executionState) {
 		var queueName,
+		promising,
 		waitingElements = executionState._context.length;
 		
-		if (typeof executionState._method._arguments[0] == "function") {
-			executionState._callback = executionState._method._arguments[0];
-		} else {
+		if (typeof executionState._method._arguments[0] == "string") {
 			queueName = executionState._method._arguments[0];
-			executionState._callback = executionState._method._arguments[1];
+			if (typeof executionState._method._arguments[1] == "function") {
+				executionState._callback = executionState._method._arguments[1];
+			} else {
+				promising = executionState._method._arguments[1];
+				executionState._callback = executionState._method._arguments[2];
+			}
+		} else {
+			if (typeof executionState._method._arguments[0] == "function") {
+				executionState._callback = executionState._method._arguments[0];
+			} else {
+				promising = executionState._method._arguments[0];
+				executionState._callback = executionState._method._arguments[1];
+			}
 		}
 		
-		// wait for each element to reach the current end of its queue
-		executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
-			executionState._canContinue = !--waitingElements;
-			timedInvocationChain();
-			next();
-		});
-
 		executionState._next = executionState._context;
 		executionState._canContinue = !waitingElements;
+
+		// wait for each element to reach the current end of its queue
+		if (promising) {
+			executionState._context.promise(queueName == null ? 'fx' : queueName).done(function(){
+				executionState._canContinue = true;
+				timedInvocationChain();
+			});
+		} else {
+			executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
+				executionState._canContinue = !--waitingElements;
+				timedInvocationChain();
+				next();
+			});
+		}
 	};
 
 	/**
