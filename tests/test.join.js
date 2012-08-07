@@ -3524,9 +3524,9 @@ var suite = {
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3551,9 +3551,9 @@ var suite = {
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3578,7 +3578,7 @@ var suite = {
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
 				$x.stop(queue);
-				test.assertEquals(".join(queue,true) should not fire on .stop(queue)", 0, x);
+				test.assertEquals(".join(queue,true) should not fire on .stop(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
 				$x.dequeue(queue);
 				test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
 				window.setTimeout(function(){
@@ -3639,11 +3639,11 @@ var suite = {
 			window.setTimeout(function(){
 				test.assertEquals("active queue should wait until delay is over", 0, x);
 				$x.stop(queue);
-				test.assertEquals(".join(queue,true) should not fire on .stop(queue)", 0, x);
+				test.assertEquals(".join(queue,true) should not fire on .stop(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired yet", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired yet", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3699,11 +3699,11 @@ var suite = {
 				$x.stop(queue);
 				test.assertEquals("TIC must wait until .then()", 0, x);
 				TIC.then(callback);
-				test.assertEquals(".join(queue,true) should not fire after .stop(queue)", 0, x);
+				test.assertEquals(".join(queue,true) should not fire after .stop(queue)", (compareVersion($().jquery,'1.7.99') < 0) ? 0 : 1, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired yet", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired yet", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3761,9 +3761,9 @@ var suite = {
 				$x.unwait();
 				test.assertEquals(".join(queue,true) should not fire in case of .unwait()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3790,9 +3790,9 @@ var suite = {
 				$x.unwait();
 				test.assertEquals(".join(queue,true) should not fire in case of .unwait()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3821,9 +3821,9 @@ var suite = {
 				TIC.then(callback);
 				test.assertEquals(".join(queue,true) should not fire in case of .unwait()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3850,9 +3850,9 @@ var suite = {
 				$x.unrepeat();
 				test.assertEquals(".join(queue,true) should not fire in case of .unrepeat()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3879,9 +3879,9 @@ var suite = {
 				$x.unrepeat();
 				test.assertEquals(".join(queue,true) should not fire in case of .unrepeat()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3910,9 +3910,9 @@ var suite = {
 				TIC.then(callback);
 				test.assertEquals(".join(queue,true) should not fire in case of .unrepeat()", 0, x);
 				window.setTimeout(function(){
-					test.assertEquals(".join(queue,true) must not have fired after first delay is over", 0, x);
+					test.assertEquals(".join(queue,true) must not have fired after first delay is over", (compareVersion($().jquery,'1.8.0') < 0) ? 1 : 0, x);
 					$x.dequeue(queue);
-					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", (compareVersion($().jquery,'1.7.99') <= 0) ? 0 : 1, x);
+					test.assertEquals(".join(queue,true) should fire after .dequeue(queue)", 1, x);
 					window.setTimeout(function(){
 						test.assertEquals(".join(queue,true) should not have fired anymore", 1, x);
 						$x.dequeue(queue);
@@ -3959,7 +3959,7 @@ var suite = {
 		},
 		
 		"$(some).join(queue,true).doThisLater()._.doThatNow()|1.6": function($,test){
-			$x = $('<div>').hide();
+			$x = $('<div>').hide().delay(100,'Q');
 			$x.join('Q',true).text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join('Q', true, function(){
