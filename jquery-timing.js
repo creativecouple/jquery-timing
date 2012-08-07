@@ -155,7 +155,7 @@
 					if (!method.timing && !executionState._canContinue) {
 						// prevent automatic re-trigger in case of loops
 						executionState._next = executionState._context[executionState._method._name].apply(executionState._context, executionState._method._arguments);
-						if (ongoingLoops.length && executionState._next instanceof MockupPlaceholder) {
+						if (ongoingLoops.length && executionState._next instanceof PredictingProxy) {
 							hookupToMockup(executionState, executionState._next);
 							continue;
 						}
@@ -198,24 +198,24 @@
 	 * @param methodStack a linked list that this placeholder will fill with call parameters 
 	 * @return the placeholder object
 	 */
-	function MockupPlaceholder(context, methodStack, onStepCallback) {
+	function PredictingProxy(context, methodStack, onStepCallback) {
 		this['.methods'] = methodStack;
 		this['.callback'] = onStepCallback;
 		this.length = 0;
 		Array.prototype.push.apply(this, jQuery.makeArray(this._ = context._ = context));
 		
 		for (var key in context) {
-			if (!(key in MockupPlaceholder.prototype) && typeof context[key] == "function") {
+			if (!(key in PredictingProxy.prototype) && typeof context[key] == "function") {
 				this[key] = extendMockupPrototype(key);
 			}
 		}
 	}
 	
 	/**
-	 * Create and return a new placeholder function on the prototype of MockupPlaceholder. 
+	 * Create and return a new placeholder function on the prototype of PredictingProxy. 
 	 */
 	function extendMockupPrototype(name){
-		return MockupPlaceholder.prototype[name] = function(){
+		return PredictingProxy.prototype[name] = function(){
 			this['.methods']._name = name;
 			this['.methods']._arguments = arguments;
 			this['.methods'] = this['.methods']._next = {};
@@ -254,7 +254,7 @@
 					});
 					return timedInvocationChain();
 				});
-				return placeholder = new MockupPlaceholder(original.apply(this, arguments), methodStack = {}, function(){
+				return placeholder = new PredictingProxy(original.apply(this, arguments), methodStack = {}, function(){
 					return timedInvocationChain ? timedInvocationChain(placeholder) : placeholder;
 				});
 			};
@@ -291,7 +291,7 @@
 	jQuery.each(['wait','repeat','join','then'], function(index, name){
 		jQuery.fn[name] = function(){
 			var methodStack = {},
-			placeholder = new MockupPlaceholder(this, methodStack, createTimedInvocationChain(this, methodStack, [], function(elements){
+			placeholder = new PredictingProxy(this, methodStack, createTimedInvocationChain(this, methodStack, [], function(elements){
 					placeholder.length = 0;
 					Array.prototype.push.apply(placeholder, elements);
 				}));
@@ -421,7 +421,7 @@
 	jQuery.fn.each = function(callback){
 		if (!callback || callback === jQuery) {
 			var methodStack = {},
-			placeholder = new MockupPlaceholder(this, methodStack, createTimedInvocationChain(this, methodStack, [], function(elements){
+			placeholder = new PredictingProxy(this, methodStack, createTimedInvocationChain(this, methodStack, [], function(elements){
 					placeholder.length = 0;
 					Array.prototype.push.apply(placeholder, elements);
 				}));
@@ -462,7 +462,7 @@
 			return proxyPlaceholder;
 		}
 		
-		for (key in MockupPlaceholder.prototype) {
+		for (key in PredictingProxy.prototype) {
 			proxyPlaceholder[key] = spreadAction;
 		}
 		proxyPlaceholder.length = size;
@@ -675,7 +675,7 @@
 	};
 	
 	// support .until() and .all()
-	new MockupPlaceholder(loopEndMethods);
+	new PredictingProxy(loopEndMethods);
 	
 	/**
 	 * Define unwait and unrepeat methods.
