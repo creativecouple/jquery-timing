@@ -26,18 +26,19 @@
 		<length file="${script-minimized}" property="bytes-before-shrink" />
 		
 		<replace file="${script-minimized}" token="_allAction" value="a"/>
-		<replace file="${script-minimized}" token="_arguments" value="b"/>
-		<replace file="${script-minimized}" token="_callback" value="c"/>
-		<replace file="${script-minimized}" token="_canContinue" value="d"/>
-		<replace file="${script-minimized}" token="_context" value="e"/>
-		<replace file="${script-minimized}" token="_count" value="f"/>
-		<replace file="${script-minimized}" token="_fixOpenLoop" value="g"/>
-		<replace file="${script-minimized}" token="_method" value="h"/>
-		<replace file="${script-minimized}" token="_name" value="i"/>
-		<replace file="${script-minimized}" token="_next" value="j"/>
-		<replace file="${script-minimized}" token="_openEndAction" value="k"/>
-		<replace file="${script-minimized}" token="_triggered" value="l"/>
-		<replace file="${script-minimized}" token="_untilAction" value="m"/>
+		<replace file="${script-minimized}" token="_allowPromise" value="b"/>
+		<replace file="${script-minimized}" token="_arguments" value="c"/>
+		<replace file="${script-minimized}" token="_callback" value="d"/>
+		<replace file="${script-minimized}" token="_canContinue" value="e"/>
+		<replace file="${script-minimized}" token="_context" value="f"/>
+		<replace file="${script-minimized}" token="_count" value="g"/>
+		<replace file="${script-minimized}" token="_fixOpenLoop" value="h"/>
+		<replace file="${script-minimized}" token="_method" value="i"/>
+		<replace file="${script-minimized}" token="_name" value="j"/>
+		<replace file="${script-minimized}" token="_next" value="k"/>
+		<replace file="${script-minimized}" token="_openEndAction" value="l"/>
+		<replace file="${script-minimized}" token="_triggered" value="m"/>
+		<replace file="${script-minimized}" token="_untilAction" value="n"/>
 
 		<length file="${script-minimized}" property="bytes-after-shrink" />
 		<echo>Shrinking ${bytes-before-shrink} =&gt; ${bytes-after-shrink} Bytes</echo>
