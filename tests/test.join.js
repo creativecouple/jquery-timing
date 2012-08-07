@@ -1,4 +1,4 @@
-var suite = {
+tests[".join() functionality"] = {
 		
 	_version: ['1.4'],
 		

@@ -1,4 +1,4 @@
-var suite = {
+tests[".delegate() functionality"] = {
 		
 		_version: ['1.4.2','1.8.0'],
 		

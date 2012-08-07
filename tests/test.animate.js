@@ -1,4 +1,4 @@
-var suite = {
+tests[".animate() functionality"] = {
 		
 		_version: ['1.4.0'],
 		

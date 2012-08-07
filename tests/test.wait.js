@@ -1,4 +1,4 @@
-var suite = {
+tests[".wait() functionality"] = {
 		
 		"waiting short": {
 			
@@ -848,9 +848,9 @@ var suite = {
 
 		},
 		
-		_version : ['1.5'],
-
 		"waiting for instant deferred": {
+			
+			_version : ['1.5'],
 
 			".wait(deferred,callback) + deferred.resolve()" : function($, test) {
 				var deferred = new $.Deferred();

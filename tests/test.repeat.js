@@ -1,4 +1,4 @@
-var suite = {
+tests[".repeat() functionality"] = {
 		
 		"instant open for-loop": {
 		

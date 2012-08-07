@@ -1,4 +1,4 @@
-var suite = {
+tests[".then() functionality"] = {
 		
 		"static usage": {
 			

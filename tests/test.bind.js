@@ -1,4 +1,4 @@
-var suite = {
+tests[".bind() functionality"] = {
 		
 		_version: ['1.0','1.8.0'],
 		

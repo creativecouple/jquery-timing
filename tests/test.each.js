@@ -1,4 +1,4 @@
-var suite = {
+tests[".each() functionality"] = {
 		
 		"instant each-loop": {
 		

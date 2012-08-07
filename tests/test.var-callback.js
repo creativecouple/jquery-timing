@@ -1,4 +1,4 @@
-var suite = {
+tests["$.X() functionality"] = {
 		
 		"simple usage": {
 		

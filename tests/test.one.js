@@ -3,7 +3,7 @@ function unbind() {
 	return ($q.off || $q.unbind).apply($q, arguments);
 }
 
-var suite = {
+tests[".one() functionality"] = {
 		
 		_version: ['1.2.4'],
 		

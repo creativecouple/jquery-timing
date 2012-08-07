@@ -1,4 +1,4 @@
-var suite = {
+tests[".on() functionality"] = {
 		
 		_version: ['1.7.0'],
 		

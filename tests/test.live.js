@@ -1,4 +1,4 @@
-var suite = {
+tests[".live() functionality"] = {
 		
 		_version: ['1.3','1.8.0'],
 		

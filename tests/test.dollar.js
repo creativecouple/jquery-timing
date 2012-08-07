@@ -1,4 +1,4 @@
-var suite = {
+tests[".$() functionality"] = {
 		
 		"chaining .$()": {
 		

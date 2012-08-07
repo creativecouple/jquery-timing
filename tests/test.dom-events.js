@@ -3,7 +3,7 @@ function unbind() {
 	return $q.unbind.apply($q, arguments);
 }
 
-var suite = {
+tests["dom events functionality"] = {
 		
 		"binding click event - classical style": {
 		
