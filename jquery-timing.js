@@ -195,9 +195,7 @@
 		if (jQuery.Deferred) {
 			// add .promise() method to tic
 			timedInvocationChain.promise = function(){
-				var ret = jQuery.Deferred();
-				deferred = deferred || jQuery.Deferred();
-				deferred.then(ret.resolve);
+				var ret = (deferred = deferred || jQuery.Deferred()).promise();
 				timedInvocationChain();
 				return ret;
 			};
@@ -784,7 +782,8 @@
 		callbackVariable.neg = function(){
 			return X('-x', callbackVariable);
 		};
-		callbackVariable.X = function(compute){
+		// $$ only for backward compatibility
+		callbackVariable.$$ = callbackVariable.X = function(compute){
 			return X(compute, callbackVariable);
 		};
 		jQuery.each('abcdefghij', function(index, character){
@@ -796,7 +795,8 @@
 		return callbackVariable;
 	};
 	
-	jQuery.X = X;
+	// $$ only for backward compatibility
+	window.$$ = jQuery.$$ = jQuery.X = X;
 	
 	/**
 	 * Define chained version of $().
