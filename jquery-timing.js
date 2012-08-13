@@ -121,9 +121,13 @@
 				}
 				// check end of chain
 				if (!executionState._method._name) {
-					// resolve any waiting promise 
 					if (deferred && (!ongoingLoops.length || ongoingLoops[0]._allowPromise)) {
-						deferred.resolveWith(executionState._context);
+						// resolve any waiting promise 
+						if (executionState._context && typeof executionState._context.promise == "function") {
+							executionState._context.promise().then(deferred.resolve);
+						} else {
+							deferred.resolveWith(executionState._context);
+						}
 						deferred = null;
 					}
 					if (!ongoingLoops.length) {
@@ -194,8 +198,8 @@
 		};
 		if (jQuery.Deferred) {
 			// add .promise() method to tic
-			timedInvocationChain.promise = function(){
-				var ret = (deferred = deferred || jQuery.Deferred()).promise();
+			timedInvocationChain.promise = function(type, target){
+				var ret = (deferred = deferred || jQuery.Deferred()).promise(target);
 				timedInvocationChain();
 				return ret;
 			};
@@ -228,8 +232,12 @@
 	
 	// enabling jQuery.when(tic);
 	if (jQuery.Deferred) {
-		PredictingProxy.prototype.promise = function() {
-			return (this['.callback'] && typeof this['.callback'].promise == "function") ? this['.callback'].promise() : jQuery.Deferred().resolveWith(this);
+		PredictingProxy.prototype.promise = function(type, target) {
+			if (typeof type == "object") {
+				target = type;
+				type = null;
+			}
+			return (this['.callback'] && typeof this['.callback'].promise == "function") ? this['.callback'].promise(type, target) : jQuery.Deferred().resolveWith(this).promise(target);
 		};
 	}
 	
@@ -285,8 +293,12 @@
 					return timedInvocationChain ? timedInvocationChain(placeholder) : placeholder;
 				}
 				if (jQuery.Deferred) {					
-					fire.promise = function(){
-						return timedInvocationChain ? timedInvocationChain.promise() : deferred = jQuery.Deferred();
+					fire.promise = function(type, target){
+						if (typeof type == "object") {
+							target = type;
+							type = null;
+						}
+						return (timedInvocationChain && !type) ? timedInvocationChain.promise(type, target) : (deferred = deferred || jQuery.Deferred()).promise(target);
 					};
 				}
 				return placeholder = new PredictingProxy(original.apply(this, arguments), methodStack = {}, fire);
