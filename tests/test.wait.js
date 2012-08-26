@@ -2,10 +2,10 @@ tests[".wait() functionality"] = {
 		
 		"waiting short": {
 			
-			".wait(callback)" : function($, test) {
+			".wait(null,callback)" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
-				$.wait(callback);
+				$.wait(null,callback);
 				test.assertEquals(".wait() should defer", 0, x);
 				window.setTimeout(function(){
 					test.assertEquals(".wait() should have fired after short waiting", 1, x);
@@ -48,11 +48,11 @@ tests[".wait() functionality"] = {
 				}, 1);
 			},
 			
-			".wait(callback) + .unwait()" : function($, test) {
+			".wait(null,callback) + .unwait()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
-				$x.wait(callback);
+				$x.wait(null,callback);
 				test.assertEquals(".wait() should defer", 0, x);
 				$x.unwait();
 				window.setTimeout(function(){
@@ -80,11 +80,11 @@ tests[".wait() functionality"] = {
 				}, 1);
 			},
 			
-			".wait(callback) + .unrepeat()" : function($, test) {
+			".wait(null,callback) + .unrepeat()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
-				$x.wait(callback);
+				$x.wait(null,callback);
 				test.assertEquals(".wait() should defer", 0, x);
 				$x.unrepeat();
 				window.setTimeout(function(){
@@ -1031,6 +1031,72 @@ tests[".wait() functionality"] = {
 					test.done();
 				}, 100);
 			}
+			
+		},
+		
+		"waiting for result of callback": {
+			
+			".wait(function).then(callback) + return timeout": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return 10;}).then(function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should have fired", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(function,callback) + return event": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return 10;}, function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should have fired", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait(function).then(callback) + return event": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return 'test';}).then(function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.trigger('test');
+				test.assertEquals(".wait() should have fired", 1, x);
+				test.done();
+			},
+			
+			".wait(function,callback) + return timeout": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return 'test';}, function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.trigger('test');
+				test.assertEquals(".wait() should have fired", 1, x);
+				test.done();
+			},
+			
+			".wait(function).then(callback) + return deferred": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return $x.one('click');}).then(function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.click();
+				test.assertEquals(".wait() should have fired", 1, x);
+				test.done();
+			},
+			
+			".wait(function,callback) + return deferred": function($, test){
+				var x = 0;
+				var $x = test.element('<div>');
+				$x.wait(function(){return $x.one('click');}, function(){x++;});
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.click();
+				test.assertEquals(".wait() should have fired", 1, x);
+				test.done();
+			},
 			
 		},
 		

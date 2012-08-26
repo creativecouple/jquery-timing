@@ -3,7 +3,7 @@ tests[".each() functionality"] = {
 		"instant each-loop": {
 		
 			".each().then(callback)": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var callbackX = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -30,7 +30,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".each($).then(callback).all()": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var callbackX = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -112,7 +112,7 @@ tests[".each() functionality"] = {
 		"instant each-loop with delay": {
 		
 			".each().wait(timeout,callback)": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -134,7 +134,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".each().wait(event).then(callback)": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -159,7 +159,7 @@ tests[".each() functionality"] = {
 		"deferred each-loop": {
 
 			".wait(timeout).each().then(callback)": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -177,7 +177,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".repeat(event).each($).then(callback).all()": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){
@@ -198,7 +198,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".repeat(event).each().then(callback).until(false)": function($, test) {
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){

@@ -170,10 +170,10 @@ tests[".then() functionality"] = {
 
 		"deferred usage": {
 			
-			".wait(callback).then(callback)" : function($,test) {				
+			".wait().then(callback)" : function($,test) {				
 				var x=0;
 				var $x = test.element('<div>');
-				$x.wait(function(){
+				$x.wait(null,function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
 				}).then(function(){

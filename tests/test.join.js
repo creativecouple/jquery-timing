@@ -218,7 +218,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join() instantly": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = test.element('<div>').add('<span>').add('<p>');
+			var $x = test.element($('<div>').add('<span>').add('<p>'));
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(callback);
 			$x.delay(10000);
@@ -463,7 +463,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join(true) instantly": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = test.element('<div>').add('<span>').add('<p>');
+			var $x = test.element($('<div>').add('<span>').add('<p>'));
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(true,callback);
 			$x.delay(10000);
@@ -1316,7 +1316,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join() deferred": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = test.element('<div>').add('<span>').add('<p>');
+			var $x = test.element($('<div>').add('<span>').add('<p>'));
 			var timeout = 100;
 			$x.eq(0).delay(timeout);
 			$x.eq(2).delay(timeout*2);
@@ -1729,7 +1729,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join(true) deferred": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = test.element('<div>').add('<span>').add('<p>');
+			var $x = test.element($('<div>').add('<span>').add('<p>'));
 			var timeout = 100;
 			$x.eq(0).delay(timeout);
 			$x.eq(2).delay(timeout*2);
@@ -2381,7 +2381,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = test.element('<div>').add('<span>').add('<p>');
+			var $x = test.element($('<div>').add('<span>').add('<p>'));
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(queue,true,callback);
 			$x.delay(10000,queue);

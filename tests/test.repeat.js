@@ -86,14 +86,14 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).eq(X).doSomething()": function($, test) {
 				var x = 0;
-				var $x = test.element('<div>').add('<p>').add('<span>');
+				var $x = test.element($('<div>').add('<span>').add('<p>'));
 				var callback = function(i){
 					test.assertEquals("loop iteration must match", i, x);
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
 				};
 				var X=$.X();
-				var TIC = $x.repeat(X).eq(X).then(callback);
+				$x.repeat(X).eq(X).then(callback);
 				test.assertEquals("then must be run first time", 1, x);
 				window.setTimeout(function(){
 					test.assertEquals(".repeat() should have run until empty selection", 4, x);
@@ -472,7 +472,7 @@ tests[".repeat() functionality"] = {
 
 			".repeat(X).eq(X).until()": function($, test) {
 				var x = 0;
-				var $x = test.element('<div>').add('<span>').add('<p>');
+				var $x = test.element($('<div>').add('<span>').add('<p>'));
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(y){
@@ -499,7 +499,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).then(callback).eq(X).until() +…+ .then(callback)": function($, test) {
 				var x = 0;
-				var $x = test.element('<div>').add('<span>').add('<p>');
+				var $x = test.element($('<div>').add('<span>').add('<p>'));
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(){
@@ -527,7 +527,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).eq(X).until($,false)": function($, test) {
 				var x = 0;
-				var $x = test.element('<div>').add('<span>').add('<p>');
+				var $x = test.element($('<div>').add('<span>').add('<p>'));
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(y){
@@ -1073,7 +1073,7 @@ tests[".repeat() functionality"] = {
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
 				var callback2 = function(){ y++; test.check(); };
-				$x.wait(callback1).repeat(callback2).until(3);
+				$x.wait().then(callback1).repeat(callback2).until(3);
 				test.assertEquals("waiting for little timeout", 0, x);
 				test.assertEquals("waiting for loop start", 0, y);
 				window.setTimeout(function(){
