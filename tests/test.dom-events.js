@@ -1100,7 +1100,7 @@ tests["dom events functionality"] = {
 		"access original context": {
 			
 			"$(some).blur($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.blur($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.blur();
@@ -1109,7 +1109,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).focus($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.focus($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.focus();
@@ -1118,7 +1118,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).load($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.load($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.load();
@@ -1127,7 +1127,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).resize($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.resize($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.resize();
@@ -1136,7 +1136,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).scroll($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.scroll($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.scroll();
@@ -1145,7 +1145,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).unload($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.unload($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.unload();
@@ -1154,7 +1154,7 @@ tests["dom events functionality"] = {
 			},
 			
 			"$(some).click($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.click($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.click();
@@ -1163,7 +1163,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).dblclick($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.dblclick($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.dblclick();
@@ -1172,7 +1172,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mousedown($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.mousedown($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mousedown();
@@ -1181,7 +1181,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseup($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.mouseup($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseup();
@@ -1190,7 +1190,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mousemove($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.mousemove($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mousemove();
@@ -1199,7 +1199,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseover($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.mouseover($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseover();
@@ -1208,7 +1208,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseout($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.mouseout($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseout();
@@ -1217,7 +1217,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).change($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.change($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.change();
@@ -1226,7 +1226,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).select($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.select($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.select();
@@ -1235,7 +1235,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).submit($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.submit($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.submit();
@@ -1244,7 +1244,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keydown($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.keydown($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keydown();
@@ -1253,7 +1253,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keypress($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.keypress($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keypress();
@@ -1262,7 +1262,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keyup($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.keyup($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keyup();
@@ -1271,7 +1271,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).error($).doThisLater()._.doThatNow()": function($, test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.error($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.error();

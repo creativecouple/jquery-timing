@@ -1037,7 +1037,7 @@ tests[".wait() functionality"] = {
 		"access original context from deferred chain": {
 			
 			"$(some).wait().doThisLater()._.doThatNow()": function($,test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.wait().text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				window.setTimeout(function(){
@@ -1047,7 +1047,7 @@ tests[".wait() functionality"] = {
 			},
 			
 			"$(some).wait(event).doThisLater()._.doThatNow()": function($,test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.wait('evt').text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.trigger('evt');
@@ -1056,7 +1056,7 @@ tests[".wait() functionality"] = {
 			},
 			
 			"$(some).wait(timeout).doThisLater()._.doThatNow()": function($,test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.wait(10).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				window.setTimeout(function(){

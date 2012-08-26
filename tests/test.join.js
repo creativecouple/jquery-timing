@@ -3928,7 +3928,7 @@ tests[".join() functionality"] = {
 	"access original context from deferred chain": {
 		
 		"$(some).fadeIn().join().doThisLater()._.doThatNow()": function($,test){
-			$x = test.element('<div>').hide();
+			var $x = test.element('<div>').hide();
 			$x.fadeIn().join().text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join(function(){
@@ -3938,7 +3938,7 @@ tests[".join() functionality"] = {
 		},
 
 		"$(some).join(queue).doThisLater()._.doThatNow()": function($,test){
-			$x = test.element('<div>').hide();
+			var $x = test.element('<div>').hide();
 			$x.join('Q').text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join('Q', function(){
@@ -3949,7 +3949,7 @@ tests[".join() functionality"] = {
 		},
 
 		"$(some).fadeIn().join(true).doThisLater()._.doThatNow()|1.6": function($,test){
-			$x = test.element('<div>').hide();
+			var $x = test.element('<div>').hide();
 			$x.fadeIn().join(true).text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join(true,function(){
@@ -3959,7 +3959,7 @@ tests[".join() functionality"] = {
 		},
 		
 		"$(some).join(queue,true).doThisLater()._.doThatNow()|1.6": function($,test){
-			$x = test.element('<div>').hide().delay(100,'Q');
+			var $x = test.element('<div>').hide().delay(100,'Q');
 			$x.join('Q',true).text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join('Q', true, function(){

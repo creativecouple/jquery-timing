@@ -533,7 +533,7 @@ tests[".on() functionality"] = {
 		"access original context from deferred chain": {
 			
 			"$(some).on(event).doThisLater()._.doThatNow()": function($,test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.on('evt').text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.trigger('evt');
@@ -542,7 +542,7 @@ tests[".on() functionality"] = {
 			},
 
 			"$(some).on(event,$).doThisLater()._.doThatNow()": function($,test){
-				$x = test.element('<div>');
+				var $x = test.element('<div>');
 				$x.on('evt',$).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.trigger('evt');
