@@ -3,7 +3,7 @@ tests[".each() functionality"] = {
 		"instant each-loop": {
 		
 			".each().then(callback)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callbackX = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -30,7 +30,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".each($).then(callback).all()": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callbackX = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -59,7 +59,7 @@ tests[".each() functionality"] = {
 			},
 			
 			".each().text().all().get()": function($, test){
-				var $x = $('<div>foo</div>').add('<p>bar</p>').add('<span>Foo<em>Bar</em></span>');
+				var $x = test.element('<div>foo</div>').add('<p>bar</p>').add('<span>Foo<em>Bar</em></span>');
 				test.assertEquals("jQuery's .text() method going wrong??", 'foobarFooBar', $x.text());
 				var tic = $x.each().text();
 				test.assertNotEquals("each-loop must return TIC object", $x, tic);
@@ -72,7 +72,7 @@ tests[".each() functionality"] = {
 			},
 			
 			".each().data('unknown').all().get()": function($, test){
-				var $x = $('<div>foo</div>');
+				var $x = test.element('<div>foo</div>');
 				var tic = $x.each().data('unknown');
 				test.assertNotEquals("each-loop must return TIC object", $x, tic);
 				var $y = tic.all();
@@ -84,18 +84,18 @@ tests[".each() functionality"] = {
 			},
 			
 			"$($(some).each().attr('title')).map(toUpperCase)": function($, test){
-				var $x = $('<div title="foo">').add('<p title="bar">').add('<span title="Fooo"><em title="Bar"/></span>');
+				var $x = test.element('<div title="foo">').add('<p title="bar">').add('<span title="Fooo"><em title="Bar"/></span>');
 				test.assertEquals("jQuery's .attr() should only find first one", 'foo', $x.attr('title'));
 				var tic = $x.each().attr('title');
 				test.assertNotEquals("each-loop must return TIC object", $x, tic);
 				test.assertEquals("snapshot has wrong content", 'foo::bar::Fooo', $(tic).get().join('::'));
-				var $y = $(tic).map(String.prototype.toUpperCase);
+				var $y = test.element(tic).map(String.prototype.toUpperCase);
 				test.assertEquals("result has wrong content", 'FOO::BAR::FOOO', $y.get().join('::'));
 				test.done();
 			},
 			
 			".each().next().all().end()": function($, test){
-				var $x = $('<div><div title="foo"></div><p title="bar"></p><span title="Fooo"><em title="Bar"/></span></div>').children();
+				var $x = test.element('<div><div title="foo"></div><p title="bar"></p><span title="Fooo"><em title="Bar"/></span></div>').children();
 				test.assertEquals("not enough children", 3, $x.size());
 				var tic = $x.each().next();
 				test.assertNotEquals("each-loop must return TIC object", $x, tic);
@@ -112,7 +112,7 @@ tests[".each() functionality"] = {
 		"instant each-loop with delay": {
 		
 			".each().wait(timeout,callback)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -134,7 +134,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".each().wait(event).then(callback)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -159,7 +159,7 @@ tests[".each() functionality"] = {
 		"deferred each-loop": {
 
 			".wait(timeout).each().then(callback)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var callback = function(i){
 					test.assertEquals("wrong order of elements?", x, i);
@@ -177,7 +177,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".repeat(event).each($).then(callback).all()": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){
@@ -198,7 +198,7 @@ tests[".each() functionality"] = {
 			},
 	
 			".repeat(event).each().then(callback).until(false)": function($, test) {
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var x=0;
 				var event = 'myEvent';
 				var callback = function(i){

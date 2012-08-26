@@ -221,7 +221,8 @@ function TestCase(success, error, $) {
 	$.extend(this, {
 		$: $,
 		success: success,
-		error: error
+		error: error,
+		elements: $([])
 	});
 }
 $.extend(TestCase.prototype, {
@@ -239,6 +240,7 @@ $.extend(TestCase.prototype, {
 			throw assertionException;
 		} 
 		this.finished = true;
+		this.elements.remove();
 		this.success();
 	},
 	
@@ -247,6 +249,7 @@ $.extend(TestCase.prototype, {
 			throw assertionException;
 		}
 		this.finished = true;
+		this.elements.remove();
 		this.error(message);
 		throw assertionException;
 	},
@@ -279,7 +282,14 @@ $.extend(TestCase.prototype, {
 	
 	guid: function() {
 		return ++guid;
+	},
+	
+	element: function() {
+		var $elem = this.$.apply(window,arguments);
+		this.elements = this.elements.add($elem);
+		return $elem;
 	}
+	
 	
 });
 

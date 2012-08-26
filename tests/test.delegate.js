@@ -5,7 +5,7 @@ tests[".delegate() functionality"] = {
 		"binding single event - classical style": {
 		
 			".delegate(selector,event,handler) + .undelegate(selector,event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -24,7 +24,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,data,handler) + .undelegate(selector,event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -44,7 +44,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,handler) + .undelegate(selector,event,handler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -63,7 +63,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,data,handler) + .undelegate(selector,event,handler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -83,7 +83,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,handler) + .undelegate(selector,event,otherHandler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -102,7 +102,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,data,handler) + .undelegate(selector,event,otherHandler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -122,7 +122,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,handler) + .trigger(event) + .undelegate(selector,event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -143,7 +143,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,data,handler) + .trigger(event) + .undelegate(selector,event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -165,7 +165,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,handler) + .trigger(event) + .undelegate(selector,event,handler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -186,7 +186,7 @@ tests[".delegate() functionality"] = {
 			},
 			
 			".delegate(selector,event,data,handler) + .trigger(event) + .undelegate(selector,event,handler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -208,7 +208,7 @@ tests[".delegate() functionality"] = {
 			},
 			
 			".delegate(selector,event,handler) + .trigger(event) + .undelegate(selector,event,otherHandler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -229,7 +229,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,data,handler) + .trigger(event) + .undelegate(selector,event,otherHandler)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -255,7 +255,7 @@ tests[".delegate() functionality"] = {
 		"binding multiple events - classical style": {
 			
 			".delegate(selector,{ev1:h1, e2:h2}) + .undelegate(selector,ev1)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -282,7 +282,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,{ev1:h1, e2:h2},data) + .undelegate(selector,ev1)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0, y=0;
 				function handler1(event){
 					x++;
@@ -311,7 +311,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,'ev1 ev2',handler) + .undelegate(selector,ev2)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0;
 				var $delegate = $x.delegate('p','ev1 ev2', function(){ x++; });
 				test.assertEquals("classical bind must return original jQuery object", $x, $delegate);
@@ -332,7 +332,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,'ev1 ev2',data,handler) + .undelegate(selector,ev2)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -361,7 +361,7 @@ tests[".delegate() functionality"] = {
 		"binding single event - timed invocation chain style": {
 			
 			".delegate(selector,event).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -381,7 +381,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event,$).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -401,7 +401,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,event).doSomething()._": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var $delegate = $x.delegate('p','myEvent',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $delegate);
 				var $y = $delegate._;
@@ -414,7 +414,7 @@ tests[".delegate() functionality"] = {
 		"binding multiple events - timed invocation chain style": {
 			
 			".delegate(selector,'ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0;
 				function handler(){
 					x++;
@@ -438,7 +438,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,'ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var x=0;
 				function handler(){
 					x++;
@@ -462,7 +462,7 @@ tests[".delegate() functionality"] = {
 			},
 
 			".delegate(selector,'ev1 ev2').doSomething()._": function($, test) {
-				var $x = $('<div><p>');
+				var $x = test.element('<div><p>');
 				var $delegate = $x.delegate('p','ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $delegate);
 				var $y = $delegate._;

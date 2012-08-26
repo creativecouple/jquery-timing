@@ -8,7 +8,7 @@ tests["dom events functionality"] = {
 		"binding click event - classical style": {
 		
 			".click(handler) + .unbind/.off('click')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -26,7 +26,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(handler) + .unbind/.off('click',handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -44,7 +44,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(handler) + .unbind/.off('click',otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -62,7 +62,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(handler) + .click() + .unbind/.off('click')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -82,7 +82,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(handler) + .click() + .unbind/.off('click',handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -102,7 +102,7 @@ tests["dom events functionality"] = {
 			},
 			
 			".click(handler) + .click() + .unbind/.off('click',otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -128,7 +128,7 @@ tests["dom events functionality"] = {
 			_version: ['1.4.3'],
 			
 			".click(data,handler) + .unbind/.off('click')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -147,7 +147,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(data,handler) + .unbind/.off('click',handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -166,7 +166,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(data,handler) + .unbind/.off('click',otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -185,7 +185,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(data,handler) + .click() + .unbind/.off('click')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -206,7 +206,7 @@ tests["dom events functionality"] = {
 			},
 
 			".click(data,handler) + .click() + .unbind/.off('click',handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -227,7 +227,7 @@ tests["dom events functionality"] = {
 			},
 			
 			".click(data,handler) + .click() + .unbind/.off('click',otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -252,7 +252,7 @@ tests["dom events functionality"] = {
 		"binding other DOM events - classical style": {
 
 			".blur(handler) + .blur() + .unbind/.off('blur')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -274,7 +274,7 @@ tests["dom events functionality"] = {
 			},
 
 			".focus(handler) + .focus() + .unbind/.off('focus')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -296,7 +296,7 @@ tests["dom events functionality"] = {
 			},
 
 			".load(handler) + .load() + .unbind/.off('load')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -318,7 +318,7 @@ tests["dom events functionality"] = {
 			},
 
 			".resize(handler) + .resize() + .unbind/.off('resize')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -340,7 +340,7 @@ tests["dom events functionality"] = {
 			},
 
 			".scroll(handler) + .scroll() + .unbind/.off('scroll')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -362,7 +362,7 @@ tests["dom events functionality"] = {
 			},
 
 			".unload(handler) + .unload() + .unbind/.off('unload')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -385,7 +385,7 @@ tests["dom events functionality"] = {
 			},
 
 			".dblclick(handler) + .dblclick() + .unbind/.off('dblclick')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -407,7 +407,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mousedown(handler) + .mousedown() + .unbind/.off('mousedown')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -429,7 +429,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseup(handler) + .mouseup() + .unbind/.off('mouseup')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -451,7 +451,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mousemove(handler) + .mousemove() + .unbind/.off('mousemove')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -473,7 +473,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseover(handler) + .mouseover() + .unbind/.off('mouseover')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -495,7 +495,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseout(handler) + .mouseout() + .unbind/.off('mouseout')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -517,7 +517,7 @@ tests["dom events functionality"] = {
 			},
 
 			".change(handler) + .change() + .unbind/.off('change')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -539,7 +539,7 @@ tests["dom events functionality"] = {
 			},
 
 			".select(handler) + .select() + .unbind/.off('select')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -561,7 +561,7 @@ tests["dom events functionality"] = {
 			},
 
 			".submit(handler) + .submit() + .unbind/.off('submit')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -583,7 +583,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keydown(handler) + .keydown() + .unbind/.off('keydown')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -605,7 +605,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keypress(handler) + .keypress() + .unbind/.off('keypress')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -627,7 +627,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keyup(handler) + .keyup() + .unbind/.off('keyup')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -649,7 +649,7 @@ tests["dom events functionality"] = {
 			},
 
 			".error(handler) + .error() + .unbind/.off('error')": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -675,7 +675,7 @@ tests["dom events functionality"] = {
 		"binding DOM event - timed invocation chain style": {
 			
 			".click($).doSomething() + .click()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -696,7 +696,7 @@ tests["dom events functionality"] = {
 			},
 
 			".blur($).doSomething() + .blur()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -717,7 +717,7 @@ tests["dom events functionality"] = {
 			},
 
 			".focus($).doSomething() + .focus()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -738,7 +738,7 @@ tests["dom events functionality"] = {
 			},
 
 			".load($).doSomething() + .load()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -759,7 +759,7 @@ tests["dom events functionality"] = {
 			},
 
 			".resize($).doSomething() + .resize()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -780,7 +780,7 @@ tests["dom events functionality"] = {
 			},
 
 			".scroll($).doSomething() + .scroll()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -801,7 +801,7 @@ tests["dom events functionality"] = {
 			},
 
 			".unload($).doSomething() + .unload()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -823,7 +823,7 @@ tests["dom events functionality"] = {
 			},
 
 			".dblclick($).doSomething() + .dblclick()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -844,7 +844,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mousedown($).doSomething() + .mousedown()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -865,7 +865,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseup($).doSomething() + .mouseup()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -886,7 +886,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mousemove($).doSomething() + .mousemove()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -907,7 +907,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseover($).doSomething() + .mouseover()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -928,7 +928,7 @@ tests["dom events functionality"] = {
 			},
 
 			".mouseout($).doSomething() + .mouseout()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -949,7 +949,7 @@ tests["dom events functionality"] = {
 			},
 
 			".change($).doSomething() + .change()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -970,7 +970,7 @@ tests["dom events functionality"] = {
 			},
 
 			".select($).doSomething() + .select()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -991,7 +991,7 @@ tests["dom events functionality"] = {
 			},
 
 			".submit($).doSomething() + .submit()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1012,7 +1012,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keydown($).doSomething() + .keydown()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1033,7 +1033,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keypress($).doSomething() + .keypress()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1054,7 +1054,7 @@ tests["dom events functionality"] = {
 			},
 
 			".keyup($).doSomething() + .keyup()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1075,7 +1075,7 @@ tests["dom events functionality"] = {
 			},
 
 			".error($).doSomething() + .error()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1100,7 +1100,7 @@ tests["dom events functionality"] = {
 		"access original context": {
 			
 			"$(some).blur($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.blur($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.blur();
@@ -1109,7 +1109,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).focus($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.focus($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.focus();
@@ -1118,7 +1118,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).load($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.load($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.load();
@@ -1127,7 +1127,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).resize($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.resize($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.resize();
@@ -1136,7 +1136,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).scroll($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.scroll($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.scroll();
@@ -1145,7 +1145,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).unload($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.unload($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.unload();
@@ -1154,7 +1154,7 @@ tests["dom events functionality"] = {
 			},
 			
 			"$(some).click($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.click($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.click();
@@ -1163,7 +1163,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).dblclick($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.dblclick($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.dblclick();
@@ -1172,7 +1172,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mousedown($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.mousedown($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mousedown();
@@ -1181,7 +1181,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseup($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.mouseup($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseup();
@@ -1190,7 +1190,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mousemove($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.mousemove($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mousemove();
@@ -1199,7 +1199,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseover($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.mouseover($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseover();
@@ -1208,7 +1208,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).mouseout($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.mouseout($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.mouseout();
@@ -1217,7 +1217,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).change($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.change($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.change();
@@ -1226,7 +1226,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).select($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.select($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.select();
@@ -1235,7 +1235,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).submit($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.submit($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.submit();
@@ -1244,7 +1244,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keydown($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.keydown($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keydown();
@@ -1253,7 +1253,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keypress($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.keypress($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keypress();
@@ -1262,7 +1262,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).keyup($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.keyup($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.keyup();
@@ -1271,7 +1271,7 @@ tests["dom events functionality"] = {
 			},
 
 			"$(some).error($).doThisLater()._.doThatNow()": function($, test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.error($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.error();

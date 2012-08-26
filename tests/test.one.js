@@ -10,7 +10,7 @@ tests[".one() functionality"] = {
 		"binding single event - classical style": {
 		
 			".one(event,handler) + .unbind/.off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -29,7 +29,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event,handler) + .unbind/.off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -48,7 +48,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event,handler) + .unbind/.off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -69,7 +69,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event,handler) + .trigger(event) + .unbind/.off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -90,7 +90,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event,handler) + .trigger(event) + .unbind/.off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -111,7 +111,7 @@ tests[".one() functionality"] = {
 			},
 			
 			".one(event,handler) + .trigger(event) + .unbind/.off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -136,7 +136,7 @@ tests[".one() functionality"] = {
 		"binding multiple events - classical style": {
 			
 			".one({ev1:h1, e2:h2}) + .unbind/.off(ev1)|1.4": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -163,7 +163,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one({ev1:h1, e2:h2}) + .unbind/.off(ev1,h1)|1.4": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -190,7 +190,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one('ev1 ev2',handler) + .unbind/.off(ev2)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -214,7 +214,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one('ev1 ev2',handler) + .unbind/.off(ev2,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -242,7 +242,7 @@ tests[".one() functionality"] = {
 		"binding single event - timed invocation chain style": {
 			
 			".one(event).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -258,7 +258,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event,$).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -278,7 +278,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one(event).doSomething()._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var $bind = $x.one('myEvent',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);
 				var $y = $bind._;
@@ -291,7 +291,7 @@ tests[".one() functionality"] = {
 		"binding multiple events - timed invocation chain style": {
 			
 			".one('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -315,7 +315,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -339,7 +339,7 @@ tests[".one() functionality"] = {
 			},
 
 			".one('ev1 ev2').doSomething()._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var $bind = $x.one('ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);
 				var $y = $bind._;

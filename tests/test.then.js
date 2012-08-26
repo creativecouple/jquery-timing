@@ -172,7 +172,7 @@ tests[".then() functionality"] = {
 			
 			".wait(callback).then(callback)" : function($,test) {				
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.wait(function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
@@ -185,7 +185,7 @@ tests[".then() functionality"] = {
 
 			".wait(event).then(callback)" : function($,test) {
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.wait('myEvent', function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
@@ -201,7 +201,7 @@ tests[".then() functionality"] = {
 
 			".on(event).then(callback)|1.7" : function($,test) {
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.on('myEvent').then(function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
@@ -217,7 +217,7 @@ tests[".then() functionality"] = {
 
 			".one(event).then(callback)" : function($,test) {
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.one('myEvent').then(function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
@@ -233,7 +233,7 @@ tests[".then() functionality"] = {
 
 			".bind(event).then(callback)||1.8" : function($,test) {
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.bind('myEvent').then(function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;
@@ -249,7 +249,7 @@ tests[".then() functionality"] = {
 
 			".slideToggle($).then(callback)|1.4" : function($,test) {
 				var x=0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				$x.slideToggle($).then(function(){
 					test.assertEquals("wrong callback order", 0, x);
 					x++;

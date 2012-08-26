@@ -7,7 +7,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .die(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -30,7 +30,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .die(event,handler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -53,7 +53,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -76,7 +76,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .trigger(event) + .die(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -101,7 +101,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .trigger(event) + .die(event,handler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -126,7 +126,7 @@ tests[".live() functionality"] = {
 			".live(event,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -157,7 +157,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .die(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -181,7 +181,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .die(event,handler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -205,7 +205,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .trigger(event) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -231,7 +231,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .trigger(event) + .die(event,handler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -257,7 +257,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .trigger(event) + .die(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -283,7 +283,7 @@ tests[".live() functionality"] = {
 			".live(event,data,handler) + .die(event,otherHandler)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -313,7 +313,7 @@ tests[".live() functionality"] = {
 			".live({ev1:h1, e2:h2}) + .die(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -344,7 +344,7 @@ tests[".live() functionality"] = {
 			".live({ev1:h1, e2:h2},data) + .die(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0, y=0;
 				function handler1(event){
 					x++;
@@ -377,7 +377,7 @@ tests[".live() functionality"] = {
 			".live('ev1 ev2',handler) + .die(ev2)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0;
 				var $live = $x.live('ev1 ev2', function(){ x++; });
 				test.assertEquals("classical bind must return original jQuery object", $x, $live);
@@ -402,7 +402,7 @@ tests[".live() functionality"] = {
 			".live('ev1 ev2',data,handler) + .die(ev2)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0;
 				function handler(event){
 					x++;
@@ -435,7 +435,7 @@ tests[".live() functionality"] = {
 			".live(event).doSomething() + .trigger(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -459,7 +459,7 @@ tests[".live() functionality"] = {
 			".live(event,$).doSomething() + .trigger(event)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -483,7 +483,7 @@ tests[".live() functionality"] = {
 			".live(event).doSomething()._": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var $live = $x.live('myEvent',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				var $y = $live._;
@@ -502,7 +502,7 @@ tests[".live() functionality"] = {
 			".live('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0;
 				function handler(){
 					x++;
@@ -530,7 +530,7 @@ tests[".live() functionality"] = {
 			".live('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var x=0;
 				function handler(){
 					x++;
@@ -558,7 +558,7 @@ tests[".live() functionality"] = {
 			".live('ev1 ev2').doSomething()._": function($, test) {
 				var clazz = "c" + test.guid();
 				$('<div>').addClass(clazz).appendTo('body');
-				var $x = $('div.'+clazz);
+				var $x = test.element('div.'+clazz);
 				var $live = $x.live('ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
 				var $y = $live._;

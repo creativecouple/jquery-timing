@@ -240,7 +240,7 @@ tests["$.X() functionality"] = {
 		"applications of self-counting callback variables": {
 		
 			"$('.many').text($.X('x++')) -> '0','1','2','3',…|1.4": function($, test) {
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.text($.X('x++'));
 				for (var i=0; i<3; i++) {
@@ -250,7 +250,7 @@ tests["$.X() functionality"] = {
 			},
 			
 			"$('.many').wait().text($.X('x++')) -> '0','1','2','3',…|1.4": function($, test) {
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.wait().text($.X('x++'));
 				window.setTimeout(function(){
@@ -262,7 +262,7 @@ tests["$.X() functionality"] = {
 			},
 			
 			"$('.many').addClass($.X('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…|1.4": function($, test) {
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.addClass($.X('"t"+(x++)'));
 				for (var i=0; i<3; i++) {
@@ -272,7 +272,7 @@ tests["$.X() functionality"] = {
 			},
 			
 			"$('.many').wait().addClass($.X('\"t\"+(x++)')) -> .t0,.t1,.t2,.t3,…|1.4": function($, test) {
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				$x.wait().addClass($.X('"t"+(x++)'));
 				window.setTimeout(function(){
@@ -284,7 +284,7 @@ tests["$.X() functionality"] = {
 			},
 			
 			"$('.many').repeat(X).eq(X).doSomething.until()": function($, test) {
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				test.assertEquals("not enough objects", 3, $x.size());
 				var X = $.X();
 				var x=0;

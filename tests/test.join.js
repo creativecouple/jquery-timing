@@ -7,7 +7,7 @@ tests[".join() functionality"] = {
 		".join(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(callback);
 			$x.delay(10000);
 			$x.delay(10000);
@@ -26,7 +26,7 @@ tests[".join() functionality"] = {
 		".join().then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -46,7 +46,7 @@ tests[".join() functionality"] = {
 		".join(callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(callback);
 			$x.delay(10000);
 			test.assertEquals("instant .join() should fire", 1, x);
@@ -66,7 +66,7 @@ tests[".join() functionality"] = {
 		".join(callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(callback);
 			$x.delay(10000);
 			test.assertEquals("instant .join() should fire", 1, x);
@@ -86,7 +86,7 @@ tests[".join() functionality"] = {
 		".join().then(callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -108,7 +108,7 @@ tests[".join() functionality"] = {
 		".join().then(callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -130,7 +130,7 @@ tests[".join() functionality"] = {
 		".join() + .stop() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -152,7 +152,7 @@ tests[".join() functionality"] = {
 		".join() + .stop(true) + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -174,7 +174,7 @@ tests[".join() functionality"] = {
 		".join() + .unwait() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -196,7 +196,7 @@ tests[".join() functionality"] = {
 		".join() + .unrepeat() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -218,7 +218,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join() instantly": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>').add('<span>').add('<p>');
+			var $x = test.element('<div>').add('<span>').add('<p>');
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(callback);
 			$x.delay(10000);
@@ -228,7 +228,7 @@ tests[".join() functionality"] = {
 		},
 		
 		".stop().join()._": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.stop().join();
 			$x.delay(10000);
 			var _ = TIC._;
@@ -253,7 +253,7 @@ tests[".join() functionality"] = {
 		".join(true,callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("instant .join(true) should fire", 1, x);
@@ -271,7 +271,7 @@ tests[".join() functionality"] = {
 		".join(true).then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -291,7 +291,7 @@ tests[".join() functionality"] = {
 		".join(true,callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("instant .join(true) should fire", 1, x);
@@ -311,7 +311,7 @@ tests[".join() functionality"] = {
 		".join(true,callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("instant .join(true) should fire", 1, x);
@@ -331,7 +331,7 @@ tests[".join() functionality"] = {
 		".join(true).then(callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -353,7 +353,7 @@ tests[".join() functionality"] = {
 		".join(true).then(callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -375,7 +375,7 @@ tests[".join() functionality"] = {
 		".join(true) + .stop() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -397,7 +397,7 @@ tests[".join() functionality"] = {
 		".join(true) + .stop(true) + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -419,7 +419,7 @@ tests[".join() functionality"] = {
 		".join(true) + .unwait() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -441,7 +441,7 @@ tests[".join() functionality"] = {
 		".join(true) + .unrepeat() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -463,7 +463,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join(true) instantly": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>').add('<span>').add('<p>');
+			var $x = test.element('<div>').add('<span>').add('<p>');
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(true,callback);
 			$x.delay(10000);
@@ -473,7 +473,7 @@ tests[".join() functionality"] = {
 		},
 		
 		".stop().join(true)._": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.stop().join(true);
 			$x.delay(10000);
 			var _ = TIC._;
@@ -496,7 +496,7 @@ tests[".join() functionality"] = {
 		".join(callback) …" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -515,7 +515,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -536,7 +536,7 @@ tests[".join() functionality"] = {
 		".join(callback) +…+ .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -557,7 +557,7 @@ tests[".join() functionality"] = {
 		".join(callback) +…+ .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -578,7 +578,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .then(callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -601,7 +601,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .then(callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -624,7 +624,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .stop() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -647,7 +647,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .stop(true) + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -670,7 +670,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .unwait() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -693,7 +693,7 @@ tests[".join() functionality"] = {
 		".join() +…+ .unrepeat() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join();
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -722,7 +722,7 @@ tests[".join() functionality"] = {
 		".join(true,callback) …" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(true,callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -741,7 +741,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -762,7 +762,7 @@ tests[".join() functionality"] = {
 		".join(true,callback) +…+ .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(true,callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -783,7 +783,7 @@ tests[".join() functionality"] = {
 		".join(true,callback) +…+ .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(true,callback);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -804,7 +804,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .then(callback) + .stop()" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -827,7 +827,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .then(callback) + .stop(true)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -850,7 +850,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .stop() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -873,7 +873,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .stop(true) + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -896,7 +896,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .unwait() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -919,7 +919,7 @@ tests[".join() functionality"] = {
 		".join(true) +…+ .unrepeat() + .then(callback)" : function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(true);
 			$x.delay(10000);
 			window.setTimeout(function(){
@@ -947,7 +947,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -971,7 +971,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join().then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -995,7 +995,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1023,7 +1023,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1049,7 +1049,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join().then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1075,7 +1075,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join().then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1101,7 +1101,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join();
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1129,7 +1129,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join();
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1157,7 +1157,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1183,7 +1183,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join().then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1209,7 +1209,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join();
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1237,7 +1237,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1263,7 +1263,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join().then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1289,7 +1289,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join();
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1316,7 +1316,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join() deferred": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>').add('<span>').add('<p>');
+			var $x = test.element('<div>').add('<span>').add('<p>');
 			var timeout = 100;
 			$x.eq(0).delay(timeout);
 			$x.eq(2).delay(timeout*2);
@@ -1337,7 +1337,7 @@ tests[".join() functionality"] = {
 		
 		".delay(timeout).join()._": function($, test) {
 
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(100).join();
 			$x.delay(10000);
 			var _ = TIC._;
@@ -1356,7 +1356,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1380,7 +1380,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true).then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1404,7 +1404,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1432,7 +1432,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1458,7 +1458,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true).then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1486,7 +1486,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true).then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1512,7 +1512,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join(true);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1542,7 +1542,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join(true);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1570,7 +1570,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1596,7 +1596,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true).then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1622,7 +1622,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join(true);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1650,7 +1650,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true,callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1676,7 +1676,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout).join(true).then(callback);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1702,7 +1702,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout).join(true);
 			$x.delay(10000);
 			test.assertEquals("active queue should wait", 0, x);
@@ -1729,7 +1729,7 @@ tests[".join() functionality"] = {
 		"$('.multiple').join(true) deferred": function($, test) {
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>').add('<span>').add('<p>');
+			var $x = test.element('<div>').add('<span>').add('<p>');
 			var timeout = 100;
 			$x.eq(0).delay(timeout);
 			$x.eq(2).delay(timeout*2);
@@ -1751,7 +1751,7 @@ tests[".join() functionality"] = {
 		
 		".delay(timeout).join(true)._": function($, test) {
 
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(100).join(true);
 			$x.delay(10000);
 			var _ = TIC._;
@@ -1768,7 +1768,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue, callback);
 			$x.delay(10000,queue);
 			$x.delay(10000,queue);
@@ -1790,7 +1790,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1811,7 +1811,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1835,7 +1835,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1862,7 +1862,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1889,7 +1889,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1916,7 +1916,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1943,7 +1943,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -1972,7 +1972,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2001,7 +2001,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue, callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2026,7 +2026,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2051,7 +2051,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2078,7 +2078,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue, callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2103,7 +2103,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2128,7 +2128,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("empty named queues should wait until .dequeue()", 0, x);
@@ -2161,7 +2161,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("instant .join(queue,true) should fire", 1, x);
@@ -2180,7 +2180,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2201,7 +2201,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("instant .join(queue,true) should fire", 1, x);
@@ -2222,7 +2222,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("instant .join(queue,true) should fire", 1, x);
@@ -2243,7 +2243,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2266,7 +2266,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2289,7 +2289,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2312,7 +2312,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2335,7 +2335,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2358,7 +2358,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("TIC must not fire before .then()", 0, x);
@@ -2381,7 +2381,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>').add('<span>').add('<p>');
+			var $x = test.element('<div>').add('<span>').add('<p>');
 			test.assertEquals("not enough objects", 3, $x.size());
 			var TIC = $x.join(queue,true,callback);
 			$x.delay(10000,queue);
@@ -2392,7 +2392,7 @@ tests[".join() functionality"] = {
 		
 		".stop().join(queue,true)._": function($, test) {
 			var queue = 'myFX';
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.stop().join(queue,true);
 			$x.delay(10000,queue);
 			var _ = TIC._;
@@ -2417,7 +2417,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue, callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2439,7 +2439,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2462,7 +2462,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2486,7 +2486,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue,callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2514,7 +2514,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue,callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2542,7 +2542,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2571,7 +2571,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2600,7 +2600,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2630,7 +2630,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2660,7 +2660,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue, callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2686,7 +2686,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2713,7 +2713,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2741,7 +2741,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue, callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2767,7 +2767,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2794,7 +2794,7 @@ tests[".join() functionality"] = {
 			var x = 0;
 			var queue = 'myFX';
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2819,7 +2819,7 @@ tests[".join() functionality"] = {
 		},
 		
 		".join(queue)._": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join('myQueue');
 			$x.delay(10000);
 			var _ = TIC._;
@@ -2838,7 +2838,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2858,7 +2858,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2880,7 +2880,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2902,7 +2902,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.join(queue,true,callback);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2924,7 +2924,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2948,7 +2948,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2972,7 +2972,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -2996,7 +2996,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -3020,7 +3020,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -3044,7 +3044,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var x = 0;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.join(queue,true);
 			$x.delay(10000,queue);
 			window.setTimeout(function(){
@@ -3073,7 +3073,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3100,7 +3100,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3127,7 +3127,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3162,7 +3162,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3195,7 +3195,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3228,7 +3228,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3261,7 +3261,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3296,7 +3296,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3331,7 +3331,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3360,7 +3360,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3389,7 +3389,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3420,7 +3420,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3449,7 +3449,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3478,7 +3478,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3515,7 +3515,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3542,7 +3542,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3569,7 +3569,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3601,7 +3601,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3630,7 +3630,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3659,7 +3659,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3688,7 +3688,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3719,7 +3719,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3750,7 +3750,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3779,7 +3779,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3808,7 +3808,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3839,7 +3839,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true,callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3868,7 +3868,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.delay(timeout,queue).join(queue,true).then(callback);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3897,7 +3897,7 @@ tests[".join() functionality"] = {
 			var queue = 'myFX';
 			var timeout = 100;
 			var callback = function(){ x++; test.check(); };
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var TIC = $x.delay(timeout,queue).join(queue,true);
 			$x.delay(10000,queue);
 			test.assertEquals("active queue should wait", 0, x);
@@ -3928,7 +3928,7 @@ tests[".join() functionality"] = {
 	"access original context from deferred chain": {
 		
 		"$(some).fadeIn().join().doThisLater()._.doThatNow()": function($,test){
-			$x = $('<div>').hide();
+			$x = test.element('<div>').hide();
 			$x.fadeIn().join().text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join(function(){
@@ -3938,7 +3938,7 @@ tests[".join() functionality"] = {
 		},
 
 		"$(some).join(queue).doThisLater()._.doThatNow()": function($,test){
-			$x = $('<div>').hide();
+			$x = test.element('<div>').hide();
 			$x.join('Q').text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join('Q', function(){
@@ -3949,7 +3949,7 @@ tests[".join() functionality"] = {
 		},
 
 		"$(some).fadeIn().join(true).doThisLater()._.doThatNow()|1.6": function($,test){
-			$x = $('<div>').hide();
+			$x = test.element('<div>').hide();
 			$x.fadeIn().join(true).text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join(true,function(){
@@ -3959,7 +3959,7 @@ tests[".join() functionality"] = {
 		},
 		
 		"$(some).join(queue,true).doThisLater()._.doThatNow()|1.6": function($,test){
-			$x = $('<div>').hide().delay(100,'Q');
+			$x = test.element('<div>').hide().delay(100,'Q');
 			$x.join('Q',true).text('later')._.text('now');
 			test.assertEquals("immediate action must have happened already", 'now', $x.text());
 			$x.join('Q', true, function(){

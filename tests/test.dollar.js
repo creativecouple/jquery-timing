@@ -3,7 +3,7 @@ tests[".$() functionality"] = {
 		"chaining .$()": {
 		
 			"$(some).$(other)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var $y = $x.$('<p>');
 				test.assertEquals("chained call of $ will leave previous context alone", 1, $x.size());
 				test.assertEquals("wrong element selected", 'div', $x[0].nodeName.toLowerCase());
@@ -14,7 +14,7 @@ tests[".$() functionality"] = {
 			},
 
 			"$(some).find(filter).$(other).end().end()": function($, test) {
-				var $x = $('<div><p>A</p><p>B</p>');
+				var $x = test.element('<div><p>A</p><p>B</p>');
 				var $y = $x.find('p');
 				var $z = $y.$('<span>');
 				test.assertEquals("chained call of $ will leave previous context alone", 1, $x.size());

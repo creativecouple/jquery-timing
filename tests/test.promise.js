@@ -5,7 +5,7 @@ tests[".promise() functionality"] = {
 	"classical instant promise": {
 		
 		"$('.some').promise()": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.promise().then(function(){
 				test.done();
 			});
@@ -13,7 +13,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').promise(target)": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var target = {};
 			$x.promise(target);
 			$.when(target).then(function(){
@@ -23,7 +23,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').promise(type)": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			$x.promise('foo').then(function(){
 				test.done();
 			});
@@ -31,7 +31,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').promise(type,target)": function($, test) {
-			var $x = $('<div>');
+			var $x = test.element('<div>');
 			var target = {};
 			$x.promise('foo',target);
 			$.when(target).then(function(){
@@ -45,7 +45,7 @@ tests[".promise() functionality"] = {
 	"classical deferred promise": {
 		
 		"$('.some').delay(timeout).promise()": function($, test) {
-			var $x = $('<div>').delay(10);
+			var $x = test.element('<div>').delay(10);
 			var x = 0;
 			$x.promise().then(function(){ x++; });			
 			test.assertEquals("promise must wait for animation", 0, x);
@@ -56,7 +56,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').delay(timeout).promise(target)": function($, test) {
-			var $x = $('<div>').delay(10);
+			var $x = test.element('<div>').delay(10);
 			var x = 0;
 			var target = {};
 			$x.promise(target);
@@ -69,7 +69,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').delay(timeout,type).promise(type)": function($, test) {
-			var $x = $('<div>').delay(10,'foo').dequeue('foo');
+			var $x = test.element('<div>').delay(10,'foo').dequeue('foo');
 			var x = 0;
 			$x.promise('foo').then(function(){ x++; });
 			test.assertEquals("promise must wait for animation", (compareVersion($().jquery,'1.8.0') <= 0) ? 1 : 0, x);
@@ -80,7 +80,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').delay(timeout,type).promise(target,type)": function($, test) {
-			var $x = $('<div>').delay(10,'foo').dequeue('foo');
+			var $x = test.element('<div>').delay(10,'foo').dequeue('foo');
 			var x = 0;
 			var target = {};
 			$x.promise('foo',target);
@@ -97,7 +97,7 @@ tests[".promise() functionality"] = {
 	"instant timing promise": {
 		
 		"$('.some').wait(event) + trigger(event) + .promise()": function($, test) {
-			var tic = $('<div>').wait('click');
+			var tic = test.element('<div>').wait('click');
 			$(tic).click();
 			tic.promise().then(function(){
 				test.done();
@@ -106,7 +106,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').wait(event) + trigger(event) + .promise(target)": function($, test) {
-			var tic = $('<div>').wait('click');
+			var tic = test.element('<div>').wait('click');
 			$(tic).click();
 			var target = {};
 			tic.promise(target);
@@ -117,7 +117,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').repeat().until(count).promise()": function($, test) {
-			var tic = $('<div>').repeat().until(10);
+			var tic = test.element('<div>').repeat().until(10);
 			tic.promise().then(function(){
 				test.done();
 			});
@@ -125,7 +125,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').repeat().until(count).promise(target)": function($, test) {
-			var tic = $('<div>').repeat().until(10);
+			var tic = test.element('<div>').repeat().until(10);
 			var target = {};
 			tic.promise(target);
 			$.when(target).then(function(){
@@ -139,7 +139,7 @@ tests[".promise() functionality"] = {
 	"deferred timing promise": {
 		
 		"$('.some').wait(timeout).promise()": function($, test) {
-			var tic = $('<div>').wait(10);
+			var tic = test.element('<div>').wait(10);
 			var x = 0;
 			tic.promise().then(function(){ x++; });			
 			test.assertEquals("promise must wait for animation", 0, x);
@@ -150,7 +150,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').wait(timeout).promise(true)": function($, test) {
-			var tic = $('<div>').wait(10);
+			var tic = test.element('<div>').wait(10);
 			var x = 0;
 			tic.promise(true).then(function(){ x++; });			
 			test.assertEquals("promise must wait for animation", 0, x);
@@ -161,7 +161,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').wait(timeout).promise(target)": function($, test) {
-			var tic = $('<div>').wait(10);
+			var tic = test.element('<div>').wait(10);
 			var x = 0;
 			var target = {};
 			tic.promise(target);
@@ -174,7 +174,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').wait(timeout).delay(timeout).promise()": function($, test) {
-			var tic = $('<div>').wait(10).delay(110).then(function(){ x++; });
+			var tic = test.element('<div>').wait(10).delay(110).then(function(){ x++; });
 			var x = 0;
 			tic.promise().then(function(){ x+=10; });			
 			test.assertEquals("promise must wait for animation", 0, x);
@@ -188,7 +188,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').wait(timeout).delay(timeout).promise(true)": function($, test) {
-			var tic = $('<div>').wait(10).delay(110).then(function(){ x++; });
+			var tic = test.element('<div>').wait(10).delay(110).then(function(){ x++; });
 			var x = 0;
 			tic.promise(true).then(function(){ x+=10; });			
 			test.assertEquals("promise must wait for animation", 0, x);
@@ -202,7 +202,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').on(event).promise()": function($, test) {
-			var tic = $('<div>').click($);
+			var tic = test.element('<div>').click($);
 			var x = 0;
 			tic.promise().then(function(){ x++; });			
 			test.assertEquals("promise must wait for event", 0, x);
@@ -216,7 +216,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').on(event).promise(true)": function($, test) {
-			var tic = $('<div>').click($);
+			var tic = test.element('<div>').click($);
 			var x = 0;
 			tic.promise(true).then(function(){ x++; });			
 			test.assertEquals("promise must wait for event", 0, x);
@@ -232,7 +232,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').on(event).delay(timeout).promise()": function($, test) {
-			var tic = $('<div>').click($).delay(10);
+			var tic = test.element('<div>').click($).delay(10);
 			var x = 0;
 			tic.promise().then(function(){ x++; });			
 			test.assertEquals("promise must wait for event", 0, x);
@@ -249,7 +249,7 @@ tests[".promise() functionality"] = {
 		},
 
 		"$('.some').on(event).delay(timeout).promise(true)": function($, test) {
-			var tic = $('<div>').click($).delay(10);
+			var tic = test.element('<div>').click($).delay(10);
 			var x = 0;
 			tic.promise(true).then(function(){ x++; });			
 			test.assertEquals("promise must wait for event", 0, x);

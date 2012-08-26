@@ -5,7 +5,7 @@ tests[".animate() functionality"] = {
 		"classical usage of .animate()": {
 			
 			"$('#single').animate(props).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.animate({left:100}).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -19,7 +19,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').animate(props,duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.animate({left:100},200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -34,7 +34,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').animate(props,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.animate({left:100},function(){
 					c++;
@@ -53,7 +53,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').animate(props,duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.animate({left:100},200,function(){
 					c++;
@@ -72,7 +72,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').animate(props,callback) + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.animate({left:100},function(){
 					c++;
 				});
@@ -88,7 +88,7 @@ tests[".animate() functionality"] = {
 		"classical usage of .fade*()": {
 			
 			"$('#single').fadeIn().doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeIn().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -102,7 +102,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').fadeIn(duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeIn(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -117,7 +117,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeIn(callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeIn(function(){
 					c++;
@@ -136,7 +136,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeIn(duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeIn(200,function(){
 					c++;
@@ -154,7 +154,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('#single').fadeOut().doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeOut().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -168,7 +168,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').fadeOut(duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeOut(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -183,7 +183,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeOut(callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeOut(function(){
 					c++;
@@ -202,7 +202,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeOut(duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeOut(200,function(){
 					c++;
@@ -221,7 +221,7 @@ tests[".animate() functionality"] = {
 			
 			
 			"$('#single').fadeToggle().doNow().join().doLater()|1.4.4": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeToggle().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -235,7 +235,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').fadeToggle(duration).doNow().join().doLater()|1.4.4": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeToggle(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -250,7 +250,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeToggle(callback).doNow().join().doLater()|1.4.4": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.fadeToggle(function(){
 					c++;
@@ -269,7 +269,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeToggle(duration,callback).doNow().join().doLater()|1.4.4": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.fadeToggle(200,function(){
 					c++;
@@ -288,7 +288,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').fadeOut(callback) + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.fadeIn().fadeOut(function(){
 					c++;
 				});
@@ -304,7 +304,7 @@ tests[".animate() functionality"] = {
 		"classical usage of .slide*()": {
 			
 			"$('#single').slideUp().doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideUp().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -318,7 +318,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').slideUp(duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideUp(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -333,7 +333,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideUp(callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideUp(function(){
 					c++;
@@ -352,7 +352,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideUp(duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideUp(200,function(){
 					c++;
@@ -370,7 +370,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('#single').slideDown().doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideDown().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -384,7 +384,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').slideDown(duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideDown(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -399,7 +399,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideDown(callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideDown(function(){
 					c++;
@@ -418,7 +418,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideDown(duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideDown(200,function(){
 					c++;
@@ -437,7 +437,7 @@ tests[".animate() functionality"] = {
 			
 			
 			"$('#single').slideToggle().doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideToggle().text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -451,7 +451,7 @@ tests[".animate() functionality"] = {
 			},
 			
 			"$('.many').slideToggle(duration).doNow().join().doLater()": function($, test) {
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideToggle(200).text($.X('"b"+x++'));
 				test.assertEquals("classical .animate must return original jQuery object", $x, $y);
@@ -466,7 +466,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideToggle(callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'a', $x.text());
 				var $y = $x.slideToggle(function(){
 					c++;
@@ -485,7 +485,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideToggle(duration,callback).doNow().join().doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				test.assertEquals("wrong text", 'aa', $x.text());
 				var $y = $x.slideToggle(200,function(){
 					c++;
@@ -504,7 +504,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').slideToggle(callback) + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.slideToggle(function(){
 					c++;
 				});
@@ -521,7 +521,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').animate(props,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.animate({left:100},$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -543,7 +543,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').animate(props,duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.animate({left:100},200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -565,7 +565,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().animate(props,$).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.repeat().animate({left:100},$).text($.X('"c"+x++')).css({left:0}).until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -591,7 +591,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').animate(props,$).doNow() + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.animate($).then(function(){
 					c++;
 				});
@@ -608,7 +608,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeIn($).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.fadeIn($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -630,7 +630,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeIn(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.fadeIn(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -652,7 +652,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().fadeIn($).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.repeat().fadeIn($).text($.X('"c"+x++')).hide().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -678,7 +678,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeOut($).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.fadeOut($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -700,7 +700,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeOut(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.fadeOut(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -722,7 +722,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().fadeOut($).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.repeat().fadeOut(200,$).text($.X('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -749,7 +749,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').fadeToggle($).doLater()._.doNow()|1.4.4": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.fadeToggle($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -771,7 +771,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').fadeToggle(duration,$).doLater()._.doNow()|1.4.4": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.fadeToggle(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -793,7 +793,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().fadeToggle($).until(count).doLater()|1.4.4": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.repeat().fadeToggle(200,$).text($.X('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -819,7 +819,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').fadeOut($).doNow() + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.fadeIn().fadeOut($).then(function(){
 					c++;
 				});
@@ -837,7 +837,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideUp($).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.slideUp($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -859,7 +859,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideUp(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.slideUp(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -881,7 +881,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().slideUp($).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.repeat().slideUp($).text($.X('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -907,7 +907,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideDown($).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.slideDown($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -929,7 +929,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideDown(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.slideDown(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -951,7 +951,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().slideDown($).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body').hide();
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body').hide();
 				var tic = $x.repeat().slideDown(200,$).text($.X('"c"+x++')).hide().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -978,7 +978,7 @@ tests[".animate() functionality"] = {
 			
 			"$('.many').slideToggle($).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').add('<p>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.slideToggle($).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -1000,7 +1000,7 @@ tests[".animate() functionality"] = {
 			
 			"$('#single').slideToggle(duration,$).doLater()._.doNow()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.slideToggle(200,$).text($.X('"c"+x++')).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -1022,7 +1022,7 @@ tests[".animate() functionality"] = {
 			
 			".repeat().slideToggle($).until(count).doLater()": function($, test) {
 				var c = 0;
-				var $x = $('<div>').text('a').css('position','absolute').appendTo('body');
+				var $x = test.element('<div>').text('a').css('position','absolute').appendTo('body');
 				var tic = $x.repeat().slideToggle(200,$).text($.X('"c"+x++')).show().until(2).then(function(){
 					test.assertEquals("wrong context after animation callback", $x, this);
 					c++;
@@ -1048,7 +1048,7 @@ tests[".animate() functionality"] = {
 			
 			"$('empty').slideToggle($).doNow() + .join().doNow()": function($, test) {
 				var c = 0;
-				var $x = $('none');
+				var $x = test.element('none');
 				$x.slideToggle($).then(function(){
 					c++;
 				});

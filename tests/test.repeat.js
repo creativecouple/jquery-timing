@@ -4,7 +4,7 @@ tests[".repeat() functionality"] = {
 		
 			".repeat(callback) + .unrepeat()": function($, test) {
 				var x = 0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -23,7 +23,7 @@ tests[".repeat() functionality"] = {
 	
 			".repeat().then(callback) + .unrepeat()": function($, test) {
 				var x = 0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -44,7 +44,7 @@ tests[".repeat() functionality"] = {
 	
 			".repeat() + .unrepeat() + .then(callback)": function($, test) {
 				var x = 0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -64,7 +64,7 @@ tests[".repeat() functionality"] = {
 	
 			".repeat() + .unrepeat() +…+ .then(callback)": function($, test) {
 				var x = 0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -86,7 +86,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).eq(X).doSomething()": function($, test) {
 				var x = 0;
-				var $x = $('<div>').add('<p>').add('<span>');
+				var $x = test.element('<div>').add('<p>').add('<span>');
 				var callback = function(i){
 					test.assertEquals("loop iteration must match", i, x);
 					x++; test.check();
@@ -108,7 +108,7 @@ tests[".repeat() functionality"] = {
 			".repeat(callback).wait(timeout) + .unrepeat()": function($, test) {
 				var x = 0;
 				var timeout = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -135,7 +135,7 @@ tests[".repeat() functionality"] = {
 			".repeat().then(callback).wait(timeout) + .unrepeat()": function($, test) {
 				var x = 0;
 				var timeout = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -162,7 +162,7 @@ tests[".repeat() functionality"] = {
 			".repeat(callback).wait(timeout) +…+ .unrepeat()": function($, test) {
 				var x = 0;
 				var timeout = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -189,7 +189,7 @@ tests[".repeat() functionality"] = {
 			".repeat().then(callback).wait(timeout) +…+ .unrepeat()": function($, test) {
 				var x = 0;
 				var timeout = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -220,7 +220,7 @@ tests[".repeat() functionality"] = {
 			".repeat(callback).until(count)": function($, test) {
 				var x = 0;
 				var count = 10;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -238,7 +238,7 @@ tests[".repeat() functionality"] = {
 			".repeat().then(callback).until(count)": function($, test) {
 				var x = 0;
 				var count = 10;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -256,7 +256,7 @@ tests[".repeat() functionality"] = {
 			".repeat().until(count).then(callback)": function($, test) {
 				var x = 0;
 				var count = 10;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -278,7 +278,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -301,7 +301,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -324,7 +324,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -346,7 +346,7 @@ tests[".repeat() functionality"] = {
 			".wait(timeout) +…+ .repeat(callback).until(count)": function($, test) {
 				var x = 0;
 				var count = 10;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -366,7 +366,7 @@ tests[".repeat() functionality"] = {
 			},
 
 			".repeat().until(1)._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var TIC = $x.repeat().until(1);
 				var _ = TIC._;
 				test.assertEquals("tic must be same object because of instant invocation", $x, TIC);
@@ -382,7 +382,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -404,7 +404,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -426,7 +426,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -448,7 +448,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -472,7 +472,7 @@ tests[".repeat() functionality"] = {
 
 			".repeat(X).eq(X).until()": function($, test) {
 				var x = 0;
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(y){
@@ -499,7 +499,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).then(callback).eq(X).until() +…+ .then(callback)": function($, test) {
 				var x = 0;
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(){
@@ -527,7 +527,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(X).eq(X).until($,false)": function($, test) {
 				var x = 0;
-				var $x = $('<div>').add('<span>').add('<p>');
+				var $x = test.element('<div>').add('<span>').add('<p>');
 				var size=3;
 				test.assertEquals("test selection has wrong size", 3, $x.size());
 				var callback = function(y){
@@ -554,7 +554,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat().doSomething().next().until($)": function($, test) {
 				var x = 0;
-				var $x = $('<div><p></p><span></span><div></div></div>').children();
+				var $x = test.element('<div><p></p><span></span><div></div></div>').children();
 				var callback = function(){
 					x++; test.check();
 					if (x > 1000) { $x.unrepeat(); throw "repeat loop running infinitely"; };
@@ -575,7 +575,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var stopAfter = count/2;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -605,7 +605,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var event = 'myEvent';
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -639,7 +639,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var event = 'myEvent';
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -670,7 +670,7 @@ tests[".repeat() functionality"] = {
 			},
 			
 			".repeat(event)._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var TIC = $x.repeat('myEvent');
 				var _ = TIC._;
 				test.assertNotEquals("tic must be new object", $x, TIC);
@@ -686,7 +686,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var event = 'myEvent';
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -713,7 +713,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 10;
 				var event = 'myEvent';
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -739,7 +739,7 @@ tests[".repeat() functionality"] = {
 			
 			".repeat(ev1).wait(ev2).until(count)": function($, test) {
 				var x = 0, y = 0, z = 0;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var TIC = $x.repeat('ev1', function(){
 						x++;
 						$x.trigger('ev2');
@@ -806,7 +806,7 @@ tests[".repeat() functionality"] = {
 			".repeat(interval,callback)": function($, test) {
 				var x = 0;
 				var interval = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -834,7 +834,7 @@ tests[".repeat() functionality"] = {
 			".repeat(interval,true,callback)": function($, test) {
 				var x = 0;
 				var interval = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -867,7 +867,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 2;
 				var interval = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -897,7 +897,7 @@ tests[".repeat() functionality"] = {
 				var x = 0;
 				var count = 2;
 				var interval = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -926,7 +926,7 @@ tests[".repeat() functionality"] = {
 			"instant .repeat(interval,true).until(1)": function($, test) {
 				var x = 0;
 				var interval = 100;
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var callback = function(y){
 					test.assertEquals("callback argument must be iteration number", x,y);
 					x++; test.check();
@@ -946,7 +946,7 @@ tests[".repeat() functionality"] = {
 		"accessing interim states": {
 		
 			"tic=$('.some').repeat(X).eq(X).wait(timeout).until(count) + $(tic)": function($, test){
-				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>');
+				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>');
 				var timeout = 100;
 				var size = 3;
 				test.assertEquals("test object has too less children", size, $x.children().size());
@@ -978,7 +978,7 @@ tests[".repeat() functionality"] = {
 			},
 			
 			"$('.multiple').repeat(event).next() + $('#single').trigger(event)": function($, test){
-				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event = 'myEvent';
 				var $y=null;
 				var tic = $x.repeat(event).then(function(){$y=this;}).next().until(2);
@@ -996,7 +996,7 @@ tests[".repeat() functionality"] = {
 			},
 			
 			"$('.multiple').repeat(event).next().until(null,true) + $('#single').trigger(event)": function($, test){
-				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event = 'myEvent';
 				var $y=null;
 				var tic = $x.repeat(event).next().until(function(){$y=this; return null;},true);
@@ -1020,7 +1020,7 @@ tests[".repeat() functionality"] = {
 			},
 			
 			"$('.multiple').repeat().one(event) + $('#single').unrepeat()": function($, test){
-				var $x = $('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event1 = 'myEvent';
 				var event2 = 'myOtherEvent';
 				var x=0, y=0;
@@ -1069,7 +1069,7 @@ tests[".repeat() functionality"] = {
 		"deferred loops": {
 			
 			".wait().repeat().until(count)": function($, test){
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
 				var callback2 = function(){ y++; test.check(); };
@@ -1084,7 +1084,7 @@ tests[".repeat() functionality"] = {
 			},
 
 			".wait(timeout) +…+ .repeat().until(count)": function($, test){
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
 				var callback2 = function(){ y++; test.check(); };
@@ -1102,7 +1102,7 @@ tests[".repeat() functionality"] = {
 			},
 
 			".wait(event).repeat(event).then(callback)": function($, test){
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
 				var callback2 = function(){ y++; test.check(); };

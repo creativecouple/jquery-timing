@@ -5,7 +5,7 @@ tests[".on() functionality"] = {
 		"binding single event - classical style": {
 		
 			".on(event,handler) + .off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -24,7 +24,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,data,handler) + .off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -44,7 +44,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,handler) + .off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -63,7 +63,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,data,handler) + .off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -83,7 +83,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,handler) + .off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -102,7 +102,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,data,handler) + .off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -122,7 +122,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,handler) + .trigger(event) + .off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -143,7 +143,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,data,handler) + .trigger(event) + .off(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -165,7 +165,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,handler) + .trigger(event) + .off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -186,7 +186,7 @@ tests[".on() functionality"] = {
 			},
 			
 			".on(event,data,handler) + .trigger(event) + .off(event,handler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -208,7 +208,7 @@ tests[".on() functionality"] = {
 			},
 			
 			".on(event,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -229,7 +229,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,data,handler) + .trigger(event) + .off(event,otherHandler)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(event){
@@ -255,7 +255,7 @@ tests[".on() functionality"] = {
 		"binding multiple events - classical style": {
 			
 			".on({ev1:h1, e2:h2}) + .off(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				function handler1(){
 					x++;
@@ -282,7 +282,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on({ev1:h1, e2:h2},data) + .off(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0, y=0;
 				function handler1(event){
 					x++;
@@ -311,7 +311,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on('ev1 ev2',handler) + .off(ev2)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				var $on = $x.on('ev1 ev2', function(){ x++; });
 				test.assertEquals("classical bind must return original jQuery object", $x, $on);
@@ -332,7 +332,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on('ev1 ev2',data,handler) + .off(ev2)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(event){
 					x++;
@@ -361,7 +361,7 @@ tests[".on() functionality"] = {
 		"binding single event - timed invocation chain style": {
 			
 			".on(event).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -381,7 +381,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event).doSomething() + .trigger(event) + .doSomething() + .trigger(event) + .doSomething()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				var d=null;
@@ -410,7 +410,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,$).doSomething() + .trigger(event)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				function handler(){
@@ -430,7 +430,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event,$).doSomething() + .trigger(event) + .doSomething() + .trigger(event) + .doSomething()": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var ev = 'myEvent';
 				var x=0;
 				var d=null;
@@ -459,7 +459,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on(event).doSomething()._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var $on = $x.on('myEvent',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
 				var $y = $on._;
@@ -472,7 +472,7 @@ tests[".on() functionality"] = {
 		"binding multiple events - timed invocation chain style": {
 			
 			".on('ev1 ev2').doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -496,7 +496,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on('ev1 ev2',$).doSomething() + .trigger(ev1)": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
 					x++;
@@ -520,7 +520,7 @@ tests[".on() functionality"] = {
 			},
 
 			".on('ev1 ev2').doSomething()._": function($, test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var $on = $x.on('ev1 ev2',$).text('test');
 				test.assertNotEquals("timed bind must return placeholder object", $x, $on);
 				var $y = $on._;
@@ -533,7 +533,7 @@ tests[".on() functionality"] = {
 		"access original context from deferred chain": {
 			
 			"$(some).on(event).doThisLater()._.doThatNow()": function($,test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.on('evt').text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.trigger('evt');
@@ -542,7 +542,7 @@ tests[".on() functionality"] = {
 			},
 
 			"$(some).on(event,$).doThisLater()._.doThatNow()": function($,test){
-				$x = $('<div>');
+				$x = test.element('<div>');
 				$x.on('evt',$).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.trigger('evt');

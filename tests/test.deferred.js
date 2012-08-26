@@ -20,7 +20,7 @@ tests["Deferred functionality"] = {
 
 			"$.when($some.wait(event)).done(callback)" : function($,test) {
 				var event = 'myev';
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var tic=$x.wait(event);
 				var x = 0;
 				$.when(tic).done(function(){ x++; });
@@ -35,7 +35,7 @@ tests["Deferred functionality"] = {
 		"multiple defers": {
 				
 			"$.when($some.wait(ev1), $other.wait(ev2)).done(callback)" : function($,test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var x = 0, foo = 0, bar = 0;
 				$.when($x.wait('foo').then(function(){foo++;}), $x.wait('bar').then(function(){bar++;})).done(function(){ x++; });
 				test.assertEquals("deferred must not fire too early", 0, x);
@@ -69,7 +69,7 @@ tests["Deferred functionality"] = {
 			},
 
 			"$.when(tic.each()).done(callback) + tic.all()" : function($,test) {
-				var tic = $('<div>').each();
+				var tic = test.element('<div>').each();
 				var x = 0;
 				$.when(tic).done(function(){ x++; });
 				test.assertEquals("deferred must not fire too early", 0, x);
@@ -85,7 +85,7 @@ tests["Deferred functionality"] = {
 		"event handlers": {
 			
 			"$.when($some.click($)).done(callback) + $some.click()" : function($,test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var tic = $x.click($);
 				var x = 0;
 				$.when(tic).done(function(){ x++; });
@@ -100,7 +100,7 @@ tests["Deferred functionality"] = {
 			},
 
 			"$.when($some.one(event)).done(callback) + $some.trigger(event)" : function($,test) {
-				var $x = $('<div>');
+				var $x = test.element('<div>');
 				var tic = $x.one('foobar');
 				var x = 0;
 				$.when(tic).done(function(){ x++; });
