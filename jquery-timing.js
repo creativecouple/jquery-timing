@@ -411,15 +411,11 @@
 	 * @param timedInvocationChain
 	 * @param executionState
 	 */
-	jQuery.fn.wait.timing = function(timedInvocationChain, executionState) {
+	jQuery.fn.wait.timing = function(timedInvocationChain, executionState, ongoingLoops) {
 		var trigger, event, timeout;
 		
-		if (typeof executionState._method._arguments[0] == "function") {
-			executionState._callback = executionState._method._arguments[0];
-		} else {
-			trigger = executionState._method._arguments[0];
-			executionState._callback = executionState._method._arguments[1];
-		}
+		trigger = executionState._method._arguments[0];
+		executionState._callback = executionState._method._arguments[1];
 
 		function triggerAction() {
 			originalOff.call(event ? originalOff.call(executionState._context, event, triggerAction) : executionState._context, 'unwait', unwaitAction);
@@ -439,6 +435,9 @@
 			timedInvocationChain();
 		}
 
+		if (typeof trigger == "function") {
+			trigger = trigger.apply(executionState._context, loopCounts(ongoingLoops));
+		}
 		if (typeof trigger == "string") {
 
 			originalOn.call(executionState._context, event = trigger, triggerAction);
