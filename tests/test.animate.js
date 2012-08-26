@@ -13,7 +13,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -27,7 +27,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -46,7 +46,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -65,7 +65,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -96,7 +96,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -110,7 +110,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -129,7 +129,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -148,7 +148,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -162,7 +162,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -176,7 +176,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -195,7 +195,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -214,7 +214,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -229,7 +229,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -243,7 +243,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -262,7 +262,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -281,7 +281,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -312,7 +312,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -326,7 +326,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -345,7 +345,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -364,7 +364,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -378,7 +378,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -392,7 +392,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -411,7 +411,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -430,7 +430,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -445,7 +445,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -459,7 +459,7 @@ tests[".animate() functionality"] = {
 				test.assertEquals("wrong text", 'b0b1', $x.text());
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -478,7 +478,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 1, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -497,7 +497,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 2, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -536,7 +536,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -558,7 +558,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -583,7 +583,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -623,7 +623,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -645,7 +645,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -670,7 +670,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -693,7 +693,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -715,7 +715,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -740,7 +740,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -764,7 +764,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -786,7 +786,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -811,7 +811,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -852,7 +852,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -874,7 +874,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -899,7 +899,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -922,7 +922,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -944,7 +944,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -969,7 +969,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
@@ -993,7 +993,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0c1', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -1015,7 +1015,7 @@ tests[".animate() functionality"] = {
 				$x.join(function(){window.setTimeout(function(){
 					test.assertEquals("wrong text", 'c0', $x.text());
 					test.assertEquals("wrong counter", 11, c);
-					$x.remove();
+					
 					test.done();
 				},10);});
 			},
@@ -1040,7 +1040,7 @@ tests[".animate() functionality"] = {
 					$x.join(function(){window.setTimeout(function(){
 						test.assertEquals("wrong text", 'c1', $x.text());
 						test.assertEquals("wrong counter", 11, c);
-						$x.remove();
+						
 						test.done();
 					},10);});
 				},10);});
