@@ -80,6 +80,33 @@ tests[".wait() functionality"] = {
 				}, 1);
 			},
 			
+			".wait(null,callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(null,callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait(true);
+				test.assertEquals(".wait() should have fired because of unwait(true)", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait().then(callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait().then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait(true);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
 			".wait(null,callback) + .unrepeat()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
@@ -187,6 +214,33 @@ tests[".wait() functionality"] = {
 						test.done();
 					}, timeout+1);
 				}, timeout+1);
+			},
+			
+			".wait(null,callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(10,callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait(true);
+				test.assertEquals(".wait() should have fired because of unwait(true)", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait().then(callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(10).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				$x.unwait(true);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait(timeout,callback) + .unrepeat()" : function($, test) {
@@ -1199,6 +1253,26 @@ tests[".wait() functionality"] = {
 				$x.eq(1).trigger(event);
 				test.assertEquals("wait fired again", 2, x);
 				test.assertEquals("tic should wait again for all remaining elements", '23', $(tic).text());
+				
+				tic.then(function(){
+					test.done();
+				});
+				test.fail('tic should go on');
+			},
+			
+			"$('.multiple').wait(event) + $('#single').unwait(true)": function($, test){
+				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children();
+				var event = 'myEvent';
+				var x=0;
+				var callback = function(){ x++; test.check(); };
+				var tic = $x.wait(event).then(callback);
+				$x.eq(0).unwait(true).trigger(event);
+				test.assertEquals("wait still waiting for event", 0, x);
+				test.assertEquals("tic should still wait for all elements", '123', $(tic).text());
+				
+				$x.eq(1).trigger(event);
+				test.assertEquals("wait must have fired", 1, x);
+				test.assertEquals("tic should wait again for all elements", '123', $(tic).text());
 				
 				tic.then(function(){
 					test.done();
