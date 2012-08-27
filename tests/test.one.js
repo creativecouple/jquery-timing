@@ -248,6 +248,8 @@ tests[".one() functionality"] = {
 				function handler(){
 					x++;
 					test.assertEquals("context object must be original", $x.get(0), this.get(0));
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $bind = $x.one(ev).then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);
@@ -295,6 +297,8 @@ tests[".one() functionality"] = {
 				var x=0;
 				function handler(){
 					x++;
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $bind = $x.one('ev1 ev2').then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $bind);

@@ -367,6 +367,8 @@ tests[".delegate() functionality"] = {
 				function handler(){
 					x++;
 					test.assertEquals("context object must be original", $x.get(0), this.parent().get(0));
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $delegate = $x.delegate('p',ev).then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $delegate);
@@ -418,6 +420,8 @@ tests[".delegate() functionality"] = {
 				var x=0;
 				function handler(){
 					x++;
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $delegate = $x.delegate('p','ev1 ev2').then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $delegate);

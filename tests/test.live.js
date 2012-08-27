@@ -441,6 +441,8 @@ tests[".live() functionality"] = {
 				function handler(){
 					x++;
 					test.assertEquals("context object must be original", $x.get(0), this.get(0));
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $live = $x.live(ev).then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
@@ -506,6 +508,8 @@ tests[".live() functionality"] = {
 				var x=0;
 				function handler(){
 					x++;
+					test.assertNotEquals("context must not be original", $x, this);
+					test.assertEquals("previous context must be original", $x, this.end());
 				}
 				var $live = $x.live('ev1 ev2').then(handler);
 				test.assertNotEquals("timed bind must return placeholder object", $x, $live);
