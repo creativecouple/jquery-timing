@@ -262,7 +262,7 @@
 		if (jQuery.fn[name]) {
 			var original = jQuery.fn[name];
 			jQuery.fn[name] = function(){
-				var i, methodStack, placeholder, timedInvocationChain, deferred;
+				var i, methodStack, placeholder, timedInvocationChain, deferred, context = this;
 				for(i=0; i<arguments.length; i++) {
 					if (typeof arguments[i] == "function" || (arguments[i] && typeof arguments[i] == "object") || arguments[i] === false) {
 						if (arguments[i] !== jQuery) {
@@ -270,13 +270,13 @@
 							if (typeof arguments[i] == "function" && jQuery.guid) {
 								arguments[i].guid = arguments[i].guid || jQuery.guid++;
 							}
-							return original.apply(this, arguments);
+							return original.apply(context, arguments);
 						}
 						break;
 					}
 				}
 				Array.prototype.splice.call(arguments, i, 1, function(){
-					timedInvocationChain = createTimedInvocationChain(jQuery(this), methodStack, [{
+					timedInvocationChain = createTimedInvocationChain(context.$(this), methodStack, [{
 							_count: jQuery.extend(Array.prototype.shift.apply(arguments), arguments),
 							_allowPromise: true
 						}], function(elements){
@@ -301,7 +301,7 @@
 						return (timedInvocationChain && !type) ? timedInvocationChain.promise(type, target) : (deferred = deferred || jQuery.Deferred()).promise(target);
 					};
 				}
-				return placeholder = new PredictingProxy(original.apply(this, arguments), methodStack = {}, fire);
+				return placeholder = new PredictingProxy(original.apply(context, arguments), methodStack = {}, fire);
 			};
 		}
 	});
