@@ -543,8 +543,11 @@
 				},
 				_fixOpenLoop: loopEndMethods.all,
 				_openEndAction: function(tic, state){
-					if (openLoopTimeout && finished < size-1) {
+					if (openLoopTimeout) {
 						finished++;
+						if (finished == size) {
+							methodToGoOn = state._method;
+						}
 						timedInvocationChain();
 					}
 				}
