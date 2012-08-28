@@ -496,17 +496,26 @@
 			return;
 		}
 		
-		var size = executionState._context.length,
+		var size = Math.max(executionState._context.length, 1),
 		finished = 0,
-		key, methodToGoOn,
+		key, methodToGoOn, openLoopTimeout,
 		innerTICs = [],
 		innerElements = [],
-		proxyPlaceholder = {},
+		proxyPlaceholder = jQuery.extend({}, executionState._context),
 		stepByStep = executionState._method._arguments[0] === jQuery;
 
+		if (stepByStep) {
+			window.setTimeout(function(){
+				openLoopTimeout = true;
+				timedInvocationChain();
+			},0);
+		}
+		
 		function spreadAction(){
-			if (stepByStep && finished < size) {
-				(innerTICs[finished])();
+			if (stepByStep) {
+				if (finished < size) {
+					(innerTICs[finished])();
+				}
 			} else {
 				for (var i=0; i<size; i++) {
 					(innerTICs[i])();
@@ -519,9 +528,10 @@
 			proxyPlaceholder[key] = spreadAction;
 		}
 		proxyPlaceholder.length = size;
-		executionState._context.each(function(index){
-			var innerLoops = ongoingLoops.slice();
-			innerElements[index] = [proxyPlaceholder[index] = this];
+		for(key=0; key<size; key++) (function(index){
+			var innerLoops = ongoingLoops.slice(),
+			context = executionState._context.eq(index);
+			innerElements[index] = context.get();
 			innerLoops.unshift({
 				_count: index,
 				_allAction: function(state){
@@ -531,9 +541,15 @@
 					}
 					timedInvocationChain();
 				},
-				_fixOpenLoop: loopEndMethods.all				
+				_fixOpenLoop: loopEndMethods.all,
+				_openEndAction: function(tic, state){
+					if (openLoopTimeout && finished < size-1) {
+						finished++;
+						timedInvocationChain();
+					}
+				}
 			});
-			innerTICs[index] = createTimedInvocationChain(jQuery(this), executionState._method._next, innerLoops, function(elements){
+			innerTICs[index] = createTimedInvocationChain(context, executionState._method._next, innerLoops, function(elements){
 				innerElements[index] = elements;
 				proxyPlaceholder.length = 0;
 				for (var i=0; i<size; i++) {
@@ -542,7 +558,7 @@
 				if (onStepCallback)
 					onStepCallback(jQuery.makeArray(proxyPlaceholder));
 			});
-		});
+		})(key);
 
 		executionState._next = proxyPlaceholder;
 		executionState._canContinue = true;
