@@ -136,6 +136,19 @@ tests[".each() functionality"] = {
 				test.done();
 			},
 			
+			"$('empty').each().all()": function($, test){
+				var $x = $([]);
+				var x = 0;
+				function callback() {
+					x++;
+				}
+				test.assertEquals("too much elements", 0, $x.size());
+				var $y = $x.each().then(callback).all();
+				test.assertEquals("instant each-loop must return original object", $x, $y);
+				test.assertEquals("callback must have run once", 1, x);
+				test.done();
+			},
+						
 		},
 
 		"instant each-loop with delay": {
