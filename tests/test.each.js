@@ -211,10 +211,9 @@ tests[".each() functionality"] = {
 				test.assertEquals("callback must wait for timeout", 0, x);
 				window.setTimeout(function(){
 					test.assertEquals("callback must be triggered for each element after timeout", 3, x);
-					x--;
-					var tic2 = tic.then(callback);
-					test.assertEquals("tic object still must not be original", tic, tic2);
-					test.assertEquals("callback must be triggered once for the last", 3, x);
+					var $y = tic.then(function(){ x++; });
+					test.assertEquals("after open .each($) then works instantly", $x, $y);
+					test.assertEquals("callback must be triggered once", 4, x);
 					test.done();
 				}, 200);
 			},
@@ -302,6 +301,26 @@ tests[".each() functionality"] = {
 				$x.eq(1).trigger('myEvent');
 				test.assertEquals("callback must be triggered for each element again", 3, x);
 				test.done();
+			},
+			
+			".repeat(interval).each($).then(callback)": function($, test) {
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
+				var x=0;
+				var interval = 200;
+				var callback = function(i){
+					x++;
+				};
+				var tic = $x.repeat(interval,true).each($).then(callback);				
+				test.assertNotEquals("tic object must not be original", $x, tic);
+				test.assertEquals("callback must be called once", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals("callback must be called once for all three elements", 3, x);
+					window.setTimeout(function(){
+						test.assertEquals("callback must be called twice for all three elements", 6, x);
+						$x.unrepeat();
+						test.done();
+					}, interval);
+				}, interval/2);
 			},
 	
 		},
