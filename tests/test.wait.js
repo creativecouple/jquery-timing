@@ -902,6 +902,192 @@ tests[".wait() functionality"] = {
 
 		},
 		
+		"waiting for animated elements": {
+			
+			_version : ['1.6'],
+
+			".wait(animated,callback)" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					
+					test.assertEquals(".wait() should have fired after resolving the animated", 1, x);
+					
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 200);
+			},
+			
+			".wait(animated).then(callback)" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					
+					test.assertEquals(".wait() should have fired after resolving the animated", 1, x);
+					
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 200);
+			},
+			
+			".wait(animated) + .then(callback)" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				var TIC = $x.wait(animated);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					var $y = TIC.then(callback);
+					test.assertEquals(".wait() should have fired after telling TIC", 1, x);
+					test.assertNotEquals("instant .then() should not return TIC object", TIC, $y);
+					test.assertEquals("instant .then() should return jQuery object", 1, $y.size());
+					
+					test.assertEquals(".wait() should not fire anymore", 1, x);
+					window.setTimeout(function(){
+						
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 200);
+			},
+			
+			".wait(animated,callback) +…+ .unwait()" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not have fired yet", 0, x);
+					$x.unwait();
+					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 200);
+				}, 10);
+			},
+			
+			".wait(animated).then(callback) +…+ .unwait()" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not have fired before resolving the animated", 0, x);
+					$x.unwait();
+					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 200);
+				}, 10);
+			},
+			
+			".wait(animated) +…+ .unwait() + .then(callback)" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				var TIC = $x.wait(animated);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait() should not have fired before resolving the animated", 0, x);
+					$x.unwait();
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					TIC.then(callback);
+					test.assertEquals(".wait() should have not fired after telling TIC because of .unwait()", 0, x);
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have fired anymore", 0, x);
+						test.done();
+					}, 200);
+				}, 10);
+			},
+	
+			".wait(animated,callback) +…+ .unrepeat()" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated, callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+						test.done();
+					}, 200);
+				}, 10);
+			},
+			
+			".wait(animated).then(callback) +…+ .unrepeat()" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				$x.wait(animated).then(callback);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
+						test.done();
+					}, 200);
+				}, 10);
+			},
+			
+			".wait(animated) +…+ .unrepeat() + .then(callback)" : function($, test) {
+				var animated = test.element('<div>').hide().fadeIn(100);
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				var TIC = $x.wait(animated);
+				test.assertEquals(".wait() should defer", 0, x);
+				window.setTimeout(function(){
+					$x.unrepeat();
+					test.assertEquals(".wait() should have not fired before TIC knows to do so", 0, x);
+					TIC.then(callback);
+					test.assertEquals(".wait() should have fired after telling TIC because it ignores .unrepeat()", 1, x);
+					window.setTimeout(function(){
+						test.assertEquals(".wait() should not have fired anymore", 1, x);
+						test.done();
+					}, 100);
+				}, 200);
+			},
+			
+			".wait(animated)._": function($, test) {
+				var $x = test.element('<div>');
+				var TIC = $x.wait(test.element('<div>').hide().fadeIn(100));
+				test.assertNotEquals("tic must be new object", $x, TIC);
+				var _ = TIC._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
+		},
+		
 		"waiting for instant deferred": {
 			
 			_version : ['1.5'],
