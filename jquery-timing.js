@@ -450,13 +450,13 @@
 
 			originalOn.call(context, event = trigger, triggerAction);
 
-		} else if (trigger && typeof trigger.then == "function") {
-			
-			trigger.then(triggerAction, true);
-			
 		} else if (trigger && typeof trigger.promise == "function") {
 			
 			trigger.promise().then(triggerAction);
+			
+		} else if (trigger && typeof trigger.then == "function") {
+			
+			trigger.then(triggerAction, true);
 			
 		} else {
 
