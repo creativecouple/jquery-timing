@@ -1,5 +1,58 @@
 tests[".each() functionality"] = {
 		
+		"classical each-loop": {
+			
+			".each(callback)": function($, test){
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
+				var x=0;
+				var callbackX = function(i){
+					test.assertEquals("wrong order of elements?", x, i);
+					x++;
+					test.assertEquals("wrong context element?", $x[i], this);
+					test.assertEquals("because we are running parallel, all callbackY must be processed after", 0, y);
+				};
+				var y=0;
+				var callbackY = function(i){
+					test.assertEquals("wrong order of elements?", y, i);
+					y++;
+					test.assertEquals("wrong context element?", $x[i], this);
+					test.assertEquals("because we are running parallel, all callbackX must be processed before", 3, x);
+				};
+				var tic = $x.each(callbackX).each(callbackY);
+				test.assertEquals("tic object must be original", $x, tic);
+				test.assertEquals("callbackX must be triggered for each element", 3, x);
+				test.assertEquals("callbackY must be triggered for each element", 3, y);
+				test.assertEquals("there must be no .all() without timed .each()", undefined, tic.all);
+				test.done();
+			},
+			
+			".wait(timeout).each(callback)": function($, test){
+				var $x = test.element($('<div>').add('<p>').add('<span>'));
+				var x=0;
+				var callbackX = function(i){
+					test.assertEquals("wrong order of elements?", x, i);
+					x++;
+					test.assertEquals("wrong context element?", $x[i], this);
+					test.assertEquals("because we are running parallel, all callbackY must be processed after", 0, y);
+				};
+				var y=0;
+				var callbackY = function(i){
+					test.assertEquals("wrong order of elements?", y, i);
+					y++;
+					test.assertEquals("wrong context element?", $x[i], this);
+					test.assertEquals("because we are running parallel, all callbackX must be processed before", 3, x);
+				};
+				var tic = $x.wait(1).each(callbackX).each(callbackY);
+				test.assertNotEquals("tic object must not be original", $x, tic);
+				window.setTimeout(function(){
+					test.assertEquals("callbackX must be triggered for each element", 3, x);
+					test.assertEquals("callbackY must be triggered for each element", 3, y);
+					test.done();
+				}, 10);
+			},
+			
+		},
+		
 		"instant each-loop": {
 		
 			".each().then(callback)": function($, test) {
