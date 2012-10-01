@@ -492,7 +492,7 @@
 	jQuery.fn.each.timing = function(timedInvocationChain, executionState, ongoingLoops, onStepCallback) {
 		if (executionState._method._arguments[0] && executionState._method._arguments[0] !== jQuery) {
 			executionState._canContinue = true;
-			executionState._next = originalEach.apply(executionState._context, executionState._methods._arguments);
+			executionState._next = originalEach.apply(executionState._context, executionState._method._arguments);
 			return;
 		}
 		
