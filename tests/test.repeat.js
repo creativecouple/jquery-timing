@@ -1068,12 +1068,12 @@ tests[".repeat() functionality"] = {
 		
 		"deferred loops": {
 			
-			".wait().repeat().until(count)": function($, test){
+			".wait(timeout).repeat().until(count)": function($, test){
 				var $x = test.element('<div>');
 				var x=0, y=0;
 				var callback1 = function(){ x++; test.check(); };
 				var callback2 = function(){ y++; test.check(); };
-				$x.wait().then(callback1).repeat(callback2).until(3);
+				$x.wait(1).then(callback1).repeat(callback2).until(3);
 				test.assertEquals("waiting for little timeout", 0, x);
 				test.assertEquals("waiting for loop start", 0, y);
 				window.setTimeout(function(){

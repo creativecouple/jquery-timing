@@ -1,91 +1,94 @@
 tests[".wait() functionality"] = {
 		
-		"waiting short": {
+		"waiting for animation end": {
 			
 			".wait(null,callback)" : function($, test) {
+				var $x = test.element('<div>');
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
-				$.wait(null,callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait(null,callback);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should have fired after short waiting", 1, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 1, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
 			},
 				
 			".wait().then(callback)" : function($, test) {
+				var $x = test.element('<div>');
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
-				$.wait().then(callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait().then(callback);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should have fired after short waiting", 1, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 1, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait() +…+ .then(callback)" : function($, test) {
+				var $x = test.element('<div>');
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
-				var $x = test.element('<div>');
-				var TIC = $x.wait();
-				test.assertEquals(".wait() should defer", 0, x);
-				window.setTimeout(function(){				
-					test.assertEquals("TIC should wait until .then()", 0, x);
-					var $y = TIC.then(callback);
-					test.assertEquals(".wait() should have fired after short waiting", 1, x);
-					test.assertEquals("instant .then() should return original jQuery object", $x, $y);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 1, x);
-						test.done();
-					}, 100);
-				}, 1);
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				var tic = $x.wait();
+				test.assertEquals(".wait() should return deferred chain", compareVersion($.fn.jquery,'1.6') >= 0, tic != $x);
+				window.setTimeout(function(){
+					tic.then(callback);
+					test.assertEquals(".wait() should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait(null,callback) + .unwait()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait(null,callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unwait();
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 0, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have been interrupted by .unwait()", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait().then(callback) + .unwait()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait().then(callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unwait();
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should have been interrupted by .unwait()", 0, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 0, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have been interrupted by .unwait()", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait(null,callback) + .unwait(true)" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait(null,callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unwait(true);
 				test.assertEquals(".wait() should have fired because of unwait(true)", 1, x);
 				window.setTimeout(function(){
@@ -98,8 +101,11 @@ tests[".wait() functionality"] = {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait().then(callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unwait(true);
 				window.setTimeout(function(){
 					test.assertEquals(".wait() should not fire anymore", 1, x);
@@ -111,39 +117,187 @@ tests[".wait() functionality"] = {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait(null,callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unrepeat();
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 1, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have fired", 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait().then(callback) + .unrepeat()" : function($, test) {
 				var x = 0;
 				var callback = function(){ x++; test.check(); };
 				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
 				$x.wait().then(callback);
-				test.assertEquals(".wait() should defer", 0, x);
+				test.assertEquals(".wait() should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
 				$x.unrepeat();
 				window.setTimeout(function(){
-					test.assertEquals(".wait() should not have been interrupted by .unrepeat()", 1, x);
-					window.setTimeout(function(){
-						test.assertEquals(".wait() should not fire anymore", 1, x);
-						test.done();
-					}, 100);
-				}, 1);
+					test.assertEquals(".wait() should have fired", 1, x);
+					test.done();
+				}, 100);
 			},
 			
 			".wait()._": function($, test) {
 				var $x = test.element('<div>');
-				var TIC = $x.wait();
-				test.assertNotEquals("tic must be new object", $x, TIC);
-				var _ = TIC._;
+				var _ = $x.wait()._;
+				test.assertEquals("underscore must return original object", $x, _);
+				test.done();
+			},
+
+			".wait($,callback)" : function($, test) {
+				var $x = test.element('<div>');
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($,callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
+			},
+				
+			".wait($).then(callback)" : function($, test) {
+				var $x = test.element('<div>');
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($).then(callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($) +…+ .then(callback)" : function($, test) {
+				var $x = test.element('<div>');
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				var tic = $x.wait($);
+				test.assertEquals(".wait($) should return deferred chain", compareVersion($.fn.jquery,'1.6') >= 0, tic != $x);
+				window.setTimeout(function(){
+					tic.then(callback);
+					test.assertEquals(".wait($) should have fired after waiting", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($,callback) + .unwait()" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($,callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unwait();
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have been interrupted by .unwait()", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($).then(callback) + .unwait()" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($).then(callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unwait();
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have been interrupted by .unwait()", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($,callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($,callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unwait(true);
+				test.assertEquals(".wait($) should have fired because of unwait(true)", 1, x);
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($).then(callback) + .unwait(true)" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($).then(callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unwait(true);
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should not fire anymore", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($,callback) + .unrepeat()" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($,callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unrepeat();
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have fired", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($).then(callback) + .unrepeat()" : function($, test) {
+				var x = 0;
+				var callback = function(){ x++; test.check(); };
+				var $x = test.element('<div>');
+				if ($x.delay) {
+					$x.delay(10);
+				}
+				$x.wait($).then(callback);
+				test.assertEquals(".wait($) should defer", compareVersion($.fn.jquery,'1.6') >= 0 ? 0 : 1, x);
+				$x.unrepeat();
+				window.setTimeout(function(){
+					test.assertEquals(".wait($) should have fired", 1, x);
+					test.done();
+				}, 100);
+			},
+			
+			".wait($)._": function($, test) {
+				var $x = test.element('<div>');
+				var _ = $x.wait($)._;
 				test.assertEquals("underscore must return original object", $x, _);
 				test.done();
 			},
@@ -1342,16 +1496,6 @@ tests[".wait() functionality"] = {
 		
 		"access original context from deferred chain": {
 			
-			"$(some).wait().doThisLater()._.doThatNow()": function($,test){
-				var $x = test.element('<div>');
-				$x.wait().text('later')._.text('now');
-				test.assertEquals("immediate action must have happened already", 'now', $x.text());
-				window.setTimeout(function(){
-					test.assertEquals("later action must have happened after timeout", 'later', $x.text());
-					test.done();
-				}, 100);
-			},
-			
 			"$(some).wait(event).doThisLater()._.doThatNow()": function($,test){
 				var $x = test.element('<div>');
 				$x.wait('evt').text('later')._.text('now');
@@ -1375,22 +1519,6 @@ tests[".wait() functionality"] = {
 
 		"access interim snapshots": {
 		
-			"tic=$('.some').wait().next() + $(tic)": function($, test){
-				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children(':first');
-				var tic = $x.wait().next();
-				test.assertNotEquals("waiting tic is not the same as original object", $x, tic);
-				var $t = test.element(tic);
-				test.assertEquals("tic should currently hold one element", 1, $t.size());
-				test.assertEquals("tic should currently stay on first child", "1", $t.text());
-				window.setTimeout(function(){
-					test.assertEquals("after wait tic should stay on second child", "2", $(tic).text());
-					var $y = tic.next();
-					test.assertEquals("after second next tic should stay on third child", "3", $(tic).text());
-					test.assertNotEquals("instant call to .next() should return original object instead of tic", tic, $y);
-					test.done();
-				}, 1);
-			},
-			
 			"$('.multiple').wait(event) + $('#single').trigger(event)": function($, test){
 				var $x = test.element('<div><p>1</p><p>2</p><p>3</p></div>').children();
 				var event = 'myEvent';
