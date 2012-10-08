@@ -443,6 +443,9 @@
 		originalOn.call(context, 'unwait', unwaitAction);
 		executionState._next = context;
 
+		if (trigger == null || trigger == jQuery) {
+			trigger = context;
+		}	
 		if (typeof trigger == "function") {
 			trigger = trigger.apply(context, loopCounts(ongoingLoops));
 		}
