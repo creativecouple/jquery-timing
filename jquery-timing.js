@@ -375,13 +375,26 @@
 		executionState._next = executionState._context;
 		executionState._canContinue = !waitingElements;
 
-		// wait for each element to reach the current end of its queue
-		if (promising) {
-			executionState._context.promise(queueName == null ? 'fx' : queueName).then(function(){
+		if (promising == jQuery) {
+			// wait for all elements to reach the end of their queue at the same time - the super-promise
+			function checkPromiseResolved(){
+				var promise = executionState._context.promise(queueName == null ? 'fx' : queueName);
+				if ((typeof promise.isResolved == "function" && promise.isResolved()) || (typeof promise.state == "function" && promise.state() == "resolved")) {
+					executionState._canContinue = true;
+					timedInvocationChain();
+				} else {
+					promise.done(checkPromiseResolved);
+				}
+			}
+			checkPromiseResolved();
+		} else if (promising) {
+			// wait for all elements to reach the end of their queue once
+			executionState._context.promise(queueName == null ? 'fx' : queueName).done(function(){
 				executionState._canContinue = true;
 				timedInvocationChain();
 			});
 		} else {
+			// wait for each element to reach the current end of its queue
 			executionState._context.queue(queueName == null ? 'fx' : queueName, function(next){
 				executionState._canContinue = !--waitingElements;
 				timedInvocationChain();
