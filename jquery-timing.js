@@ -837,7 +837,7 @@
 		callbackVariable.$$ = callbackVariable.X = function(compute){
 			return X(compute, callbackVariable);
 		};
-		jQuery.each('abcdefghij', function(index, character){
+		jQuery.each(['a','b','c','d','e','f','g','h','i','j'], function(index, character){
 			callbackVariable[index] = callbackVariable[character] = function(){
 				callbackVariable(arguments[index]);
 			};
