@@ -273,7 +273,7 @@ tests["dom events functionality"] = {
 				test.done();
 			},
 
-			".focus(handler) + .focus() + .unbind/.off('focus')": function($, test) {
+			".focus(handler) + .focus() + .unbind/.off('focus')||1.8.99": function($, test) {
 				var $x = test.element('<div>');
 				var x=0;
 				function handler(){
@@ -716,8 +716,8 @@ tests["dom events functionality"] = {
 				test.done();
 			},
 
-			".focus($).doSomething() + .focus()": function($, test) {
-				var $x = test.element('<div>');
+			".focus($).doSomething() + .focus()||1.8.99": function($, test) {
+				var $x = test.element('<input>');
 				var x=0;
 				function handler(){
 					x++;
@@ -1108,8 +1108,8 @@ tests["dom events functionality"] = {
 				test.done();
 			},
 
-			"$(some).focus($).doThisLater()._.doThatNow()": function($, test){
-				var $x = test.element('<div>');
+			"$(some).focus($).doThisLater()._.doThatNow()||1.8.99": function($, test){
+				var $x = test.element('<input>');
 				$x.focus($).text('later')._.text('now');
 				test.assertEquals("immediate action must have happened already", 'now', $x.text());
 				$x.focus();
