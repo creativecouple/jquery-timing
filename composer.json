@@ -1,0 +1,27 @@
+{
+  "name": "creativecouple/jquery-timing",
+  "description": "a jQuery plugin that provides easy-to-use timing methods to write less and do more.",
+  "type": "component",
+  "homepage": "http://creativecouple.github.io/jquery-timing/",
+  "authors": [
+    {
+      "name": "CreativeCouple",
+      "url": "http://www.creativecouple.de/",
+      "email": info@creativecouple.de"
+    }
+  ],
+  "require": {
+    "robloach/component-installer": "*",
+    "components/jquery": "*"
+  },
+  "extra": {
+    "component": {
+      "scripts": [
+        "jquery-timing.js"
+      ],
+      "files": [
+        "jquery-timing.min.js"
+      ]
+    }
+  }
+}
