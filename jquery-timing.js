@@ -5,15 +5,15 @@
  * JavaScript functions for waiting / repeating / stopping jQuery actions.
  * 
  * This code is published under the MIT License (MIT).
- * http://www.opensource.org/licenses/mit-license.php
+ * https://www.opensource.org/licenses/mit-license.php
  * 
  * For examples, reference, and other information see
- * http://creativecouple.github.com/jquery-timing/
+ * https://creativecouple.github.io/jquery-timing/
  * 
  * @author CreativeCouple
  * @author Peter Liske
  * @copyright (c) 2011 by CreativeCouple
- * @see http://creativecouple.github.com/jquery-timing/
+ * @see https://creativecouple.github.io/jquery-timing/
  */
 
 (function(jQuery, window){
